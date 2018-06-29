@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="GenesisProject" default="build_jars" basedir=".">
+
+	<property name="version.mayor">0</property>
+	<property name="version.minor">1</property>
+	<property name="version.patch">0</property>
+
+	<property name="version_number">${version.mayor}.${version.minor}.${version.patch}</property>
+	<property name="version">V${version_number}</property>
+
+	<property name="project_name_client">genesis_project</property>
+	<property name="project_name_server">genesis_project_server</property>
+
+	<property name="mainClassServer">net.jfabricationgames.genesis_project.main_menu.ClientMain</property>
+	<property name="mainClassClient">net.jfabricationgames.genesis_project.server.ServerMain</property>
+
+	<property name="src">src/</property>
+	<property name="build_all">build</property>
+	<property name="build">build/main</property>
+	<property name="dist">dist/</property>
+	<property name="release_dir">${dist}/release</property>
+	<property name="release">${release_dir}/${project_name_client}_${version}</property>
+	<property name="images_path">net/jfabricationgames/genesis_project/images</property>
+	<property name="images">net/jfabricationgames/genesis_project/images/**/*.*</property>
+	
+	<property name="src_test">test/</property>
+	<property name="build_test">build/test</property>
+
+	<property name="path_elem_jfg_toolbox">jfabricationgames_toolbox_V1.0.7.jar</property>
+	<property name="path_elem_jfg_database_login">jfg_database_login_lib_V1.4.0.jar</property>
+	<property name="path_elem_jfg_jdbc_connector">jfg_jdbc_connectorV1.0.1.jar</property>
+	<property name="path_elem_jfg_server">jfg_serverV1.3.1.jar</property>
+	<property name="path_elem_jfg_logger">jfg_loggerV1.0.3.jar</property>
+	<property name="path_elem_miglayout">miglayout15-swing.jar</property>
+	<property name="path_elem_mysql_connector">mysql-connector-java-5.1.39-bin.jar</property>
+	<property name="path_elem_jfreechart">lib/jfreechart-1.0.19.jar</property>
+	<property name="path_elem_jcommon">lib/jcommon-1.0.23.jar</property>
+	
+	<path id="classpath_test">
+		<pathelement location="lib/junit-4.12.jar"/>
+		<pathelement location="lib/hamcrest-core-1.3.jar"/>
+		<pathelement location="${build}"/>
+	</path>
+	
+	<path id="classpath">
+		<pathelement path="${path_elem_jfg_toolbox}" />
+		<pathelement path="${path_elem_jfg_database_login}" />
+		<pathelement path="${path_elem_jfg_jdbc_connector}" />
+		<pathelement path="${path_elem_jfg_server}" />
+		<pathelement path="${path_elem_jfg_logger}" />
+		<pathelement path="${path_elem_miglayout}" />
+		<pathelement path="${path_elem_mysql_connector}" />
+		<pathelement path="${path_elem_jfreechart}"/>
+		<pathelement path="${path_elem_jcommon}"/>
+	</path>
+
+	<target name="init">
+		<tstamp />
+		<mkdir dir="${build}" />
+		<mkdir dir="${build_test}" />
+	</target>
+
+	<target name="generate_timestamp" depends="init">
+		<sequential>
+			<local name="timestamp" />
+			<tstamp>
+				<format property="timestamp" pattern="yyyy_MM_dd HH:mm:ss" />
+			</tstamp>
+			<echo file="${build}/build_info">Genesis Project Version: ${version_number}
+Build on: ${timestamp}</echo>
+		</sequential>
+	</target>
+	
+	<target name="generate_version_info" depends="init">
+		<sequential>
+			<local name="timestamp" />
+			<tstamp>
+				<format property="timestamp" pattern="yyyy_MM_dd HH:mm:ss" />
+			</tstamp>
+			<echo file="${build}/bab_info.properties">version=${version_number}
+build_date=${timestamp}</echo>
+		</sequential>
+	</target>
+	
+	<target name="generate_run_scripts" depends="init">
+		<echo file="${build}/run_bunkers_and_badasses.bat">java -jar -Xms2048m data/${project_name_client}_${version}.jar</echo>
+		<echo file="${build}/run_bunkers_and_badasses.sh">java -jar -Xms2048m data/${project_name_client}_${version}.jar</echo>
+	</target>
+
+	<target name="compile_src" depends="init">
+		<javac srcdir="${src}" destdir="${build}" encoding="UTF-8" includeantruntime="false">
+			<classpath refid="classpath" />
+		</javac>
+	</target>
+	
+	<target name="compile_test" depends="compile_src">
+		<javac srcdir="${src_test}" destdir="${build_test}" includeantruntime="false">
+			<classpath refid="classpath" />
+			<classpath refid="classpath_test" />
+		</javac>
+		<copy todir="${build_test}/${images_path}">
+			<fileset dir="src/${images_path}" />
+		</copy>
+	</target>
+	
+	<target name="test" depends="compile_test">
+		<junit printsummary="true" haltonfailure="true" haltonerror="true" fork="true">
+			<classpath>
+				<path refid="classpath_test" />
+				<path refid="classpath" />
+				<pathelement location="${build_test}" />
+			</classpath>
+			<formatter type="brief" usefile="false" />
+			<batchtest>
+				<fileset dir="${src_test}" includes="**/*Test.java" />
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="build_jars" depends="test">
+		<antcall target="generate_timestamp" />
+		<antcall target="generate_version_info"/>
+		<antcall target="build_jar_client" />
+		<antcall target="build_jar_server" />
+	</target>
+	
+	<target name="build_release" depends="clean,build_jars,generate_run_scripts">
+		<mkdir dir="${release_dir}"/>
+		<mkdir dir="${release}"/>
+		<mkdir dir="${release}/data"/>
+		<mkdir dir="${release}/boards"/>
+		<copy todir="${release}">
+			<fileset dir="project_doc" includes="bunkers_and_badasses_*.pdf" />
+			<fileset dir="project_doc" includes="bab.ico" />
+			<fileset dir="${build}" includes="run_bunkers_and_badasses.*" />
+		</copy>
+		<copy todir="${release}/data">
+			<fileset dir="${dist}/lib" includes="${project_name_client}_${version}.jar" />
+		</copy>
+		<copy todir="${release}/boards">
+			<fileset dir="boards" includes="*.babbm" />
+		</copy>
+		<zip destfile="${release_dir}/${project_name_client}_${version}.zip" basedir="${release_dir}" />
+	</target>
+
+	<target name="build_jar_client" depends="compile_src">
+		<mkdir dir="${dist}/lib" />
+		<jar jarfile="${dist}/lib/${project_name_client}_${version}.jar" basedir="${build}">
+			<manifest>
+				<attribute name="Main-Class" value="${mainClassClient}" />
+			</manifest>
+			<fileset dir="${src}">
+				<include name="${images}" />
+			</fileset>
+			<fileset dir="." includes="${build}/build_timestamp" />
+			<zipgroupfileset dir="." includes="*.jar" />
+			<zipgroupfileset dir="." includes="lib/*.jar" />
+		</jar>
+	</target>
+
+	<target name="build_jar_server" depends="compile_src">
+		<mkdir dir="${dist}/lib" />
+		<jar jarfile="${dist}/lib/${project_name_server}_${version}.jar" basedir="${build}">
+			<manifest>
+				<attribute name="Main-Class" value="${mainClassServer}" />
+			</manifest>
+			<!--<fileset dir="${src}">
+				<include name="${images}" />
+			</fileset>-->
+			<fileset dir="." includes="${build}/build_timestamp" />
+			<zipgroupfileset dir="." includes="*.jar" />
+			<zipgroupfileset dir="." includes="lib/*.jar" />
+		</jar>
+	</target>
+
+	<target name="build_test_jars" depends="test">
+		<!--build the normal jars but mark them as test-->
+		<antcall target="generate_timestamp" />
+		<antcall target="build_test_jar_client" />
+		<antcall target="build_test_jar_server" />
+	</target>
+
+	<target name="build_test_jar_client" depends="compile_src">
+		<mkdir dir="${dist}/lib" />
+		<jar jarfile="${dist}/lib/${project_name_client}_${version}_test.jar" basedir="${build}">
+			<manifest>
+				<attribute name="Main-Class" value="${mainClassClient}" />
+			</manifest>
+			<fileset dir="${src}">
+				<include name="${images}" />
+			</fileset>
+			<fileset dir="." includes="${build}/build_timestamp" />
+			<zipgroupfileset dir="." includes="*.jar" />
+		</jar>
+	</target>
+
+	<target name="build_test_jar_server" depends="compile_src">
+		<mkdir dir="${dist}/lib" />
+		<jar jarfile="${dist}/lib/${project_name_server}_${version}_test.jar" basedir="${build}">
+			<manifest>
+				<attribute name="Main-Class" value="${mainClassServer}" />
+			</manifest>
+			<fileset dir="." includes="${build}/build_timestamp" />
+			<zipgroupfileset dir="." includes="*.jar" />
+		</jar>
+	</target>
+
+	<target name="clean">
+		<delete dir="${build_all}" />
+		<delete dir="${dist}" />
+	</target>
+
+</project>
