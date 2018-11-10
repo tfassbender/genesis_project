@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-
-<AnchorPane minHeight="800.0" minWidth="1200.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.1">
+<AnchorPane minHeight="800.0" minWidth="1200.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <BorderPane layoutX="437.0" layoutY="239.0" prefHeight="800.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
@@ -20,13 +29,16 @@
               <items>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                      <children>
-                        <SplitPane dividerPositions="0.8715953307392996" layoutX="286.0" layoutY="312.0" orientation="VERTICAL" prefHeight="773.0" prefWidth="892.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <SplitPane dividerPositions="0.5512321660181583" layoutX="286.0" layoutY="312.0" orientation="VERTICAL" prefHeight="773.0" prefWidth="892.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <items>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                                  <children>
                                     <ScrollPane layoutX="173.0" layoutY="290.0" prefHeight="669.0" prefWidth="857.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <content>
-                                          <ImageView fitHeight="1000.0" fitWidth="2000.0" pickOnBounds="true" preserveRatio="true" />
+                                          <ImageView fitHeight="1000.0" fitWidth="2000.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/background.png" />
+                                             </image></ImageView>
                                        </content>
                                     </ScrollPane>
                                  </children>
@@ -37,12 +49,328 @@
                                       <tabs>
                                         <Tab text="Klasse">
                                           <content>
-                                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                                   <children>
+                                                      <ScrollPane layoutX="208.0" layoutY="57.0" prefHeight="343.0" prefWidth="828.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <content>
+                                                            <ImageView fitHeight="1500.0" fitWidth="2000.0" pickOnBounds="true" preserveRatio="true" />
+                                                         </content>
+                                                      </ScrollPane>
+                                                   </children></AnchorPane>
                                           </content>
                                         </Tab>
                                         <Tab text="Forschung">
                                           <content>
-                                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                                   <children>
+                                                      <ScrollPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <content>
+                                                            <GridPane prefWidth="1800.0">
+                                                               <columnConstraints>
+                                                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="10.0" />
+                                                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
+                                                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="20.0" prefWidth="20.0" />
+                                                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="12.0" prefWidth="100.0" />
+                                                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="12.0" prefWidth="100.0" />
+                                                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="12.0" prefWidth="100.0" />
+                                                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="12.0" prefWidth="100.0" />
+                                                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="12.0" prefWidth="100.0" />
+                                                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
+                                                               </columnConstraints>
+                                                               <rowConstraints>
+                                                                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints maxHeight="100.0" minHeight="80.0" vgrow="SOMETIMES" />
+                                                               </rowConstraints>
+                                                               <children>
+                                                                  <ImageView fitHeight="1000.0" fitWidth="2000.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.columnSpan="7" GridPane.halignment="LEFT">
+                                                                     <image>
+                                                                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/research/research_panel.png" />
+                                                                     </image></ImageView>
+                                                                  <Label text="Stufe" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                                     <styleClass>
+                                                                        <String fx:value="header" />
+                                                                        <String fx:value="resources" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label text="Aufstieg" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                                                     <styleClass>
+                                                                        <String fx:value="header" />
+                                                                        <String fx:value="resources" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label text="Resourcen" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                                                     <styleClass>
+                                                                        <String fx:value="header" />
+                                                                        <String fx:value="resources" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label text="Mögliche Stufe" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                                                     <styleClass>
+                                                                        <String fx:value="header" />
+                                                                        <String fx:value="resources" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label text="Nächste Stufe" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                                                                     <styleClass>
+                                                                        <String fx:value="header" />
+                                                                        <String fx:value="resources" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <GridPane GridPane.columnIndex="1" GridPane.columnSpan="7" GridPane.rowIndex="7">
+                                                                    <columnConstraints>
+                                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="150.0" />
+                                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="40.0" />
+                                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
+                                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="150.0" />
+                                                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="200.0" />
+                                                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
+                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                    </columnConstraints>
+                                                                    <rowConstraints>
+                                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                    </rowConstraints>
+                                                                     <children>
+                                                                        <Label text="Resourcen Hinzufügen" GridPane.rowSpan="3">
+                                                                           <styleClass>
+                                                                              <String fx:value="header" />
+                                                                              <String fx:value="resources" />
+                                                                           </styleClass>
+                                                                        </Label>
+                                                                        <Label text="C:" GridPane.columnIndex="1">
+                                                                           <styleClass>
+                                                                              <String fx:value="resources" />
+                                                                              <String fx:value="header_2" />
+                                                                           </styleClass>
+                                                                        </Label>
+                                                                        <Label text="Fe:" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                                           <styleClass>
+                                                                              <String fx:value="resources" />
+                                                                              <String fx:value="header_2" />
+                                                                           </styleClass>
+                                                                        </Label>
+                                                                        <Label text="Si:" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                                           <styleClass>
+                                                                              <String fx:value="resources" />
+                                                                              <String fx:value="header_2" />
+                                                                           </styleClass>
+                                                                        </Label>
+                                                                        <Spinner fx:id="spinnerResearchAddCarbon" editable="true" styleClass="resources" GridPane.columnIndex="2" />
+                                                                        <Spinner fx:id="spinnerResearchAddIron" editable="true" styleClass="resources" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                                        <Spinner fx:id="spinnerResearchAddSilicium" editable="true" styleClass="resources" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                                                        <Label text="Forschungsbereich" GridPane.columnIndex="3" GridPane.rowSpan="3">
+                                                                           <GridPane.margin>
+                                                                              <Insets left="25.0" />
+                                                                           </GridPane.margin>
+                                                                           <styleClass>
+                                                                              <String fx:value="resources" />
+                                                                              <String fx:value="header_2" />
+                                                                           </styleClass>
+                                                                        </Label>
+                                                                        <ComboBox fx:id="comboBoxResearchAddResourcesSelectArea" prefWidth="150.0" styleClass="resources" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowSpan="3" />
+                                                                        <Button fx:id="buttonResearchAddResources" mnemonicParsing="false" text="Hinzufügen" GridPane.columnIndex="5" GridPane.rowSpan="3">
+                                                                           <styleClass>
+                                                                              <String fx:value="resources" />
+                                                                              <String fx:value="add" />
+                                                                           </styleClass>
+                                                                        </Button>
+                                                                     </children>
+                                                                  </GridPane>
+                                                                  <Label fx:id="labelResearchStateMine" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="data_field" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelResearchStateEconomy" text="Label" GridPane.columnIndex="4" GridPane.rowIndex="2">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="data_field" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelResearchStateFtl" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="2">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="data_field" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelResearchStateResearch" text="Label" GridPane.columnIndex="6" GridPane.rowIndex="2">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="data_field" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelResearchStateMilitary" text="Label" GridPane.columnIndex="7" GridPane.rowIndex="2">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="data_field" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelResearchStateWeapon" text="Label" GridPane.columnIndex="8" GridPane.rowIndex="2">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="data_field" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Button fx:id="buttonResearchPromotionMines" mnemonicParsing="false" text="Aufstieg: Mienen" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="promotion" />
+                                                                     </styleClass>
+                                                                  </Button>
+                                                                  <Button fx:id="buttonResearchPromotionEconomy" mnemonicParsing="false" text="Aufstieg: Wirtschaft" GridPane.columnIndex="4" GridPane.rowIndex="3">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="promotion" />
+                                                                     </styleClass>
+                                                                  </Button>
+                                                                  <Button fx:id="buttonResearchPromotionFtl" mnemonicParsing="false" text="Aufstieg: FTL" GridPane.columnIndex="5" GridPane.rowIndex="3">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="promotion" />
+                                                                     </styleClass>
+                                                                  </Button>
+                                                                  <Button fx:id="buttonResearchPromotionResearch" mnemonicParsing="false" text="Aufstieg: Forschung" GridPane.columnIndex="6" GridPane.rowIndex="3">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="promotion" />
+                                                                     </styleClass>
+                                                                  </Button>
+                                                                  <Button fx:id="buttonResearchPromotionMilitary" mnemonicParsing="false" text="Aufstieg: Militär" GridPane.columnIndex="7" GridPane.rowIndex="3">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="promotion" />
+                                                                     </styleClass>
+                                                                  </Button>
+                                                                  <Button fx:id="buttonResearchPromotionWeapon" mnemonicParsing="false" text="Aufstieg: Die Waffe" GridPane.columnIndex="8" GridPane.rowIndex="3">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="promotion" />
+                                                                     </styleClass>
+                                                                  </Button>
+                                                                  <Label fx:id="labelResearchResourcesMines" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="4">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="data_field" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelResearchResourcesEconomy" text="Label" GridPane.columnIndex="4" GridPane.rowIndex="4">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="data_field" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelResearchResourcesFtl" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="4">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="data_field" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelResearchResourcesResearch" text="Label" GridPane.columnIndex="6" GridPane.rowIndex="4">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="data_field" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelResearchResourcesMilitary" text="Label" GridPane.columnIndex="7" GridPane.rowIndex="4">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="data_field" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelResearchResourcesWeapon" text="Label" GridPane.columnIndex="8" GridPane.rowIndex="4">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="data_field" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelResearchPossibleStateMines" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="5">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="data_field" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelResearchNextStateResourcesMines" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="6">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="data_field" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelResearchPossibleStateEconomy" text="Label" GridPane.columnIndex="4" GridPane.rowIndex="5">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="data_field" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelResearchNextStateResourcesEconomy" text="Label" GridPane.columnIndex="4" GridPane.rowIndex="6">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="data_field" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelResearchPossibleStateFtl" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="5">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="data_field" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelResearchNextStateResourcesFtl" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="6">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="data_field" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelResearchPossibleStateResearch" text="Label" GridPane.columnIndex="6" GridPane.rowIndex="5">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="data_field" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelResearchNextStateResourcesResearch" text="Label" GridPane.columnIndex="6" GridPane.rowIndex="6">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="data_field" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelResearchPossibleStateMilitary" text="Label" GridPane.columnIndex="7" GridPane.rowIndex="5">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="data_field" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelResearchNextStateResourcesMilitary" text="Label" GridPane.columnIndex="7" GridPane.rowIndex="6">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="data_field" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelResearchPossibleStateWeapon" text="Label" GridPane.columnIndex="8" GridPane.rowIndex="5">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="data_field" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelResearchNextStateResourcesWeapon" text="Label" GridPane.columnIndex="8" GridPane.rowIndex="6">
+                                                                     <styleClass>
+                                                                        <String fx:value="resources" />
+                                                                        <String fx:value="data_field" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                               </children>
+                                                               <opaqueInsets>
+                                                                  <Insets />
+                                                               </opaqueInsets>
+                                                            </GridPane>
+                                                         </content>
+                                                      </ScrollPane>
+                                                   </children></AnchorPane>
                                           </content>
                                         </Tab>
                                           <Tab text="Technologien">
