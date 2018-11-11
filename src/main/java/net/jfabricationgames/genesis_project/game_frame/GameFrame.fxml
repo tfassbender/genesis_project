@@ -30,7 +30,7 @@
    <children>
       <BorderPane layoutX="437.0" layoutY="239.0" prefHeight="800.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
-            <SplitPane dividerPositions="0.7195325542570952" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <SplitPane dividerPositions="0.1" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
               <items>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                      <children>
@@ -40,10 +40,15 @@
                                  <children>
                                     <ScrollPane layoutX="173.0" layoutY="290.0" prefHeight="669.0" prefWidth="857.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <content>
-                                          <ImageView fitHeight="1000.0" fitWidth="2000.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/background.png" />
-                                             </image></ImageView>
+                                          <StackPane>
+                                             <children>
+                                                <ImageView fitHeight="1000.0" fitWidth="2000.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/background.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </children>
+                                          </StackPane>
                                        </content>
                                     </ScrollPane>
                                  </children>
@@ -58,161 +63,173 @@
                                                    <children>
                                                       <ScrollPane layoutX="208.0" layoutY="57.0" prefHeight="343.0" prefWidth="828.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                          <content>
-                                                            <StackPane prefHeight="150.0" prefWidth="200.0">
+                                                            <GridPane>
+                                                               <columnConstraints>
+                                                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="20.0" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                                               </columnConstraints>
+                                                               <rowConstraints>
+                                                                  <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                                               </rowConstraints>
                                                                <children>
-                                                                  <ImageView fitHeight="700.0" fitWidth="2000.0" pickOnBounds="true" preserveRatio="true">
-                                                                     <image>
-                                                                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/classes/class_boards/class_board_red_1.png" />
-                                                                     </image>
-                                                                  </ImageView>
-                                                                  <GridPane>
-                                                                    <columnConstraints>
-                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="3.0" prefWidth="100.0" />
-                                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="8.5" prefWidth="100.0" />
-                                                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="4.0" prefWidth="100.0" />
-                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="2.0" prefWidth="100.0" />
-                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="8.6" prefWidth="100.0" />
-                                                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.0" prefWidth="100.0" />
-                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="11.7" prefWidth="100.0" />
-                                                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="4.0" prefWidth="100.0" />
-                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="2.0" prefWidth="100.0" />
-                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="8.0" prefWidth="100.0" />
-                                                                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="6.0" prefWidth="100.0" />
-                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
-                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="18.0" prefWidth="100.0" />
-                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                                    </columnConstraints>
-                                                                    <rowConstraints>
-                                                                        <RowConstraints minHeight="10.0" percentHeight="11.3" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                      <RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                      <RowConstraints minHeight="10.0" percentHeight="3.5" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="10.0" percentHeight="6.5" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="10.0" percentHeight="3.9" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="10.0" percentHeight="6.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                      <RowConstraints minHeight="10.0" percentHeight="3.9" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="10.0" percentHeight="6.5" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="10.0" percentHeight="9.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="10.0" percentHeight="10.5" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="10.0" percentHeight="6.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="10.0" percentHeight="9.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="10.0" percentHeight="10.5" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                    </rowConstraints>
+                                                                  <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                                      <children>
-                                                                        <Label text="Label" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="1">
-                                                                           <styleClass>
-                                                                              <String fx:value="game_class" />
-                                                                              <String fx:value="data" />
-                                                                           </styleClass>
-                                                                        </Label>
-                                                                        <Label text="Label" GridPane.columnIndex="10" GridPane.rowIndex="1">
-                                                                           <styleClass>
-                                                                              <String fx:value="game_class" />
-                                                                              <String fx:value="data" />
-                                                                           </styleClass>
-                                                                        </Label>
-                                                                        <Label text="Label" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="3">
-                                                                           <styleClass>
-                                                                              <String fx:value="game_class" />
-                                                                              <String fx:value="data" />
-                                                                           </styleClass>
-                                                                        </Label>
-                                                                        <Label text="Label" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="5">
-                                                                           <styleClass>
-                                                                              <String fx:value="game_class" />
-                                                                              <String fx:value="data" />
-                                                                           </styleClass>
-                                                                        </Label>
-                                                                        <Label text="Label" GridPane.columnIndex="10" GridPane.rowIndex="3">
-                                                                           <styleClass>
-                                                                              <String fx:value="game_class" />
-                                                                              <String fx:value="data" />
-                                                                           </styleClass>
-                                                                        </Label>
-                                                                        <Label text="Label" GridPane.columnIndex="10" GridPane.rowIndex="5">
-                                                                           <styleClass>
-                                                                              <String fx:value="game_class" />
-                                                                              <String fx:value="data" />
-                                                                           </styleClass>
-                                                                        </Label>
-                                                                        <Label text="Label" GridPane.columnIndex="10" GridPane.rowIndex="7">
-                                                                           <styleClass>
-                                                                              <String fx:value="game_class" />
-                                                                              <String fx:value="data" />
-                                                                           </styleClass>
-                                                                        </Label>
-                                                                        <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="8">
-                                                                           <styleClass>
-                                                                              <String fx:value="game_class" />
-                                                                              <String fx:value="data" />
-                                                                           </styleClass>
-                                                                        </Label>
-                                                                        <Label text="Label" GridPane.columnIndex="5" GridPane.rowIndex="8">
-                                                                           <styleClass>
-                                                                              <String fx:value="game_class" />
-                                                                              <String fx:value="data" />
-                                                                           </styleClass>
-                                                                        </Label>
-                                                                        <Label text="Label" GridPane.columnIndex="7" GridPane.rowIndex="8">
-                                                                           <styleClass>
-                                                                              <String fx:value="game_class" />
-                                                                              <String fx:value="data" />
-                                                                           </styleClass>
-                                                                        </Label>
-                                                                        <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="10">
-                                                                           <styleClass>
-                                                                              <String fx:value="game_class" />
-                                                                              <String fx:value="data" />
-                                                                           </styleClass>
-                                                                        </Label>
-                                                                        <Label text="Label" GridPane.columnIndex="5" GridPane.rowIndex="10">
-                                                                           <styleClass>
-                                                                              <String fx:value="game_class" />
-                                                                              <String fx:value="data" />
-                                                                           </styleClass>
-                                                                        </Label>
-                                                                        <Label text="Label" GridPane.columnIndex="7" GridPane.rowIndex="10">
-                                                                           <styleClass>
-                                                                              <String fx:value="game_class" />
-                                                                              <String fx:value="data" />
-                                                                           </styleClass>
-                                                                        </Label>
-                                                                        <Label text="Label" GridPane.columnIndex="10" GridPane.rowIndex="10">
-                                                                           <styleClass>
-                                                                              <String fx:value="game_class" />
-                                                                              <String fx:value="data" />
-                                                                           </styleClass>
-                                                                        </Label>
-                                                                        <Label text="Label" GridPane.columnIndex="5" GridPane.rowIndex="12">
-                                                                           <styleClass>
-                                                                              <String fx:value="game_class" />
-                                                                              <String fx:value="data" />
-                                                                           </styleClass>
-                                                                        </Label>
-                                                                        <Label text="Label" GridPane.columnIndex="10" GridPane.rowIndex="12">
-                                                                           <styleClass>
-                                                                              <String fx:value="game_class" />
-                                                                              <String fx:value="data" />
-                                                                           </styleClass>
-                                                                        </Label>
-                                                                        <Pane fx:id="panelGameClassGovermentEffectCover" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3" GridPane.rowSpan="4">
-                                                                           <styleClass>
-                                                                              <String fx:value="game_class" />
-                                                                              <String fx:value="cover" />
-                                                                              <String fx:value="effect" />
-                                                                           </styleClass>
-                                                                        </Pane>
-                                                                        <Pane fx:id="panelGameClassClassEffectCover" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="12" GridPane.rowIndex="11" GridPane.rowSpan="2">
-                                                                           <styleClass>
-                                                                              <String fx:value="game_class" />
-                                                                              <String fx:value="cover" />
-                                                                              <String fx:value="effect" />
-                                                                           </styleClass>
-                                                                        </Pane>
+                                                                        <ImageView fitHeight="700.0" fitWidth="2000.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/classes/class_boards/class_board_blue_1.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                        <GridPane>
+                                                                          <columnConstraints>
+                                                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="3.0" prefWidth="100.0" />
+                                                                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="8.5" prefWidth="100.0" />
+                                                                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="4.0" prefWidth="100.0" />
+                                                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="2.0" prefWidth="100.0" />
+                                                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="8.6" prefWidth="100.0" />
+                                                                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.0" prefWidth="100.0" />
+                                                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="11.7" prefWidth="100.0" />
+                                                                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="4.0" prefWidth="100.0" />
+                                                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="2.0" prefWidth="100.0" />
+                                                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="8.0" prefWidth="100.0" />
+                                                                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="6.0" prefWidth="100.0" />
+                                                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
+                                                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="18.0" prefWidth="100.0" />
+                                                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                          </columnConstraints>
+                                                                          <rowConstraints>
+                                                                              <RowConstraints minHeight="10.0" percentHeight="11.3" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                            <RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                            <RowConstraints minHeight="10.0" percentHeight="3.5" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                              <RowConstraints minHeight="10.0" percentHeight="6.5" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                              <RowConstraints minHeight="10.0" percentHeight="3.9" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                              <RowConstraints minHeight="10.0" percentHeight="6.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                            <RowConstraints minHeight="10.0" percentHeight="3.9" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                              <RowConstraints minHeight="10.0" percentHeight="6.5" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                              <RowConstraints minHeight="10.0" percentHeight="9.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                              <RowConstraints minHeight="10.0" percentHeight="10.5" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                              <RowConstraints minHeight="10.0" percentHeight="6.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                              <RowConstraints minHeight="10.0" percentHeight="9.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                              <RowConstraints minHeight="10.0" percentHeight="10.5" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                          </rowConstraints>
+                                                                           <children>
+                                                                              <Label text="Label" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                                                 <styleClass>
+                                                                                    <String fx:value="game_class" />
+                                                                                    <String fx:value="data" />
+                                                                                 </styleClass>
+                                                                              </Label>
+                                                                              <Label text="Label" GridPane.columnIndex="10" GridPane.rowIndex="1">
+                                                                                 <styleClass>
+                                                                                    <String fx:value="game_class" />
+                                                                                    <String fx:value="data" />
+                                                                                 </styleClass>
+                                                                              </Label>
+                                                                              <Label text="Label" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                                                                                 <styleClass>
+                                                                                    <String fx:value="game_class" />
+                                                                                    <String fx:value="data" />
+                                                                                 </styleClass>
+                                                                              </Label>
+                                                                              <Label text="Label" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="5">
+                                                                                 <styleClass>
+                                                                                    <String fx:value="game_class" />
+                                                                                    <String fx:value="data" />
+                                                                                 </styleClass>
+                                                                              </Label>
+                                                                              <Label text="Label" GridPane.columnIndex="10" GridPane.rowIndex="3">
+                                                                                 <styleClass>
+                                                                                    <String fx:value="game_class" />
+                                                                                    <String fx:value="data" />
+                                                                                 </styleClass>
+                                                                              </Label>
+                                                                              <Label text="Label" GridPane.columnIndex="10" GridPane.rowIndex="5">
+                                                                                 <styleClass>
+                                                                                    <String fx:value="game_class" />
+                                                                                    <String fx:value="data" />
+                                                                                 </styleClass>
+                                                                              </Label>
+                                                                              <Label text="Label" GridPane.columnIndex="10" GridPane.rowIndex="7">
+                                                                                 <styleClass>
+                                                                                    <String fx:value="game_class" />
+                                                                                    <String fx:value="data" />
+                                                                                 </styleClass>
+                                                                              </Label>
+                                                                              <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="8">
+                                                                                 <styleClass>
+                                                                                    <String fx:value="game_class" />
+                                                                                    <String fx:value="data" />
+                                                                                 </styleClass>
+                                                                              </Label>
+                                                                              <Label text="Label" GridPane.columnIndex="5" GridPane.rowIndex="8">
+                                                                                 <styleClass>
+                                                                                    <String fx:value="game_class" />
+                                                                                    <String fx:value="data" />
+                                                                                 </styleClass>
+                                                                              </Label>
+                                                                              <Label text="Label" GridPane.columnIndex="7" GridPane.rowIndex="8">
+                                                                                 <styleClass>
+                                                                                    <String fx:value="game_class" />
+                                                                                    <String fx:value="data" />
+                                                                                 </styleClass>
+                                                                              </Label>
+                                                                              <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="10">
+                                                                                 <styleClass>
+                                                                                    <String fx:value="game_class" />
+                                                                                    <String fx:value="data" />
+                                                                                 </styleClass>
+                                                                              </Label>
+                                                                              <Label text="Label" GridPane.columnIndex="5" GridPane.rowIndex="10">
+                                                                                 <styleClass>
+                                                                                    <String fx:value="game_class" />
+                                                                                    <String fx:value="data" />
+                                                                                 </styleClass>
+                                                                              </Label>
+                                                                              <Label text="Label" GridPane.columnIndex="7" GridPane.rowIndex="10">
+                                                                                 <styleClass>
+                                                                                    <String fx:value="game_class" />
+                                                                                    <String fx:value="data" />
+                                                                                 </styleClass>
+                                                                              </Label>
+                                                                              <Label text="Label" GridPane.columnIndex="10" GridPane.rowIndex="10">
+                                                                                 <styleClass>
+                                                                                    <String fx:value="game_class" />
+                                                                                    <String fx:value="data" />
+                                                                                 </styleClass>
+                                                                              </Label>
+                                                                              <Label text="Label" GridPane.columnIndex="5" GridPane.rowIndex="12">
+                                                                                 <styleClass>
+                                                                                    <String fx:value="game_class" />
+                                                                                    <String fx:value="data" />
+                                                                                 </styleClass>
+                                                                              </Label>
+                                                                              <Label text="Label" GridPane.columnIndex="10" GridPane.rowIndex="12">
+                                                                                 <styleClass>
+                                                                                    <String fx:value="game_class" />
+                                                                                    <String fx:value="data" />
+                                                                                 </styleClass>
+                                                                              </Label>
+                                                                              <Pane fx:id="panelGameClassGovermentEffectCover" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3" GridPane.rowSpan="4">
+                                                                                 <styleClass>
+                                                                                    <String fx:value="game_class" />
+                                                                                    <String fx:value="cover" />
+                                                                                    <String fx:value="effect" />
+                                                                                 </styleClass>
+                                                                              </Pane>
+                                                                              <Pane fx:id="panelGameClassClassEffectCover" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="12" GridPane.rowIndex="11" GridPane.rowSpan="2">
+                                                                                 <styleClass>
+                                                                                    <String fx:value="game_class" />
+                                                                                    <String fx:value="cover" />
+                                                                                    <String fx:value="effect" />
+                                                                                 </styleClass>
+                                                                              </Pane>
+                                                                           </children>
+                                                                        </GridPane>
                                                                      </children>
-                                                                  </GridPane>
+                                                                  </StackPane>
                                                                </children>
-                                                            </StackPane>
+                                                            </GridPane>
                                                          </content>
                                                       </ScrollPane>
                                                    </children></AnchorPane>
@@ -237,6 +254,7 @@
                                                                   <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
                                                                </columnConstraints>
                                                                <rowConstraints>
+                                                                  <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
                                                                   <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                                                                   <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -247,7 +265,7 @@
                                                                   <RowConstraints maxHeight="100.0" minHeight="80.0" vgrow="SOMETIMES" />
                                                                </rowConstraints>
                                                                <children>
-                                                                  <StackPane GridPane.columnIndex="2" GridPane.columnSpan="7" GridPane.halignment="LEFT">
+                                                                  <StackPane GridPane.columnIndex="2" GridPane.columnSpan="7" GridPane.halignment="LEFT" GridPane.rowIndex="1">
                                                                      <children>
                                                                         <ImageView fitHeight="1000.0" fitWidth="2000.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
@@ -590,37 +608,37 @@
                                                                         </GridPane>
                                                                      </children>
                                                                   </StackPane>
-                                                                  <Label text="Stufe" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                                  <Label text="Stufe" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                                                      <styleClass>
                                                                         <String fx:value="header" />
                                                                         <String fx:value="resources" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Label text="Aufstieg" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                                                  <Label text="Aufstieg" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                                                      <styleClass>
                                                                         <String fx:value="header" />
                                                                         <String fx:value="resources" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Label text="Resourcen" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                                                  <Label text="Resourcen" GridPane.columnIndex="1" GridPane.rowIndex="5">
                                                                      <styleClass>
                                                                         <String fx:value="header" />
                                                                         <String fx:value="resources" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Label text="Mögliche Stufe" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                                                  <Label text="Mögliche Stufe" GridPane.columnIndex="1" GridPane.rowIndex="6">
                                                                      <styleClass>
                                                                         <String fx:value="header" />
                                                                         <String fx:value="resources" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Label text="Nächste Stufe" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                                                                  <Label text="Nächste Stufe" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="7">
                                                                      <styleClass>
                                                                         <String fx:value="header" />
                                                                         <String fx:value="resources" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <GridPane GridPane.columnIndex="1" GridPane.columnSpan="8" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER">
+                                                                  <GridPane GridPane.columnIndex="1" GridPane.columnSpan="8" GridPane.halignment="CENTER" GridPane.rowIndex="8" GridPane.valignment="CENTER">
                                                                     <columnConstraints>
                                                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" percentWidth="25.0" prefWidth="150.0" />
                                                                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="150.0" />
@@ -673,7 +691,7 @@
                                                                               <String fx:value="header_2" />
                                                                            </styleClass>
                                                                         </Label>
-                                                                        <ComboBox fx:id="comboBoxResearchAddResourcesSelectArea" prefWidth="150.0" styleClass="resources" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowSpan="3" />
+                                                                        <ComboBox fx:id="comboBoxResearchAddResourcesSelectArea" prefWidth="150.0" styleClass="resources" visibleRowCount="6" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowSpan="3" />
                                                                         <Button fx:id="buttonResearchAddResources" mnemonicParsing="false" text="Hinzufügen" GridPane.columnIndex="6" GridPane.rowSpan="3">
                                                                            <styleClass>
                                                                               <String fx:value="resources" />
@@ -683,187 +701,187 @@
                                                                         </Button>
                                                                      </children>
                                                                   </GridPane>
-                                                                  <Label fx:id="labelResearchStateMine" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                                                                  <Label fx:id="labelResearchStateMine" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="3">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="data_field" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Label fx:id="labelResearchStateEconomy" text="Label" GridPane.columnIndex="4" GridPane.rowIndex="2">
+                                                                  <Label fx:id="labelResearchStateEconomy" text="Label" GridPane.columnIndex="4" GridPane.rowIndex="3">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="data_field" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Label fx:id="labelResearchStateFtl" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="2">
+                                                                  <Label fx:id="labelResearchStateFtl" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="3">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="data_field" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Label fx:id="labelResearchStateResearch" text="Label" GridPane.columnIndex="6" GridPane.rowIndex="2">
+                                                                  <Label fx:id="labelResearchStateResearch" text="Label" GridPane.columnIndex="6" GridPane.rowIndex="3">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="data_field" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Label fx:id="labelResearchStateMilitary" text="Label" GridPane.columnIndex="7" GridPane.rowIndex="2">
+                                                                  <Label fx:id="labelResearchStateMilitary" text="Label" GridPane.columnIndex="7" GridPane.rowIndex="3">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="data_field" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Label fx:id="labelResearchStateWeapon" text="Label" GridPane.columnIndex="8" GridPane.rowIndex="2">
+                                                                  <Label fx:id="labelResearchStateWeapon" text="Label" GridPane.columnIndex="8" GridPane.rowIndex="3">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="data_field" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Button fx:id="buttonResearchPromotionMines" mnemonicParsing="false" text="Aufstieg: Mienen" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                                                                  <Button fx:id="buttonResearchPromotionMines" mnemonicParsing="false" text="Aufstieg: Mienen" GridPane.columnIndex="3" GridPane.rowIndex="4">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="promotion" />
                                                                         <String fx:value="purchase" />
                                                                      </styleClass>
                                                                   </Button>
-                                                                  <Button fx:id="buttonResearchPromotionEconomy" mnemonicParsing="false" text="Aufstieg: Wirtschaft" GridPane.columnIndex="4" GridPane.rowIndex="3">
+                                                                  <Button fx:id="buttonResearchPromotionEconomy" mnemonicParsing="false" text="Aufstieg: Wirtschaft" GridPane.columnIndex="4" GridPane.rowIndex="4">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="promotion" />
                                                                         <String fx:value="purchase" />
                                                                      </styleClass>
                                                                   </Button>
-                                                                  <Button fx:id="buttonResearchPromotionFtl" mnemonicParsing="false" text="Aufstieg: FTL" GridPane.columnIndex="5" GridPane.rowIndex="3">
+                                                                  <Button fx:id="buttonResearchPromotionFtl" mnemonicParsing="false" text="Aufstieg: FTL" GridPane.columnIndex="5" GridPane.rowIndex="4">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="promotion" />
                                                                         <String fx:value="purchase" />
                                                                      </styleClass>
                                                                   </Button>
-                                                                  <Button fx:id="buttonResearchPromotionResearch" mnemonicParsing="false" text="Aufstieg: Forschung" GridPane.columnIndex="6" GridPane.rowIndex="3">
+                                                                  <Button fx:id="buttonResearchPromotionResearch" mnemonicParsing="false" text="Aufstieg: Forschung" GridPane.columnIndex="6" GridPane.rowIndex="4">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="promotion" />
                                                                         <String fx:value="purchase" />
                                                                      </styleClass>
                                                                   </Button>
-                                                                  <Button fx:id="buttonResearchPromotionMilitary" mnemonicParsing="false" text="Aufstieg: Militär" GridPane.columnIndex="7" GridPane.rowIndex="3">
+                                                                  <Button fx:id="buttonResearchPromotionMilitary" mnemonicParsing="false" text="Aufstieg: Militär" GridPane.columnIndex="7" GridPane.rowIndex="4">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="promotion" />
                                                                         <String fx:value="purchase" />
                                                                      </styleClass>
                                                                   </Button>
-                                                                  <Button fx:id="buttonResearchPromotionWeapon" mnemonicParsing="false" text="Aufstieg: Die Waffe" GridPane.columnIndex="8" GridPane.rowIndex="3">
+                                                                  <Button fx:id="buttonResearchPromotionWeapon" mnemonicParsing="false" text="Aufstieg: Die Waffe" GridPane.columnIndex="8" GridPane.rowIndex="4">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="promotion" />
                                                                         <String fx:value="purchase" />
                                                                      </styleClass>
                                                                   </Button>
-                                                                  <Label fx:id="labelResearchResourcesMines" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="4">
+                                                                  <Label fx:id="labelResearchResourcesMines" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="5">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="data_field" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Label fx:id="labelResearchResourcesEconomy" text="Label" GridPane.columnIndex="4" GridPane.rowIndex="4">
+                                                                  <Label fx:id="labelResearchResourcesEconomy" text="Label" GridPane.columnIndex="4" GridPane.rowIndex="5">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="data_field" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Label fx:id="labelResearchResourcesFtl" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="4">
+                                                                  <Label fx:id="labelResearchResourcesFtl" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="5">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="data_field" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Label fx:id="labelResearchResourcesResearch" text="Label" GridPane.columnIndex="6" GridPane.rowIndex="4">
+                                                                  <Label fx:id="labelResearchResourcesResearch" text="Label" GridPane.columnIndex="6" GridPane.rowIndex="5">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="data_field" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Label fx:id="labelResearchResourcesMilitary" text="Label" GridPane.columnIndex="7" GridPane.rowIndex="4">
+                                                                  <Label fx:id="labelResearchResourcesMilitary" text="Label" GridPane.columnIndex="7" GridPane.rowIndex="5">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="data_field" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Label fx:id="labelResearchResourcesWeapon" text="Label" GridPane.columnIndex="8" GridPane.rowIndex="4">
+                                                                  <Label fx:id="labelResearchResourcesWeapon" text="Label" GridPane.columnIndex="8" GridPane.rowIndex="5">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="data_field" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Label fx:id="labelResearchPossibleStateMines" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="5">
+                                                                  <Label fx:id="labelResearchPossibleStateMines" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="6">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="data_field" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Label fx:id="labelResearchNextStateResourcesMines" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="6">
+                                                                  <Label fx:id="labelResearchNextStateResourcesMines" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="7">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="data_field" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Label fx:id="labelResearchPossibleStateEconomy" text="Label" GridPane.columnIndex="4" GridPane.rowIndex="5">
+                                                                  <Label fx:id="labelResearchPossibleStateEconomy" text="Label" GridPane.columnIndex="4" GridPane.rowIndex="6">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="data_field" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Label fx:id="labelResearchNextStateResourcesEconomy" text="Label" GridPane.columnIndex="4" GridPane.rowIndex="6">
+                                                                  <Label fx:id="labelResearchNextStateResourcesEconomy" text="Label" GridPane.columnIndex="4" GridPane.rowIndex="7">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="data_field" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Label fx:id="labelResearchPossibleStateFtl" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="5">
+                                                                  <Label fx:id="labelResearchPossibleStateFtl" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="6">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="data_field" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Label fx:id="labelResearchNextStateResourcesFtl" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="6">
+                                                                  <Label fx:id="labelResearchNextStateResourcesFtl" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="7">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="data_field" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Label fx:id="labelResearchPossibleStateResearch" text="Label" GridPane.columnIndex="6" GridPane.rowIndex="5">
+                                                                  <Label fx:id="labelResearchPossibleStateResearch" text="Label" GridPane.columnIndex="6" GridPane.rowIndex="6">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="data_field" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Label fx:id="labelResearchNextStateResourcesResearch" text="Label" GridPane.columnIndex="6" GridPane.rowIndex="6">
+                                                                  <Label fx:id="labelResearchNextStateResourcesResearch" text="Label" GridPane.columnIndex="6" GridPane.rowIndex="7">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="data_field" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Label fx:id="labelResearchPossibleStateMilitary" text="Label" GridPane.columnIndex="7" GridPane.rowIndex="5">
+                                                                  <Label fx:id="labelResearchPossibleStateMilitary" text="Label" GridPane.columnIndex="7" GridPane.rowIndex="6">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="data_field" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Label fx:id="labelResearchNextStateResourcesMilitary" text="Label" GridPane.columnIndex="7" GridPane.rowIndex="6">
+                                                                  <Label fx:id="labelResearchNextStateResourcesMilitary" text="Label" GridPane.columnIndex="7" GridPane.rowIndex="7">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="data_field" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Label fx:id="labelResearchPossibleStateWeapon" text="Label" GridPane.columnIndex="8" GridPane.rowIndex="5">
+                                                                  <Label fx:id="labelResearchPossibleStateWeapon" text="Label" GridPane.columnIndex="8" GridPane.rowIndex="6">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="data_field" />
                                                                      </styleClass>
                                                                   </Label>
-                                                                  <Label fx:id="labelResearchNextStateResourcesWeapon" text="Label" GridPane.columnIndex="8" GridPane.rowIndex="6">
+                                                                  <Label fx:id="labelResearchNextStateResourcesWeapon" text="Label" GridPane.columnIndex="8" GridPane.rowIndex="7">
                                                                      <styleClass>
                                                                         <String fx:value="resources" />
                                                                         <String fx:value="data_field" />
@@ -1118,7 +1136,155 @@
                                           </Tab>
                                           <Tab text="Runden">
                                             <content>
-                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                                   <children>
+                                                      <ScrollPane layoutX="130.0" layoutY="130.0" prefHeight="1574.0" prefWidth="2123.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <content>
+                                                            <GridPane>
+                                                              <columnConstraints>
+                                                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="20.0" />
+                                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
+                                                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="30.0" />
+                                                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="30.0" />
+                                                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="30.0" />
+                                                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="30.0" />
+                                                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="30.0" />
+                                                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="30.0" />
+                                                              </columnConstraints>
+                                                              <rowConstraints>
+                                                                <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                              </rowConstraints>
+                                                               <children>
+                                                                  <ImageView fx:id="imageTurn1" fitHeight="250.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                                                     <image>
+                                                                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/turn_goals/turn_goal_turn_over.png" />
+                                                                     </image>
+                                                                  </ImageView>
+                                                                  <ImageView fx:id="imageTurn2" fitHeight="250.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="3">
+                                                                     <image>
+                                                                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/turn_goals/turn_goal_turn_over.png" />
+                                                                     </image>
+                                                                  </ImageView>
+                                                                  <ImageView fx:id="imageTurn3" fitHeight="250.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="6" GridPane.rowIndex="3">
+                                                                     <image>
+                                                                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/turn_goals/turn_goal_turn_over.png" />
+                                                                     </image>
+                                                                  </ImageView>
+                                                                  <ImageView fx:id="imageTurn4" fitHeight="250.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8" GridPane.rowIndex="3">
+                                                                     <image>
+                                                                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/turn_goals/turn_goal_turn_over.png" />
+                                                                     </image>
+                                                                  </ImageView>
+                                                                  <ImageView fx:id="imageTurn5" fitHeight="250.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="10" GridPane.rowIndex="3">
+                                                                     <image>
+                                                                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/turn_goals/turn_goal_turn_over.png" />
+                                                                     </image>
+                                                                  </ImageView>
+                                                                  <ImageView fx:id="imageTurn6" fitHeight="250.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="12" GridPane.rowIndex="3">
+                                                                     <image>
+                                                                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/turn_goals/turn_goal_turn_over.png" />
+                                                                     </image>
+                                                                  </ImageView>
+                                                                  <Label text="Name" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                                                     <styleClass>
+                                                                        <String fx:value="turn" />
+                                                                        <String fx:value="header" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelTurnName1" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                                                                     <styleClass>
+                                                                        <String fx:value="turn" />
+                                                                        <String fx:value="data" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelTurnName2" text="Label" GridPane.columnIndex="4" GridPane.rowIndex="5">
+                                                                     <styleClass>
+                                                                        <String fx:value="turn" />
+                                                                        <String fx:value="data" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelTurnName3" text="Label" GridPane.columnIndex="6" GridPane.rowIndex="5">
+                                                                     <styleClass>
+                                                                        <String fx:value="turn" />
+                                                                        <String fx:value="data" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelTurnName4" text="Label" GridPane.columnIndex="8" GridPane.rowIndex="5">
+                                                                     <styleClass>
+                                                                        <String fx:value="turn" />
+                                                                        <String fx:value="data" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelTurnName5" text="Label" GridPane.columnIndex="10" GridPane.rowIndex="5">
+                                                                     <styleClass>
+                                                                        <String fx:value="turn" />
+                                                                        <String fx:value="data" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label fx:id="labelTurnName6" text="Label" GridPane.columnIndex="12" GridPane.rowIndex="5">
+                                                                     <styleClass>
+                                                                        <String fx:value="turn" />
+                                                                        <String fx:value="data" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label text="1" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                                                     <styleClass>
+                                                                        <String fx:value="turn" />
+                                                                        <String fx:value="turn_count" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label text="2" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                                                                     <styleClass>
+                                                                        <String fx:value="turn" />
+                                                                        <String fx:value="turn_count" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label text="3" GridPane.columnIndex="6" GridPane.rowIndex="1">
+                                                                     <styleClass>
+                                                                        <String fx:value="turn" />
+                                                                        <String fx:value="turn_count" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label text="4" GridPane.columnIndex="8" GridPane.rowIndex="1">
+                                                                     <styleClass>
+                                                                        <String fx:value="turn" />
+                                                                        <String fx:value="turn_count" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label text="5" GridPane.columnIndex="10" GridPane.rowIndex="1">
+                                                                     <styleClass>
+                                                                        <String fx:value="turn" />
+                                                                        <String fx:value="turn_count" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label text="6" GridPane.columnIndex="12" GridPane.rowIndex="1">
+                                                                     <styleClass>
+                                                                        <String fx:value="turn" />
+                                                                        <String fx:value="turn_count" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                                  <Label text="Runde" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                                     <styleClass>
+                                                                        <String fx:value="turn" />
+                                                                        <String fx:value="header" />
+                                                                     </styleClass>
+                                                                  </Label>
+                                                               </children>
+                                                            </GridPane>
+                                                         </content>
+                                                      </ScrollPane>
+                                                   </children></AnchorPane>
                                             </content>
                                           </Tab>
                                       </tabs>
