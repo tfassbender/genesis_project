@@ -1,0 +1,678 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.1">
+   <children>
+      <ScrollPane layoutX="10.0" layoutY="10.0" prefHeight="1302.0" prefWidth="1812.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <content>
+            <GridPane prefWidth="1800.0">
+               <columnConstraints>
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="10.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="20.0" prefWidth="20.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="12.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="12.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="12.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="12.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="12.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="100.0" minHeight="80.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <StackPane GridPane.columnIndex="2" GridPane.columnSpan="7" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+                     <children>
+                        <ImageView fitHeight="1000.0" fitWidth="2000.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/research/research_panel.png" />
+                           </image>
+                        </ImageView>
+                        <GridPane>
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="2.5" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="13.2" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="13.3" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="13.4" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="13.4" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="13.4" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="1.8" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="13.2" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="13.3" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" percentHeight="5.5" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" percentHeight="13.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" percentHeight="13.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" percentHeight="13.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" percentHeight="13.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" percentHeight="13.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" percentHeight="13.2" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" percentHeight="13.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <GridPane GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="7">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="26.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="24.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="26.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="24.0" prefWidth="100.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" percentHeight="7.5" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" percentHeight="14.5" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" percentHeight="14.2" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" percentHeight="14.2" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" percentHeight="14.3" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" percentHeight="14.3" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" percentHeight="14.5" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <Pane fx:id="panelResearchCoverWeapon5" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                       <styleClass>
+                                          <String fx:value="research" />
+                                          <String fx:value="cover" />
+                                          <String fx:value="weapon" />
+                                       </styleClass>
+                                    </Pane>
+                                    <Pane fx:id="panelResearchCoverWeapon4" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                       <styleClass>
+                                          <String fx:value="research" />
+                                          <String fx:value="cover" />
+                                          <String fx:value="weapon" />
+                                       </styleClass>
+                                    </Pane>
+                                    <Pane fx:id="panelResearchCoverWeapon3" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                                       <styleClass>
+                                          <String fx:value="research" />
+                                          <String fx:value="cover" />
+                                          <String fx:value="weapon" />
+                                       </styleClass>
+                                    </Pane>
+                                    <Pane fx:id="panelResearchCoverWeapon2" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="4">
+                                       <styleClass>
+                                          <String fx:value="research" />
+                                          <String fx:value="cover" />
+                                          <String fx:value="weapon" />
+                                       </styleClass>
+                                    </Pane>
+                                    <Pane fx:id="panelResearchCoverWeapon1" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="5">
+                                       <styleClass>
+                                          <String fx:value="research" />
+                                          <String fx:value="cover" />
+                                          <String fx:value="weapon" />
+                                       </styleClass>
+                                    </Pane>
+                                    <Pane fx:id="panelResearchCoverWeapon10" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                       <styleClass>
+                                          <String fx:value="research" />
+                                          <String fx:value="cover" />
+                                          <String fx:value="weapon" />
+                                       </styleClass>
+                                    </Pane>
+                                    <Pane fx:id="panelResearchCoverWeapon9" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                       <styleClass>
+                                          <String fx:value="research" />
+                                          <String fx:value="cover" />
+                                          <String fx:value="weapon" />
+                                       </styleClass>
+                                    </Pane>
+                                    <Pane fx:id="panelResearchCoverWeapon8" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                                       <styleClass>
+                                          <String fx:value="research" />
+                                          <String fx:value="cover" />
+                                          <String fx:value="weapon" />
+                                       </styleClass>
+                                    </Pane>
+                                    <Pane fx:id="panelResearchCoverWeapon7" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4">
+                                       <styleClass>
+                                          <String fx:value="research" />
+                                          <String fx:value="cover" />
+                                          <String fx:value="weapon" />
+                                       </styleClass>
+                                    </Pane>
+                                    <Pane fx:id="panelResearchCoverWeapon6" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="5">
+                                       <styleClass>
+                                          <String fx:value="research" />
+                                          <String fx:value="cover" />
+                                          <String fx:value="weapon" />
+                                       </styleClass>
+                                    </Pane>
+                                    <Pane fx:id="panelResearchCoverWeapon0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
+                                       <styleClass>
+                                          <String fx:value="research" />
+                                          <String fx:value="cover" />
+                                          <String fx:value="weapon" />
+                                       </styleClass>
+                                    </Pane>
+                                 </children>
+                              </GridPane>
+                              <Pane fx:id="panelResearchCoverMines6" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverEconomy6" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverFtl6" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverResearch6" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverMilitary6" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="1">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverMines5" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverEconomy5" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverFtl5" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverResearch5" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="2">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverMilitary5" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="2">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverMines4" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverEconomy4" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverFtl4" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverResearch4" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="3">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverMilitary4" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="3">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverMines3" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverEconomy3" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverFtl3" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="4">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverResearch3" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="4">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverMilitary3" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="4">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverMines2" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverEconomy2" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverFtl2" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="5">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverResearch2" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="5">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverMilitary2" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="5">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverMines1" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverEconomy1" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="6">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverFtl1" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="6">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverResearch1" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="6">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverMilitary1" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="6">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverMines0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverEconomy0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="7">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverFtl0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="7">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverResearch0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="7">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                              <Pane fx:id="panelResearchCoverMilitary0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="7">
+                                 <styleClass>
+                                    <String fx:value="research" />
+                                    <String fx:value="cover" />
+                                 </styleClass>
+                              </Pane>
+                           </children>
+                        </GridPane>
+                     </children>
+                  </StackPane>
+                  <Label text="Stufe" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                     <styleClass>
+                        <String fx:value="header" />
+                        <String fx:value="resources" />
+                     </styleClass>
+                  </Label>
+                  <Label text="Aufstieg" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                     <styleClass>
+                        <String fx:value="header" />
+                        <String fx:value="resources" />
+                     </styleClass>
+                  </Label>
+                  <Label text="Resourcen" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                     <styleClass>
+                        <String fx:value="header" />
+                        <String fx:value="resources" />
+                     </styleClass>
+                  </Label>
+                  <Label text="Mögliche Stufe" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                     <styleClass>
+                        <String fx:value="header" />
+                        <String fx:value="resources" />
+                     </styleClass>
+                  </Label>
+                  <Label text="Nächste Stufe" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                     <styleClass>
+                        <String fx:value="header" />
+                        <String fx:value="resources" />
+                     </styleClass>
+                  </Label>
+                  <GridPane GridPane.columnIndex="1" GridPane.columnSpan="8" GridPane.halignment="CENTER" GridPane.rowIndex="8" GridPane.valignment="CENTER">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" percentWidth="25.0" prefWidth="150.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="150.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="40.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="150.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="200.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <Label text="Resourcen Hinzufügen" GridPane.columnIndex="1" GridPane.rowSpan="3">
+                           <styleClass>
+                              <String fx:value="header" />
+                              <String fx:value="resources" />
+                           </styleClass>
+                        </Label>
+                        <Label text="C:" GridPane.columnIndex="2">
+                           <styleClass>
+                              <String fx:value="resources" />
+                              <String fx:value="header_2" />
+                           </styleClass>
+                        </Label>
+                        <Label text="Fe:" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                           <styleClass>
+                              <String fx:value="resources" />
+                              <String fx:value="header_2" />
+                           </styleClass>
+                        </Label>
+                        <Label text="Si:" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                           <styleClass>
+                              <String fx:value="resources" />
+                              <String fx:value="header_2" />
+                           </styleClass>
+                        </Label>
+                        <Spinner fx:id="spinnerResearchAddCarbon" editable="true" styleClass="resources" GridPane.columnIndex="3" />
+                        <Spinner fx:id="spinnerResearchAddIron" editable="true" styleClass="resources" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <Spinner fx:id="spinnerResearchAddSilicium" editable="true" styleClass="resources" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        <Label text="Forschungsbereich" GridPane.columnIndex="4" GridPane.rowSpan="3">
+                           <GridPane.margin>
+                              <Insets left="25.0" />
+                           </GridPane.margin>
+                           <styleClass>
+                              <String fx:value="resources" />
+                              <String fx:value="header_2" />
+                           </styleClass>
+                        </Label>
+                        <ComboBox fx:id="comboBoxResearchAddResourcesSelectArea" prefWidth="150.0" styleClass="resources" visibleRowCount="6" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowSpan="3" />
+                        <Button fx:id="buttonResearchAddResources" mnemonicParsing="false" text="Hinzufügen" GridPane.columnIndex="6" GridPane.rowSpan="3">
+                           <styleClass>
+                              <String fx:value="resources" />
+                              <String fx:value="add" />
+                              <String fx:value="purchase" />
+                           </styleClass>
+                        </Button>
+                     </children>
+                  </GridPane>
+                  <Label fx:id="labelResearchStateMine" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="data_field" />
+                     </styleClass>
+                  </Label>
+                  <Label fx:id="labelResearchStateEconomy" text="Label" GridPane.columnIndex="4" GridPane.rowIndex="3">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="data_field" />
+                     </styleClass>
+                  </Label>
+                  <Label fx:id="labelResearchStateFtl" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="3">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="data_field" />
+                     </styleClass>
+                  </Label>
+                  <Label fx:id="labelResearchStateResearch" text="Label" GridPane.columnIndex="6" GridPane.rowIndex="3">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="data_field" />
+                     </styleClass>
+                  </Label>
+                  <Label fx:id="labelResearchStateMilitary" text="Label" GridPane.columnIndex="7" GridPane.rowIndex="3">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="data_field" />
+                     </styleClass>
+                  </Label>
+                  <Label fx:id="labelResearchStateWeapon" text="Label" GridPane.columnIndex="8" GridPane.rowIndex="3">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="data_field" />
+                     </styleClass>
+                  </Label>
+                  <Button fx:id="buttonResearchPromotionMines" mnemonicParsing="false" text="Aufstieg: Mienen" GridPane.columnIndex="3" GridPane.rowIndex="4">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="promotion" />
+                        <String fx:value="purchase" />
+                     </styleClass>
+                  </Button>
+                  <Button fx:id="buttonResearchPromotionEconomy" mnemonicParsing="false" text="Aufstieg: Wirtschaft" GridPane.columnIndex="4" GridPane.rowIndex="4">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="promotion" />
+                        <String fx:value="purchase" />
+                     </styleClass>
+                  </Button>
+                  <Button fx:id="buttonResearchPromotionFtl" mnemonicParsing="false" text="Aufstieg: FTL" GridPane.columnIndex="5" GridPane.rowIndex="4">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="promotion" />
+                        <String fx:value="purchase" />
+                     </styleClass>
+                  </Button>
+                  <Button fx:id="buttonResearchPromotionResearch" mnemonicParsing="false" text="Aufstieg: Forschung" GridPane.columnIndex="6" GridPane.rowIndex="4">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="promotion" />
+                        <String fx:value="purchase" />
+                     </styleClass>
+                  </Button>
+                  <Button fx:id="buttonResearchPromotionMilitary" mnemonicParsing="false" text="Aufstieg: Militär" GridPane.columnIndex="7" GridPane.rowIndex="4">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="promotion" />
+                        <String fx:value="purchase" />
+                     </styleClass>
+                  </Button>
+                  <Button fx:id="buttonResearchPromotionWeapon" mnemonicParsing="false" text="Aufstieg: Die Waffe" GridPane.columnIndex="8" GridPane.rowIndex="4">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="promotion" />
+                        <String fx:value="purchase" />
+                     </styleClass>
+                  </Button>
+                  <Label fx:id="labelResearchResourcesMines" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="5">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="data_field" />
+                     </styleClass>
+                  </Label>
+                  <Label fx:id="labelResearchResourcesEconomy" text="Label" GridPane.columnIndex="4" GridPane.rowIndex="5">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="data_field" />
+                     </styleClass>
+                  </Label>
+                  <Label fx:id="labelResearchResourcesFtl" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="5">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="data_field" />
+                     </styleClass>
+                  </Label>
+                  <Label fx:id="labelResearchResourcesResearch" text="Label" GridPane.columnIndex="6" GridPane.rowIndex="5">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="data_field" />
+                     </styleClass>
+                  </Label>
+                  <Label fx:id="labelResearchResourcesMilitary" text="Label" GridPane.columnIndex="7" GridPane.rowIndex="5">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="data_field" />
+                     </styleClass>
+                  </Label>
+                  <Label fx:id="labelResearchResourcesWeapon" text="Label" GridPane.columnIndex="8" GridPane.rowIndex="5">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="data_field" />
+                     </styleClass>
+                  </Label>
+                  <Label fx:id="labelResearchPossibleStateMines" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="6">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="data_field" />
+                     </styleClass>
+                  </Label>
+                  <Label fx:id="labelResearchNextStateResourcesMines" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="7">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="data_field" />
+                     </styleClass>
+                  </Label>
+                  <Label fx:id="labelResearchPossibleStateEconomy" text="Label" GridPane.columnIndex="4" GridPane.rowIndex="6">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="data_field" />
+                     </styleClass>
+                  </Label>
+                  <Label fx:id="labelResearchNextStateResourcesEconomy" text="Label" GridPane.columnIndex="4" GridPane.rowIndex="7">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="data_field" />
+                     </styleClass>
+                  </Label>
+                  <Label fx:id="labelResearchPossibleStateFtl" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="6">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="data_field" />
+                     </styleClass>
+                  </Label>
+                  <Label fx:id="labelResearchNextStateResourcesFtl" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="7">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="data_field" />
+                     </styleClass>
+                  </Label>
+                  <Label fx:id="labelResearchPossibleStateResearch" text="Label" GridPane.columnIndex="6" GridPane.rowIndex="6">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="data_field" />
+                     </styleClass>
+                  </Label>
+                  <Label fx:id="labelResearchNextStateResourcesResearch" text="Label" GridPane.columnIndex="6" GridPane.rowIndex="7">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="data_field" />
+                     </styleClass>
+                  </Label>
+                  <Label fx:id="labelResearchPossibleStateMilitary" text="Label" GridPane.columnIndex="7" GridPane.rowIndex="6">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="data_field" />
+                     </styleClass>
+                  </Label>
+                  <Label fx:id="labelResearchNextStateResourcesMilitary" text="Label" GridPane.columnIndex="7" GridPane.rowIndex="7">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="data_field" />
+                     </styleClass>
+                  </Label>
+                  <Label fx:id="labelResearchPossibleStateWeapon" text="Label" GridPane.columnIndex="8" GridPane.rowIndex="6">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="data_field" />
+                     </styleClass>
+                  </Label>
+                  <Label fx:id="labelResearchNextStateResourcesWeapon" text="Label" GridPane.columnIndex="8" GridPane.rowIndex="7">
+                     <styleClass>
+                        <String fx:value="resources" />
+                        <String fx:value="data_field" />
+                     </styleClass>
+                  </Label>
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </GridPane>
+         </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>
