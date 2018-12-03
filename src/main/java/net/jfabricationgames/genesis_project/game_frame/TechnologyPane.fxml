@@ -11,8 +11,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.1">
+<AnchorPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ScrollPane layoutX="233.0" layoutY="135.0" prefHeight="1709.0" prefWidth="2356.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
@@ -188,7 +187,7 @@
                   </ImageView>
                   <ImageView fx:id="imageTechnologyAllianceBuildings" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5" GridPane.rowIndex="6">
                      <image>
-                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/tech/tech_alliance_points.png" />
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/tech/tech_alliance_buildings.png" />
                      </image>
                   </ImageView>
                   <ImageView fx:id="imageTechnologyBonusPoints" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7" GridPane.rowIndex="6">

@@ -12,8 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 
-
-<AnchorPane prefHeight="1000.0" prefWidth="1500.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.1">
+<AnchorPane prefHeight="1000.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ScrollPane layoutX="218.0" layoutY="67.0" prefHeight="410.0" prefWidth="1046.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
@@ -29,7 +28,7 @@
                <children>
                   <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <children>
-                        <ImageView fitHeight="700.0" fitWidth="2000.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="imageViewGameClassBackground" fitHeight="700.0" fitWidth="2000.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/classes/class_boards/class_board_blue_1.png" />
                            </image>
@@ -68,97 +67,97 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
-                              <Label text="Label" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                              <Label fx:id="labelGameClassCarbon" text="Label" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="1">
                                  <styleClass>
                                     <String fx:value="game_class" />
                                     <String fx:value="data" />
                                  </styleClass>
                               </Label>
-                              <Label text="Label" GridPane.columnIndex="10" GridPane.rowIndex="1">
+                              <Label fx:id="labelGameClassPoints" text="Label" GridPane.columnIndex="10" GridPane.rowIndex="1">
                                  <styleClass>
                                     <String fx:value="game_class" />
                                     <String fx:value="data" />
                                  </styleClass>
                               </Label>
-                              <Label text="Label" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                              <Label fx:id="labelGameClassFerum" text="Label" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="3">
                                  <styleClass>
                                     <String fx:value="game_class" />
                                     <String fx:value="data" />
                                  </styleClass>
                               </Label>
-                              <Label text="Label" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="5">
+                              <Label fx:id="labelGameClassSilicium" text="Label" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="5">
                                  <styleClass>
                                     <String fx:value="game_class" />
                                     <String fx:value="data" />
                                  </styleClass>
                               </Label>
-                              <Label text="Label" GridPane.columnIndex="10" GridPane.rowIndex="3">
+                              <Label fx:id="labelGameClassResearchPoints" text="Label" GridPane.columnIndex="10" GridPane.rowIndex="3">
                                  <styleClass>
                                     <String fx:value="game_class" />
                                     <String fx:value="data" />
                                  </styleClass>
                               </Label>
-                              <Label text="Label" GridPane.columnIndex="10" GridPane.rowIndex="5">
+                              <Label fx:id="labelGameClassScientists" text="Label" GridPane.columnIndex="10" GridPane.rowIndex="5">
                                  <styleClass>
                                     <String fx:value="game_class" />
                                     <String fx:value="data" />
                                  </styleClass>
                               </Label>
-                              <Label text="Label" GridPane.columnIndex="10" GridPane.rowIndex="7">
+                              <Label fx:id="labelGameClassFTL" text="Label" GridPane.columnIndex="10" GridPane.rowIndex="7">
                                  <styleClass>
                                     <String fx:value="game_class" />
                                     <String fx:value="data" />
                                  </styleClass>
                               </Label>
-                              <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="8">
+                              <Label fx:id="labelGameClassGovermentBuildings" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="8">
                                  <styleClass>
                                     <String fx:value="game_class" />
                                     <String fx:value="data" />
                                  </styleClass>
                               </Label>
-                              <Label text="Label" GridPane.columnIndex="5" GridPane.rowIndex="8">
+                              <Label fx:id="labelGameClassCityBuildings" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="8">
                                  <styleClass>
                                     <String fx:value="game_class" />
                                     <String fx:value="data" />
                                  </styleClass>
                               </Label>
-                              <Label text="Label" GridPane.columnIndex="7" GridPane.rowIndex="8">
+                              <Label fx:id="labelGameClassResearchStationBuildings" text="Label" GridPane.columnIndex="7" GridPane.rowIndex="8">
                                  <styleClass>
                                     <String fx:value="game_class" />
                                     <String fx:value="data" />
                                  </styleClass>
                               </Label>
-                              <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="10">
+                              <Label fx:id="labelGameClassMineBuildings" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="10">
                                  <styleClass>
                                     <String fx:value="game_class" />
                                     <String fx:value="data" />
                                  </styleClass>
                               </Label>
-                              <Label text="Label" GridPane.columnIndex="5" GridPane.rowIndex="10">
+                              <Label fx:id="labelGameClassTraidingPostBuildings" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="10">
                                  <styleClass>
                                     <String fx:value="game_class" />
                                     <String fx:value="data" />
                                  </styleClass>
                               </Label>
-                              <Label text="Label" GridPane.columnIndex="7" GridPane.rowIndex="10">
+                              <Label fx:id="labelGameClassLaboratoryBuildings" text="Label" GridPane.columnIndex="7" GridPane.rowIndex="10">
                                  <styleClass>
                                     <String fx:value="game_class" />
                                     <String fx:value="data" />
                                  </styleClass>
                               </Label>
-                              <Label text="Label" GridPane.columnIndex="10" GridPane.rowIndex="10">
+                              <Label fx:id="labelGameClassSpaceStationBuildings" text="Label" GridPane.columnIndex="10" GridPane.rowIndex="10">
                                  <styleClass>
                                     <String fx:value="game_class" />
                                     <String fx:value="data" />
                                  </styleClass>
                               </Label>
-                              <Label text="Label" GridPane.columnIndex="5" GridPane.rowIndex="12">
+                              <Label fx:id="labelGameClassColonyBuildings" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="12">
                                  <styleClass>
                                     <String fx:value="game_class" />
                                     <String fx:value="data" />
                                  </styleClass>
                               </Label>
-                              <Label text="Label" GridPane.columnIndex="10" GridPane.rowIndex="12">
+                              <Label fx:id="labelGameClassDroneBuildings" text="Label" GridPane.columnIndex="10" GridPane.rowIndex="12">
                                  <styleClass>
                                     <String fx:value="game_class" />
                                     <String fx:value="data" />
