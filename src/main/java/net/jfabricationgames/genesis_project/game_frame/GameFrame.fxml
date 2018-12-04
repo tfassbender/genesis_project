@@ -85,11 +85,6 @@
                                              <children>
                                                 <TabPane layoutX="14.0" layoutY="-23.0" prefHeight="154.0" prefWidth="329.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                   <tabs>
-                                                    <Tab text="Spieler-Übersicht">
-                                                      <content>
-                                                        <AnchorPane fx:id="anchorPlayerOverviePane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                                                      </content>
-                                                    </Tab>
                                                     <Tab text="Spiel-Übersicht">
                                                       <content>
                                                         <AnchorPane fx:id="anchorGameOverviewPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
