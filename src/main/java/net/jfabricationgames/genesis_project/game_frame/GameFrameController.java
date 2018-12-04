@@ -33,6 +33,8 @@ public class GameFrameController implements Initializable {
 	private AnchorPane anchorGameOverviewPane;
 	@FXML
 	private AnchorPane anchorCostOverviewPane;
+	@FXML
+	private AnchorPane anchorChatPane;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -47,6 +49,7 @@ public class GameFrameController implements Initializable {
 		insertPane("PlayerOverviewPane.fxml", anchorPlayerOverviePane, new PlayerOverviewPaneController(), null);
 		insertPane("GameOverviewPane.fxml", anchorGameOverviewPane, new GameOverviewPaneController(), null);
 		insertPane("CostOverviewPane.fxml", anchorCostOverviewPane, new CostOverviewPaneController(), null);
+		insertPane("ChatPane.fxml", anchorChatPane, new ChatPaneController(), null);
 	}
 	
 	private void insertPane(String fxmlFileName, AnchorPane parent, Initializable controller, String cssFileName) {
@@ -56,7 +59,7 @@ public class GameFrameController implements Initializable {
 			fxmlLoader.setController(controller);
 			Parent pane = fxmlLoader.load();
 			if (cssFileName != null) {
-				pane.getStylesheets().add(getClass().getResource(cssFileName).toExternalForm());				
+				pane.getStylesheets().add(getClass().getResource(cssFileName).toExternalForm());
 			}
 			parent.getChildren().add(pane);
 			AnchorPane.setBottomAnchor(pane, 0d);

@@ -15,6 +15,8 @@ import javafx.stage.Stage;
  */
 public class GameFrameApplication extends Application {
 	
+	public static final String APPLCIATION_NAME = "Genesis Project";
+	
 	private GameFrameController controller = new GameFrameController();
 	
 	public static void main(String[] args) {
@@ -29,6 +31,7 @@ public class GameFrameApplication extends Application {
 			fxmlLoader.setController(controller);
 			Parent root = fxmlLoader.load();
 			Scene scene = new Scene(root, 1000, 700);
+			primaryStage.setTitle(APPLCIATION_NAME);
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		}
