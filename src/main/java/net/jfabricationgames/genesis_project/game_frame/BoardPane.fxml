@@ -12,7 +12,7 @@
          <content>
             <StackPane>
                <children>
-                  <ImageView fx:id="imageViewBoardBackground" fitHeight="1000.0" fitWidth="2000.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="imageViewBoardBackground" fitHeight="1500.0" fitWidth="2000.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/background.png" />
                      </image>
