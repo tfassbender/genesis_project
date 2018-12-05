@@ -1,7 +1,11 @@
 package net.jfabricationgames.genesis_project.game_frame;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +14,8 @@ import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
 
 public class GameFrameController implements Initializable {
+	
+	private final Logger LOGGER = LogManager.getLogger(getClass());
 	
 	@FXML
 	private AnchorPane anchorBoardPane;
@@ -66,8 +72,9 @@ public class GameFrameController implements Initializable {
 			AnchorPane.setLeftAnchor(pane, 0d);
 			AnchorPane.setRightAnchor(pane, 0d);
 		}
-		catch (Exception e) {
-			e.printStackTrace();
+		catch (IOException ioe) {
+			ioe.printStackTrace();
+			LOGGER.error("An exception occured while inserting a pane to the main frame", ioe);
 		}
 	}
 }
