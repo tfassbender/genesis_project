@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<AnchorPane minHeight="800.0" minWidth="1000.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <BorderPane layoutX="437.0" layoutY="239.0" prefHeight="800.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <center>
+            <SplitPane dividerPositions="0.8" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+              <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                     <children>
+                        <SplitPane dividerPositions="0.6" layoutX="286.0" layoutY="312.0" orientation="VERTICAL" prefHeight="773.0" prefWidth="892.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <items>
+                            <AnchorPane fx:id="anchorBoardPane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                                 <children>
+                                    <TabPane layoutX="70.0" layoutY="-37.0" prefHeight="148.0" prefWidth="857.0" side="LEFT" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <tabs>
+                                        <Tab text="Klasse">
+                                          <content>
+                                            <AnchorPane fx:id="anchorClassPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                          </content>
+                                        </Tab>
+                                        <Tab text="Forschung">
+                                          <content>
+                                            <AnchorPane fx:id="anchorResearchPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                          </content>
+                                        </Tab>
+                                          <Tab text="Technologien">
+                                            <content>
+                                              <AnchorPane fx:id="anchorTechnologyPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                            </content>
+                                          </Tab>
+                                          <Tab text="Runden">
+                                            <content>
+                                              <AnchorPane fx:id="anchorTurnPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                            </content>
+                                          </Tab>
+                                      </tabs>
+                                    </TabPane>
+                                 </children>
+                              </AnchorPane>
+                          </items>
+                        </SplitPane>
+                     </children>
+                  </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                     <children>
+                        <SplitPane dividerPositions="0.95" layoutX="57.0" layoutY="246.0" orientation="VERTICAL" prefHeight="773.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <items>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                                 <children>
+                                    <SplitPane dividerPositions="0.5" orientation="VERTICAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <items>
+                                          <TabPane prefHeight="461.0" prefWidth="331.0" tabClosingPolicy="UNAVAILABLE">
+                                            <tabs>
+                                              <Tab text="Planeten-Info">
+                                                   <content>
+                                                      <AnchorPane fx:id="anchorPlanetInfoPane" prefHeight="200.0" prefWidth="200.0" />
+                                                   </content>
+                                                </Tab>
+                                              <Tab text="Planungs-Tool">
+                                                   <content>
+                                                      <AnchorPane fx:id="anchorPlaningToolPane" prefHeight="200.0" prefWidth="200.0" />
+                                                   </content>
+                                                </Tab>
+                                                <Tab text="Angriffe">
+                                                  <content>
+                                                    <AnchorPane fx:id="anchorAttackPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                                  </content>
+                                                </Tab>
+                                            </tabs>
+                                          </TabPane>
+                                          <TabPane prefHeight="154.0" prefWidth="329.0" tabClosingPolicy="UNAVAILABLE">
+                                            <tabs>
+                                              <Tab text="Spiel-Übersicht">
+                                                <content>
+                                                  <AnchorPane fx:id="anchorGameOverviewPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                                </content>
+                                              </Tab>
+                                                <Tab text="Kosten-/Einkommen-Übersicht">
+                                                  <content>
+                                                    <AnchorPane fx:id="anchorCostOverviewPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                                  </content>
+                                                </Tab>
+                                            </tabs>
+                                          </TabPane>
+                                       </items>
+                                    </SplitPane>
+                                 </children>
+                              </AnchorPane>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                                 <children>
+                                  <AnchorPane fx:id="anchorChatPane" minHeight="0.0" minWidth="0.0" prefHeight="614.0" prefWidth="354.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                 </children>
+                              </AnchorPane>
+                          </items>
+                        </SplitPane>
+                     </children>
+                  </AnchorPane>
+              </items>
+            </SplitPane>
+         </center>
+         <top>
+            <MenuBar BorderPane.alignment="CENTER">
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Close" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Delete" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+         </top>
+      </BorderPane>
+   </children>
+</AnchorPane>

@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ScrollPane layoutX="233.0" layoutY="135.0" prefHeight="1709.0" prefWidth="2356.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <content>
+            <GridPane>
+               <columnConstraints>
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="30.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="30.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="30.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <ImageView fx:id="imageTechnologyColoniePoints" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/tech/tech_colonie_points.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageTechnologyTraidingPostPoints" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/tech/tech_traiding_post_points.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageTechnologyBonusResources" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5" GridPane.rowIndex="1">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/tech/tech_resources.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageTechnologyBonusResearchPoints" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7" GridPane.rowIndex="1">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/tech/tech_research_points.png" />
+                     </image>
+                  </ImageView>
+                  <Label text="Name" GridPane.rowIndex="2">
+                     <styleClass>
+                        <String fx:value="technology" />
+                        <String fx:value="header" />
+                     </styleClass>
+                  </Label>
+                  <Label text="Erforscht" GridPane.rowIndex="3">
+                     <styleClass>
+                        <String fx:value="technology" />
+                        <String fx:value="header" />
+                     </styleClass>
+                  </Label>
+                  <Label text="Kolonie Punkte" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <styleClass>
+                        <String fx:value="technology" />
+                        <String fx:value="name" />
+                     </styleClass>
+                  </Label>
+                  <Label text="Handelsposten Punkte" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                     <styleClass>
+                        <String fx:value="technology" />
+                        <String fx:value="name" />
+                     </styleClass>
+                  </Label>
+                  <Label text="Bonus Resourcen" GridPane.columnIndex="5" GridPane.rowIndex="2">
+                     <styleClass>
+                        <String fx:value="technology" />
+                        <String fx:value="name" />
+                     </styleClass>
+                  </Label>
+                  <Label text="Bonus Forschungspunkte" GridPane.columnIndex="7" GridPane.rowIndex="2">
+                     <styleClass>
+                        <String fx:value="technology" />
+                        <String fx:value="name" />
+                     </styleClass>
+                  </Label>
+                  <Button fx:id="buttonTechnologyPurchaseColoniePoints" disable="true" mnemonicParsing="false" text="Erforschen" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                     <styleClass>
+                        <String fx:value="technology" />
+                        <String fx:value="purchase" />
+                     </styleClass>
+                  </Button>
+                  <Button fx:id="buttonTechnologyPurchaseTraidingPostPoints" disable="true" mnemonicParsing="false" text="Erforschen" GridPane.columnIndex="3" GridPane.rowIndex="4">
+                     <styleClass>
+                        <String fx:value="technology" />
+                        <String fx:value="purchase" />
+                     </styleClass>
+                  </Button>
+                  <Button fx:id="buttonTechnologyPurchaseBonusResources" disable="true" mnemonicParsing="false" text="Erforschen" GridPane.columnIndex="5" GridPane.rowIndex="4">
+                     <styleClass>
+                        <String fx:value="technology" />
+                        <String fx:value="purchase" />
+                     </styleClass>
+                  </Button>
+                  <Button fx:id="buttonTechnologyPurchaseBonusResearchPoints" disable="true" mnemonicParsing="false" text="Erforschen" GridPane.columnIndex="7" GridPane.rowIndex="4">
+                     <styleClass>
+                        <String fx:value="technology" />
+                        <String fx:value="purchase" />
+                     </styleClass>
+                  </Button>
+                  <ImageView fx:id="imageTechnologyPurchasedColoniePoints" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" styleClass="technology" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/cross.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageTechnologyPurchasedTraidingPostPoints" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" styleClass="technology" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/cross.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageTechnologyPurchasedBonusResources" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" styleClass="technology" GridPane.columnIndex="5" GridPane.rowIndex="3">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/cross.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageTechnologyPurchasedBonusResearchPoints" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" styleClass="technology" GridPane.columnIndex="7" GridPane.rowIndex="3">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/cross.png" />
+                     </image>
+                  </ImageView>
+                  <Label text="Name" GridPane.rowIndex="7">
+                     <styleClass>
+                        <String fx:value="technology" />
+                        <String fx:value="header" />
+                     </styleClass>
+                  </Label>
+                  <Label text="Erforscht" GridPane.rowIndex="8">
+                     <styleClass>
+                        <String fx:value="technology" />
+                        <String fx:value="header" />
+                     </styleClass>
+                  </Label>
+                  <Button fx:id="buttonTechnologyPurchaseNewPlanetPoints" disable="true" mnemonicParsing="false" text="Erforschen" GridPane.columnIndex="1" GridPane.rowIndex="9">
+                     <styleClass>
+                        <String fx:value="technology" />
+                        <String fx:value="purchase" />
+                     </styleClass>
+                  </Button>
+                  <Button fx:id="buttonTechnologyPurchaseMilitaryFtl" disable="true" mnemonicParsing="false" text="Erforschen" GridPane.columnIndex="3" GridPane.rowIndex="9">
+                     <styleClass>
+                        <String fx:value="technology" />
+                        <String fx:value="purchase" />
+                     </styleClass>
+                  </Button>
+                  <Button fx:id="buttonTechnologyPurchaseAllianceBuildings" disable="true" mnemonicParsing="false" text="Erforschen" GridPane.columnIndex="5" GridPane.rowIndex="9">
+                     <styleClass>
+                        <String fx:value="technology" />
+                        <String fx:value="purchase" />
+                     </styleClass>
+                  </Button>
+                  <Button fx:id="buttonTechnologyPurchaseBonusPoints" disable="true" mnemonicParsing="false" text="Erforschen" GridPane.columnIndex="7" GridPane.rowIndex="9">
+                     <styleClass>
+                        <String fx:value="technology" />
+                        <String fx:value="purchase" />
+                     </styleClass>
+                  </Button>
+                  <ImageView fx:id="imageTechnologyNewPlanetPoints" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/tech/tech_new_planet_points.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageTechnologyMilitaryFtl" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="6">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/tech/tech_drone_station_range.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageTechnologyAllianceBuildings" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5" GridPane.rowIndex="6">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/tech/tech_alliance_buildings.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageTechnologyBonusPoints" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7" GridPane.rowIndex="6">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/tech/tech_points.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageTechnologyPurchasedNewPlanetPoints" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" styleClass="technology" GridPane.columnIndex="1" GridPane.rowIndex="8">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/cross.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageTechnologyPurchasedMilitaryFtl" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" styleClass="technology" GridPane.columnIndex="3" GridPane.rowIndex="8">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/cross.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageTechnologyPurchasedAllianceBuildings" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" styleClass="technology" GridPane.columnIndex="5" GridPane.rowIndex="8">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/cross.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageTechnologyPurchasedBonusPoints" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" styleClass="technology" GridPane.columnIndex="7" GridPane.rowIndex="8">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/cross.png" />
+                     </image>
+                  </ImageView>
+                  <Label text="Neue Planeten Punkte" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                     <styleClass>
+                        <String fx:value="technology" />
+                        <String fx:value="name" />
+                     </styleClass>
+                  </Label>
+                  <Label text="Militär Reichweite" GridPane.columnIndex="3" GridPane.rowIndex="7">
+                     <styleClass>
+                        <String fx:value="technology" />
+                        <String fx:value="name" />
+                     </styleClass>
+                  </Label>
+                  <Label text="Allianz Gebäude" GridPane.columnIndex="5" GridPane.rowIndex="7">
+                     <styleClass>
+                        <String fx:value="technology" />
+                        <String fx:value="name" />
+                     </styleClass>
+                  </Label>
+                  <Label text="Bonus Punkte" GridPane.columnIndex="7" GridPane.rowIndex="7">
+                     <styleClass>
+                        <String fx:value="technology" />
+                        <String fx:value="name" />
+                     </styleClass>
+                  </Label>
+               </children>
+            </GridPane>
+         </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>

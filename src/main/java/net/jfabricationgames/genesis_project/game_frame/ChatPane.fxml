@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.1">
+   <children>
+      <BorderPane layoutX="53.0" layoutY="-19.0" prefHeight="123.0" prefWidth="382.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <bottom>
+            <HBox prefHeight="35.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <TextField fx:id="textFieldChat" styleClass="chat" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="buttonChatSend" mnemonicParsing="false" styleClass="chat" text="Senden" />
+               </children>
+               <padding>
+                  <Insets top="5.0" />
+               </padding>
+            </HBox>
+         </bottom>
+         <center>
+            <TextArea fx:id="textAreaChat" editable="false" prefHeight="200.0" prefWidth="200.0" styleClass="chat" wrapText="true" BorderPane.alignment="CENTER" />
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ScrollPane layoutX="10.0" layoutY="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <content>
+            <GridPane>
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="20.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="950.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="20.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="300.0" minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="300.0" minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="300.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="300.0" minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="300.0" minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Label text="Gebäude Kosten" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <styleClass>
+                        <String fx:value="building_costs" />
+                        <String fx:value="header" />
+                     </styleClass></Label>
+                  <TableView fx:id="tableBuildingCosts" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                    <columns>
+                      <TableColumn fx:id="tableColumnBuildingCostsId" prefWidth="40.0" text="ID">
+                           <styleClass>
+                              <String fx:value="building_costs" />
+                              <String fx:value="cost_table" />
+                           </styleClass>
+                        </TableColumn>
+                        <TableColumn fx:id="tableColumnBuildingCostsBuilding" prefWidth="150.0" text="Gebäude">
+                           <styleClass>
+                              <String fx:value="building_costs" />
+                              <String fx:value="cost_table" />
+                           </styleClass>
+                        </TableColumn>
+                      <TableColumn fx:id="tableColumnBuildingCostsPlanet1" prefWidth="120.0" text="Planeten-Klasse 1">
+                           <styleClass>
+                              <String fx:value="building_costs" />
+                              <String fx:value="cost_table" />
+                           </styleClass>
+                        </TableColumn>
+                        <TableColumn fx:id="tableColumnBuildingCostsPlanet2" prefWidth="120.0" text="Planeten-Klasse 2">
+                           <styleClass>
+                              <String fx:value="building_costs" />
+                              <String fx:value="cost_table" />
+                           </styleClass>
+                        </TableColumn>
+                        <TableColumn fx:id="tableColumnBuildingCostsPlanet3" prefWidth="120.0" text="Planeten-Klasse 3">
+                           <styleClass>
+                              <String fx:value="building_costs" />
+                              <String fx:value="cost_table" />
+                           </styleClass>
+                        </TableColumn>
+                        <TableColumn fx:id="tableColumnBuildingCostsPlanet4" prefWidth="120.0" text="Planeten-Klasse 4">
+                           <styleClass>
+                              <String fx:value="building_costs" />
+                              <String fx:value="cost_table" />
+                           </styleClass>
+                        </TableColumn>
+                        <TableColumn fx:id="tableColumnBuildingCostsNeighboursSelf" prefWidth="175.0" text="Nachbarn (Selber Spieler)">
+                           <styleClass>
+                              <String fx:value="building_costs" />
+                              <String fx:value="cost_table" />
+                           </styleClass>
+                        </TableColumn>
+                        <TableColumn fx:id="tableColumnBuildingCostsNeighboursOther" prefWidth="175.0" text="Nachbarn (Andere Spieler)">
+                           <styleClass>
+                              <String fx:value="building_costs" />
+                              <String fx:value="cost_table" />
+                           </styleClass>
+                        </TableColumn>
+                    </columns>
+                     <styleClass>
+                        <String fx:value="building_costs" />
+                        <String fx:value="cost_table" />
+                     </styleClass>
+                  </TableView>
+                  <Label text="Gebäude Erträge" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                     <styleClass>
+                        <String fx:value="building_costs" />
+                        <String fx:value="header" />
+                     </styleClass>
+                  </Label>
+                  <TableView fx:id="tableBuildingEarnings" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">
+                    <columns>
+                      <TableColumn fx:id="tableColumnBuildingEarningsId" prefWidth="40.0" text="ID">
+                           <styleClass>
+                              <String fx:value="building_costs" />
+                              <String fx:value="earning_table" />
+                           </styleClass>
+                        </TableColumn>
+                      <TableColumn fx:id="tableColumnBuildingEarningsBuilding" prefWidth="150.0" text="Gebäude">
+                           <styleClass>
+                              <String fx:value="building_costs" />
+                              <String fx:value="earning_table" />
+                           </styleClass>
+                        </TableColumn>
+                        <TableColumn fx:id="tableColumnBuildingEarningsPrimeResources" prefWidth="100.0" text="Prim-Resourcen">
+                           <styleClass>
+                              <String fx:value="building_costs" />
+                              <String fx:value="earning_table" />
+                           </styleClass>
+                        </TableColumn>
+                        <TableColumn fx:id="tableColumnBuildingEarningsSekResources" prefWidth="100.0" text="Sek-Resourcen">
+                           <styleClass>
+                              <String fx:value="building_costs" />
+                              <String fx:value="earning_table" />
+                           </styleClass>
+                        </TableColumn>
+                        <TableColumn fx:id="tableColumnBuildingEarningsTertResources" prefWidth="100.0" text="Tärz-Resourcen">
+                           <styleClass>
+                              <String fx:value="building_costs" />
+                              <String fx:value="earning_table" />
+                           </styleClass>
+                        </TableColumn>
+                        <TableColumn fx:id="tableColumnBuildingEarningsResearchPoints" prefWidth="125.0" text="Forschungs-Punkte">
+                           <styleClass>
+                              <String fx:value="building_costs" />
+                              <String fx:value="earning_table" />
+                           </styleClass>
+                        </TableColumn>
+                        <TableColumn fx:id="tableColumnBuildingEarningsScientists" prefWidth="100.0" text="Eierköppe">
+                           <styleClass>
+                              <String fx:value="building_costs" />
+                              <String fx:value="earning_table" />
+                           </styleClass>
+                        </TableColumn>
+                        <TableColumn fx:id="tableColumnBuildingEarningsDefence" prefWidth="100.0" text="Verteidigung">
+                           <styleClass>
+                              <String fx:value="building_costs" />
+                              <String fx:value="earning_table" />
+                           </styleClass>
+                        </TableColumn>
+                        <TableColumn fx:id="tableColumnBuildingEarningsBuilt" prefWidth="50.0" text="Gebaut">
+                           <styleClass>
+                              <String fx:value="building_costs" />
+                              <String fx:value="earning_table" />
+                           </styleClass>
+                        </TableColumn>
+                    </columns>
+                     <styleClass>
+                        <String fx:value="building_costs" />
+                        <String fx:value="earning_table" />
+                     </styleClass>
+                  </TableView>
+               </children>
+            </GridPane>
+         </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>

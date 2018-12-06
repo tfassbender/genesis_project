@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ScrollPane layoutX="10.0" layoutY="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <content>
+            <GridPane>
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="20.0" />
+                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="60.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="50.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="60.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="200.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="20.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="150.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="-Infinity" minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Label text="Punkte" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+                     <styleClass>
+                        <String fx:value="game_overview" />
+                        <String fx:value="header" />
+                     </styleClass>
+                  </Label>
+                  <ListView fx:id="listGameOverviewPoints" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                     <styleClass>
+                        <String fx:value="game_overview" />
+                        <String fx:value="point_list" />
+                     </styleClass>
+                  </ListView>
+                  <Label text="Deine Punkte:" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                     <styleClass>
+                        <String fx:value="game_overview" />
+                        <String fx:value="header_2" />
+                     </styleClass>
+                  </Label>
+                  <Label text="Deine Position:" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                     <styleClass>
+                        <String fx:value="game_overview" />
+                        <String fx:value="header_2" />
+                     </styleClass>
+                  </Label>
+                  <Label fx:id="labelGameOverviewPlayerPoints" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                     <styleClass>
+                        <String fx:value="game_overview" />
+                        <String fx:value="data" />
+                        <String fx:value="number" />
+                     </styleClass>
+                  </Label>
+                  <Label fx:id="labelGameOverviewPlayerPosition" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                     <styleClass>
+                        <String fx:value="game_overview" />
+                        <String fx:value="data" />
+                        <String fx:value="number" />
+                     </styleClass>
+                  </Label>
+                  <Label text="Spieler-Reihenfolge" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+                     <styleClass>
+                        <String fx:value="game_overview" />
+                        <String fx:value="header" />
+                     </styleClass>
+                  </Label>
+                  <ListView fx:id="listGameOverviewPlayerOrder" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="2">
+                     <styleClass>
+                        <String fx:value="game_overview" />
+                        <String fx:value="player_list" />
+                     </styleClass>
+                  </ListView>
+                  <Label text="Am Zug:" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
+                     <styleClass>
+                        <String fx:value="game_overview" />
+                        <String fx:value="header_2" />
+                     </styleClass>
+                  </Label>
+                  <Label fx:id="labelGameOverviewPlayersTurn" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="4">
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                     <styleClass>
+                        <String fx:value="game_overview" />
+                        <String fx:value="data" />
+                        <String fx:value="player_name" />
+                     </styleClass>
+                  </Label>
+                  <TableView fx:id="tableGameOverview" styleClass="game_overview" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.rowIndex="6">
+                     <columns>
+                        <TableColumn fx:id="tableColumnGameOverviewPlayerName" prefWidth="150.0" styleClass="game_overview" text="Spieler" />
+                        <TableColumn fx:id="tableColumnGameOverviewPoints" prefWidth="75.0" styleClass="game_overview" text="Punkte" />
+                        <TableColumn fx:id="tableColumnGameOverviewPlanets" prefWidth="75.0" styleClass="game_overview" text="Planeten" />
+                        <TableColumn fx:id="tableColumnGameOverviewAlliances" prefWidth="75.0" styleClass="game_overview" text="Allianzen" />
+                        <TableColumn fx:id="tableColumnGameOverviewResourcesC" prefWidth="75.0" styleClass="game_overview" text="(C) Resourcen" />
+                        <TableColumn fx:id="tableColumnGameOverviewResourcesFe" prefWidth="75.0" styleClass="game_overview" text="(Fe) Resourcen" />
+                        <TableColumn fx:id="tableColumnGameOverviewResourcesSi" prefWidth="75.0" styleClass="game_overview" text="(Si) Resourcen" />
+                        <TableColumn fx:id="tableColumnGameOverviewResearchPoints" prefWidth="75.0" styleClass="game_overview" text="Forschungspunkte" />
+                        <TableColumn fx:id="tableColumnGameOverviewScientists" prefWidth="75.0" styleClass="game_overview" text="Eierköppe" />
+                        <TableColumn fx:id="tableColumnGameOverviewNumBuildings" prefWidth="100.0" styleClass="game_overview" text="Gebäude (ges)" />
+                        <TableColumn fx:id="tableColumnGameOverviewColonies" prefWidth="75.0" styleClass="game_overview" text="Kolonien" />
+                        <TableColumn fx:id="tableColumnGameOverviewMines" prefWidth="75.0" styleClass="game_overview" text="Mienen" />
+                        <TableColumn fx:id="tableColumnGameOverviewTraidingPosts" prefWidth="75.0" styleClass="game_overview" text="Handelsposten" />
+                        <TableColumn fx:id="tableColumnGameOverviewLaboratories" prefWidth="75.0" styleClass="game_overview" text="Labore" />
+                        <TableColumn fx:id="tableColumnGameOverviewGoverments" prefWidth="75.0" styleClass="game_overview" text="Regierungssitz" />
+                        <TableColumn fx:id="tableColumnGameOverviewCities" prefWidth="75.0" styleClass="game_overview" text="Stadt" />
+                        <TableColumn fx:id="tableColumnGameOverviewResearchStations" prefWidth="75.0" styleClass="game_overview" text="Forschungsanlagen" />
+                        <TableColumn fx:id="tableColumnGameOverviewDrones" prefWidth="75.0" styleClass="game_overview" text="Drohnen" />
+                        <TableColumn fx:id="tableColumnGameOverviewSpaceStations" prefWidth="75.0" styleClass="game_overview" text="Raumstationen" />
+                     </columns>
+                  </TableView>
+               </children>
+            </GridPane>
+         </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>

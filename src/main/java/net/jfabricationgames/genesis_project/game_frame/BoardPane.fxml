@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ScrollPane layoutX="183.0" layoutY="300.0" prefHeight="969.0" prefWidth="1040.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <content>
+            <StackPane>
+               <children>
+                  <ImageView fx:id="imageViewBoardBackground" fitHeight="1500.0" fitWidth="2000.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/background.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </StackPane>
+         </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>
