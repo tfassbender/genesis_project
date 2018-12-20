@@ -4,7 +4,7 @@ public class Field {
 	
 	private Board.Position position;
 	private Planet planet;
-	private final Building[] buildings = new Building[3];
+	private final Building[] buildings = new Building[Constants.BUILDINGS_PER_PLANET];
 	
 	public Field(Board.Position position, Planet planet) {
 		this.position = position;

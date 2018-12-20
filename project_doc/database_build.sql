@@ -179,3 +179,11 @@ CREATE TABLE IF NOT EXISTS genesis_project.target_values (
 	shared_planets_main_player FLOAT,
 	players_points FLOAT
 );
+
+CREATE TABLE IF NOT EXISTS genesis_project.cell_positions (
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	coordinate_x INT,
+	coordinate_y INT,
+	position_x INT,
+	position_y INT
+);
