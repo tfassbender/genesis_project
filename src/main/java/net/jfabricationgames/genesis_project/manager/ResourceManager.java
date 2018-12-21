@@ -1,60 +1,60 @@
 package net.jfabricationgames.genesis_project.manager;
 
+import net.jfabricationgames.genesis_project.game.BuildingResources;
 import net.jfabricationgames.genesis_project.game.Player;
 
 public class ResourceManager implements IResourceManager {
 	
 	private Player player;
 	
-	private int resourceC;
-	private int resourceSi;
-	private int resourceFe;
+	private BuildingResources buildingResources;
 	private int researchPoints;
 	private int scientists;
 	private int ftl;
 	
 	public ResourceManager(Player player) {
 		this.player = player;
+		buildingResources = new BuildingResources();
 	}
 	
 	@Override
 	public int getResourcesC() {
-		return resourceC;
+		return buildingResources.getResourcesC();
 	}
 	@Override
 	public void setResourcesC(int resources) {
-		this.resourceC = resources;
+		buildingResources.setResourcesC(resources);
 	}
 	@Override
 	public void addResourcesC(int resources) {
-		this.resourceC += resources;
+		buildingResources.addResourcesC(resources);
 	}
 	
 	@Override
 	public int getResourcesSi() {
-		return resourceSi;
+		return buildingResources.getResourcesSi();
 	}
 	@Override
 	public void setResourcesSi(int resources) {
-		this.resourceSi = resources;
+		buildingResources.setResourcesSi(resources);
 	}
 	@Override
 	public void addResourcesSi(int resources) {
-		this.resourceSi += resources;
+		buildingResources.addResourcesSi(resources);
 	}
 	
 	@Override
 	public int getResourcesFe() {
-		return resourceFe;
+		return buildingResources.getResourcesFe();
 	}
 	@Override
 	public void setResourcesFe(int resources) {
-		this.resourceFe = resources;
+		buildingResources.setResourcesFe(resources);
 	}
 	
 	@Override
 	public void addResourcesFe(int resources) {
-		this.resourceFe += resources;
+		buildingResources.addResourcesFe(resources);
 	}
 	
 	@Override
@@ -115,49 +115,40 @@ public class ResourceManager implements IResourceManager {
 	
 	@Override
 	public int getResourcesPrimary() {
-		// TODO Auto-generated method stub
-		return 0;
+		return buildingResources.getResourcesPrimary(player.getPlayerClass());
 	}
 	@Override
 	public void setResourcesPrimary(int resources) {
-		// TODO Auto-generated method stub
-		
+		buildingResources.setResourcesPrimary(player.getPlayerClass(), resources);
 	}
 	@Override
 	public void addResourcesPrimary(int resources) {
-		// TODO Auto-generated method stub
-		
+		buildingResources.addResourcesPrimary(player.getPlayerClass(), resources);
 	}
 	
 	@Override
 	public int getResourcesSecundary() {
-		// TODO Auto-generated method stub
-		return 0;
+		return buildingResources.getResourcesSecundary(player.getPlayerClass());
 	}
 	@Override
 	public void setResourcesSecundary(int resources) {
-		// TODO Auto-generated method stub
-		
+		buildingResources.setResourcesSecundary(player.getPlayerClass(), resources);
 	}
 	@Override
 	public void addResourcesSecundary(int resources) {
-		// TODO Auto-generated method stub
-		
+		buildingResources.addResourcesSecundary(player.getPlayerClass(), resources);
 	}
 	
 	@Override
 	public int getResourcesTertiary() {
-		// TODO Auto-generated method stub
-		return 0;
+		return buildingResources.getResourcesTertiary(player.getPlayerClass());
 	}
 	@Override
 	public void setResourcesTertiary(int resources) {
-		// TODO Auto-generated method stub
-		
+		buildingResources.setResourcesTertiary(player.getPlayerClass(), resources);
 	}
 	@Override
 	public void addResourcesTertiary(int resources) {
-		// TODO Auto-generated method stub
-		
+		buildingResources.addResourcesTertiary(player.getPlayerClass(), resources);
 	}
 }

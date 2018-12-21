@@ -10,6 +10,7 @@ public abstract class Constants {
 	
 	//basic
 	public static int BUILDINGS_PER_PLANET = 3;
+	public static int TURNS_PLAYED = 6;
 	
 	//alliances
 	public static int ALLIANCE_MIN_PLANETS;
