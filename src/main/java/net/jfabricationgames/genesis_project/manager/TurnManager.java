@@ -2,18 +2,19 @@ package net.jfabricationgames.genesis_project.manager;
 
 import net.jfabricationgames.genesis_project.game.Constants;
 import net.jfabricationgames.genesis_project.game.Game;
+import net.jfabricationgames.genesis_project.game.Player;
 
 public class TurnManager implements ITurnManager {
 	
 	private int turn;
-	private PlayerOrder playerOrder;
+	private PlayerOrder<Player> playerOrder;
 	
 	@SuppressWarnings("unused")
 	private Game game;
 	
 	public TurnManager(Game game) {
 		this.game = game;
-		playerOrder = new PlayerOrder(game.getPlayers().size());
+		playerOrder = new PlayerOrder<Player>(game.getPlayers().size());
 		turn = 0;
 	}
 	
@@ -46,7 +47,7 @@ public class TurnManager implements ITurnManager {
 		return turn >= Constants.TURNS_PLAYED;
 	}
 	
-	public PlayerOrder getPlayerOrder() {
+	public PlayerOrder<Player> getPlayerOrder() {
 		return playerOrder;
 	}
 }

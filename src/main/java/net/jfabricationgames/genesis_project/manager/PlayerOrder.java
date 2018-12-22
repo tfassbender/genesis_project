@@ -1,5 +1,6 @@
 package net.jfabricationgames.genesis_project.manager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,16 +13,16 @@ import net.jfabricationgames.genesis_project.game.Player;
 /**
  * The order in which the players execute their moves (for the current and the next turn).
  */
-public class PlayerOrder {
+public class PlayerOrder<T> {
 
-	private Map<Integer, Player> order;//player order starting with 0
-	private Map<Integer, Player> nextOrder;
+	private Map<Integer, T> order;//player order starting with 0
+	private Map<Integer, T> nextOrder;
 	private int move;
 	private final int players;
 	
 	public PlayerOrder(int players) {
-		order = new HashMap<Integer, Player>();
-		nextOrder = new HashMap<Integer, Player>();
+		order = new HashMap<Integer, T>();
+		nextOrder = new HashMap<Integer, T>();
 		this.players = players;
 	}
 
@@ -31,12 +32,12 @@ public class PlayerOrder {
 	 * @param players
 	 * 		The players joining the game.
 	 */
-	public void chooseRandomOrder(List<Player> players) {
+	public void chooseRandomOrder(List<T> players) {
 		Random random = new Random((long) (Math.random() * Long.MAX_VALUE));
 		chooseRandomOrder(players, random);
 	}
 	@VisibleForTesting
-	protected void chooseRandomOrder(List<Player> players, Random randomGenerator) {
+	protected void chooseRandomOrder(List<T> players, Random randomGenerator) {
 		int[] positions = new int[players.size()];
 		int swap;
 		int random;
@@ -59,7 +60,7 @@ public class PlayerOrder {
 	 * @return
 	 * 		The next player.
 	 */
-	public Player getNext() throws IllegalStateException {
+	public T getNext() throws IllegalStateException {
 		int nextMove = move+1;
 		//find the next player that hasn't passed yet
 		while (order.get(nextMove % players) == null) {
@@ -78,11 +79,11 @@ public class PlayerOrder {
 	 * @return
 	 * 		The player's order.
 	 */
-	public Player[] getOrder() {
-		Player[] users = new Player[order.size()];
+	public List<T> getOrder() {
+		List<T> users = new ArrayList<T>(order.size());//T[order.size()];
 		int index = 0;
 		for (int i : order.keySet()) {
-			users[index] = order.get(i);
+			users.add(index, order.get(i));
 			index++;
 		}
 		return users;
@@ -93,16 +94,16 @@ public class PlayerOrder {
 	 * @return
 	 * 		The player order as an array.
 	 */
-	public Player[] getNextTurnOrder() {
-		Player[] users = new Player[players];
+	public List<T> getNextTurnOrder() {
+		List<T> users = new ArrayList<T>(players);
 		for (int i : nextOrder.keySet()) {
-			users[i] = nextOrder.get(i);
+			users.add(i, nextOrder.get(i));
 		}
 		return users;
 	}
 	
-	public Player getActivePlayer() throws IllegalStateException {
-		Player user = order.get(move % players);
+	public T getActivePlayer() throws IllegalStateException {
+		T user = order.get(move % players);
 		if (user == null) {
 			throw new IllegalStateException("No active player found.");
 		}
@@ -119,7 +120,7 @@ public class PlayerOrder {
 	 * @param user
 	 * 		The user that has passed.
 	 */
-	public void playerPassed(Player user) {
+	public void playerPassed(T user) {
 		int playersPassed = nextOrder.size();
 		nextOrder.put(playersPassed, user);
 		Integer userOrder = null;
@@ -156,7 +157,7 @@ public class PlayerOrder {
 	 */
 	protected void nextTurn() {
 		order = nextOrder;
-		nextOrder = new HashMap<Integer, Player>();
+		nextOrder = new HashMap<Integer, T>();
 		move = 0;
 	}
 	
@@ -171,11 +172,11 @@ public class PlayerOrder {
 	}
 	
 	@VisibleForTesting
-	protected Map<Integer, Player> getCurrentOrder() {
+	protected Map<Integer, T> getCurrentOrder() {
 		return order;
 	}
 	@VisibleForTesting
-	protected Map<Integer, Player> getNextOrder() {
+	protected Map<Integer, T> getNextOrder() {
 		return nextOrder;
 	}
 }
