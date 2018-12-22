@@ -1,7 +1,5 @@
 package net.jfabricationgames.genesis_project.game;
 
-import javafx.scene.image.Image;
-
 public enum Planet {
 	
 	CENTER("planet_center.png"),
@@ -13,13 +11,18 @@ public enum Planet {
 	YELLOW("planet_yellow.png"),
 	RED("planet_red.png");
 	
-	private final Image image;
+	//private final Image image;
+	private String imagePath;
 	
 	private Planet(String imagePath) {
-		image = new Image("net/jfabricationgames/genesis_project/images/planets/" + imagePath);
+		this.imagePath = "net/jfabricationgames/genesis_project/images/planets/" + imagePath;
+		//image = new Image(this.imagePath);
 	}
 	
-	public Image getImage() {
+	/*public Image getImage() {
 		return image;
+	}*/
+	public String getImagePath() {
+		return imagePath;
 	}
 }

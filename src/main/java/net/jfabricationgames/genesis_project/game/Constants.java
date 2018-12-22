@@ -86,4 +86,9 @@ public abstract class Constants {
 	public static int[][] BUILDING_COSTS_DRONE = new int[1][3];
 	public static int[][] BUILDING_COSTS_SPACE_STATION = new int[1][3];
 	public static int[][] BUILDING_COSTS_SATELLITE = new int[1][3];
+	
+	/**
+	 * The number of buildings per player at game start (on field and class board).
+	 */
+	public static Map<Building, Integer> BUILDING_NUMBERS;
 }

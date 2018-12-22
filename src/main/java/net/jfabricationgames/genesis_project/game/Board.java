@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Board {
 	
-	public class Position {
+	public static class Position {
 		
 		private int x;
 		private int y;
