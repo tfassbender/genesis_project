@@ -187,3 +187,9 @@ CREATE TABLE IF NOT EXISTS genesis_project.cell_positions (
 	position_x INT,
 	position_y INT
 );
+
+CREATE TABLE IF NOT EXISTS genesis_project.start_research_states (
+	class_id INT REFERENCES genesis_project.classes (id),
+	research_id INT REFERENCES genesis_project.research_areas (id),
+	starting_state INT
+);

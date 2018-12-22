@@ -1,11 +1,12 @@
 package net.jfabricationgames.genesis_project.game;
 
-public class BuildingResources {
+public class BuildingResources implements Cloneable {
 	
 	private int resourcesC;
 	private int resourcesSi;
 	private int resourcesFe;
 	
+	public static final Resource[] BUILDING_RESOURCES = new Resource[] {Resource.CARBON, Resource.SILICIUM, Resource.IRON};
 	
 	public BuildingResources() {
 		resourcesC = 0;
@@ -16,6 +17,15 @@ public class BuildingResources {
 		this.resourcesC = resourcesC;
 		this.resourcesSi = resourcesSi;
 		this.resourcesFe = resourcesFe;
+	}
+	
+	public boolean isEmpty() {
+		return resourcesC == 0 && resourcesSi == 0 && resourcesFe == 0;
+	}
+	
+	@Override
+	public BuildingResources clone() {
+		return new BuildingResources(resourcesC, resourcesSi, resourcesFe);
 	}
 	
 	public int getResourcesC() {

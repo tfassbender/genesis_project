@@ -56,10 +56,15 @@ public abstract class Constants {
 	 * Map keys for RESEARCH_RESOURCES are listed below:
 	 * <p>
 	 * first key: research area (listed below)</br>
-	 * second key: level to be reached
+	 * second key: level to be reached </br>
+	 * third key: resource type
 	 * </p>
 	 */
-	public static Map<Integer, Map<Integer, Double>> RESEARCH_RESOURCES;
+	public static Map<ResearchArea, Map<Integer, Map<Resource, Double>>> RESEARCH_RESOURCES;
+	/**
+	 * The starting positions on the research board for every playable class.
+	 */
+	public static Map<PlayerClass, Map<ResearchArea, Integer>> STARTING_RESEARCH_STATES;
 	public static int RESEARCH_AREA_MINES;
 	public static int RESEARCH_AREA_ECONOMY;
 	public static int RESEARCH_AREA_MILITARY;
