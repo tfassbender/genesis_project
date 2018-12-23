@@ -2,6 +2,7 @@ package net.jfabricationgames.genesis_project.manager;
 
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
+import net.jfabricationgames.genesis_project.game.Resource;
 
 public interface IResearchManager {
 	
@@ -13,4 +14,7 @@ public interface IResearchManager {
 	public ResearchResources getResearchResourcesNeededTotal(ResearchArea area, int state);
 	public ResearchResources getResearchResourcesNeededLeft(ResearchArea area, int state);
 	public ResearchResources getResearchResourcesAdded(ResearchArea area, int state);
+	
+	public void addResearchResources(Resource resource, int amount, ResearchArea area, int state);
+	public void addResearchResources(ResearchResources resources, ResearchArea area, int state);
 }

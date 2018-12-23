@@ -6,13 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.HashMap;
-
 import org.junit.jupiter.api.Test;
 
 import net.jfabricationgames.genesis_project.game.Board;
 import net.jfabricationgames.genesis_project.game.Building;
-import net.jfabricationgames.genesis_project.game.Constants;
 import net.jfabricationgames.genesis_project.game.Field;
 import net.jfabricationgames.genesis_project.game.Planet;
 import net.jfabricationgames.genesis_project.game.Player;
@@ -21,24 +18,8 @@ import net.jfabricationgames.genesis_project.user.User;
 
 class BuildingManagerTest {
 	
-	private void initBuildingNumbers() {
-		//initialize the BUILDING_NUMBERS field in the Constants class
-		Constants.BUILDING_NUMBERS = new HashMap<Building, Integer>();
-		
-		Constants.BUILDING_NUMBERS.put(Building.COLONY, 10);
-		Constants.BUILDING_NUMBERS.put(Building.MINE, 6);
-		Constants.BUILDING_NUMBERS.put(Building.TRAIDING_POST, 6);
-		Constants.BUILDING_NUMBERS.put(Building.LABORATORY, 5);
-		Constants.BUILDING_NUMBERS.put(Building.GOVERMENT, 1);
-		Constants.BUILDING_NUMBERS.put(Building.CITY, 2);
-		Constants.BUILDING_NUMBERS.put(Building.RESEARCH_CENTER, 3);
-		Constants.BUILDING_NUMBERS.put(Building.DRONE, 10);
-		Constants.BUILDING_NUMBERS.put(Building.SPACE_STATION, 5);
-		Constants.BUILDING_NUMBERS.put(Building.SATELLITE, 99);
-	}
-	
 	private BuildingManager getBuildingManager() {
-		initBuildingNumbers();
+		ConstantsInitializerUtil.initBuildingNumbers();
 		Player player = new Player(new User("User"));
 		return getBuildingManager(player);
 	}
@@ -94,7 +75,7 @@ class BuildingManagerTest {
 	
 	@Test
 	public void testFindFirstPossibleBuildingPosition_upgradeBuilding() {
-		initBuildingNumbers();
+		ConstantsInitializerUtil.initBuildingNumbers();
 		Player player1 = new Player(new User("Player1"));
 		Player player2 = new Player(new User("Player2"));
 		BuildingManager manager1 = getBuildingManager(player1);
@@ -116,7 +97,7 @@ class BuildingManagerTest {
 	
 	@Test
 	public void testFindFirstPossibleBuildingPosition_emptySpaceField() {
-		initBuildingNumbers();
+		ConstantsInitializerUtil.initBuildingNumbers();
 		Player player1 = new Player(new User("Player1"));
 		Player player2 = new Player(new User("Player2"));
 		BuildingManager manager1 = getBuildingManager(player1);
@@ -138,7 +119,7 @@ class BuildingManagerTest {
 	
 	@Test
 	public void testFindFirstPossibleBuildingPosition_spaceFieldWithSatellitesAndDrones() {
-		initBuildingNumbers();
+		ConstantsInitializerUtil.initBuildingNumbers();
 		Player player1 = new Player(new User("Player1"));
 		Player player2 = new Player(new User("Player2"));
 		BuildingManager manager1 = getBuildingManager(player1);

@@ -22,6 +22,21 @@ public class BuildingResources implements Cloneable {
 	public boolean isEmpty() {
 		return resourcesC == 0 && resourcesSi == 0 && resourcesFe == 0;
 	}
+	@Override
+	public String toString() {
+		return "BuildingResources[C: " + getResourcesC() + "; Si: " + getResourcesSi() + "; Fe:" + getResourcesFe() + "]";
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof ResearchResources) {
+			ResearchResources res = (ResearchResources) obj;
+			return this.getResourcesC() == res.getResourcesC() && this.getResourcesSi() == res.getResourcesSi()
+					&& this.getResourcesFe() == res.getResourcesFe();
+		}
+		else {
+			return super.equals(obj);
+		}
+	}
 	
 	@Override
 	public BuildingResources clone() {
@@ -128,6 +143,12 @@ public class BuildingResources implements Cloneable {
 				break;
 			default:
 				throw new IllegalArgumentException("Building resources are only CARBON, IRON, SILICIUM. Not " + resource);
+		}
+	}
+	
+	public void addResources(BuildingResources resources) {
+		for (Resource res : BUILDING_RESOURCES) {
+			addResources(res, resources.getResources(res));
 		}
 	}
 }

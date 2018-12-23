@@ -45,7 +45,7 @@ class ResourceManagerTest {
 	public void testAdders() {
 		Player player = createPlayerMock();
 		IResourceManager manager = player.getResourceManager();
-
+		
 		manager.setResourcesC(5);
 		manager.setResourcesSi(6);
 		manager.setResourcesFe(7);
@@ -89,7 +89,7 @@ class ResourceManagerTest {
 	}
 	
 	@Test
-	public void testPrimaryTertiary() {
+	public void testTertiaryResources() {
 		Player player = createPlayerMock();
 		IResourceManager manager = player.getResourceManager();
 		
