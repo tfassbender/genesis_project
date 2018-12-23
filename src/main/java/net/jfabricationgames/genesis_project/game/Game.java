@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.jfabricationgames.genesis_project.manager.IResearchManager;
 import net.jfabricationgames.genesis_project.manager.ITurnManager;
+import net.jfabricationgames.genesis_project.move.IMove;
 
 public class Game {
 	
@@ -12,6 +13,14 @@ public class Game {
 	
 	private ITurnManager turnManager;
 	private IResearchManager researchManager;
+	
+	public void executeMove(IMove move) {
+		//TODO implement method
+	}
+	public boolean isMoveResourcesAvailable(IMove move) {
+		//TODO implement method
+		return false;
+	}
 	
 	public List<Player> getPlayers() {
 		return players;

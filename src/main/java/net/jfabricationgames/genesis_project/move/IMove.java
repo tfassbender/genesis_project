@@ -2,6 +2,7 @@ package net.jfabricationgames.genesis_project.move;
 
 import java.util.List;
 
+import net.jfabricationgames.genesis_project.game.AllianceBonus;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.Field;
 import net.jfabricationgames.genesis_project.game.Planet;
@@ -25,5 +26,6 @@ public interface IMove {
 	public Technology getTechnology();
 	public List<Planet> getAlliancePlanets();
 	public List<Field> getSatelliteFields();
+	public AllianceBonus getAllianceBonus();
 	public boolean isPassing();
 }
