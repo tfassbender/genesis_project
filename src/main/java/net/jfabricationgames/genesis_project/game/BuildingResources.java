@@ -1,0 +1,154 @@
+package net.jfabricationgames.genesis_project.game;
+
+public class BuildingResources implements Cloneable {
+	
+	private int resourcesC;
+	private int resourcesSi;
+	private int resourcesFe;
+	
+	public static final Resource[] BUILDING_RESOURCES = new Resource[] {Resource.CARBON, Resource.SILICIUM, Resource.IRON};
+	
+	public BuildingResources() {
+		resourcesC = 0;
+		resourcesSi = 0;
+		resourcesFe = 0;
+	}
+	public BuildingResources(int resourcesC, int resourcesSi, int resourcesFe) {
+		this.resourcesC = resourcesC;
+		this.resourcesSi = resourcesSi;
+		this.resourcesFe = resourcesFe;
+	}
+	
+	public boolean isEmpty() {
+		return resourcesC == 0 && resourcesSi == 0 && resourcesFe == 0;
+	}
+	@Override
+	public String toString() {
+		return "BuildingResources[C: " + getResourcesC() + "; Si: " + getResourcesSi() + "; Fe:" + getResourcesFe() + "]";
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof ResearchResources) {
+			ResearchResources res = (ResearchResources) obj;
+			return this.getResourcesC() == res.getResourcesC() && this.getResourcesSi() == res.getResourcesSi()
+					&& this.getResourcesFe() == res.getResourcesFe();
+		}
+		else {
+			return super.equals(obj);
+		}
+	}
+	
+	@Override
+	public BuildingResources clone() {
+		return new BuildingResources(resourcesC, resourcesSi, resourcesFe);
+	}
+	
+	public int getResourcesC() {
+		return resourcesC;
+	}
+	public void setResourcesC(int resourcesC) {
+		this.resourcesC = resourcesC;
+	}
+	public void addResourcesC(int resourcesC) {
+		this.resourcesC += resourcesC;
+	}
+	
+	public int getResourcesSi() {
+		return resourcesSi;
+	}
+	public void setResourcesSi(int resourcesSi) {
+		this.resourcesSi = resourcesSi;
+	}
+	public void addResourcesSi(int resourcesSi) {
+		this.resourcesSi += resourcesSi;
+	}
+	
+	public int getResourcesFe() {
+		return resourcesFe;
+	}
+	public void setResourcesFe(int resourcesFe) {
+		this.resourcesFe = resourcesFe;
+	}
+	public void addResourcesFe(int resourcesFe) {
+		this.resourcesFe += resourcesFe;
+	}
+	
+	public int getResourcesPrimary(PlayerClass clazz) {
+		return getResources(clazz.getPrimaryResource());
+	}
+	public void setResourcesPrimary(PlayerClass clazz, int resources) {
+		setResources(clazz.getPrimaryResource(), resources);
+	}
+	public void addResourcesPrimary(PlayerClass clazz, int resources) {
+		addResources(clazz.getPrimaryResource(), resources);
+	}
+	
+	public int getResourcesSecundary(PlayerClass clazz) {
+		return getResources(clazz.getSecundaryResource());
+	}
+	public void setResourcesSecundary(PlayerClass clazz, int resources) {
+		setResources(clazz.getSecundaryResource(), resources);
+	}
+	public void addResourcesSecundary(PlayerClass clazz, int resources) {
+		addResources(clazz.getSecundaryResource(), resources);
+	}
+	
+	public int getResourcesTertiary(PlayerClass clazz) {
+		return getResources(clazz.getTertiaryResource());
+	}
+	public void setResourcesTertiary(PlayerClass clazz, int resources) {
+		setResources(clazz.getTertiaryResource(), resources);
+	}
+	public void addResourcesTertiary(PlayerClass clazz, int resources) {
+		addResources(clazz.getTertiaryResource(), resources);
+	}
+	
+	public int getResources(Resource resource) {
+		switch (resource) {
+			case CARBON:
+				return getResourcesC();
+			case IRON:
+				return getResourcesFe();
+			case SILICIUM:
+				return getResourcesSi();
+			default:
+				throw new IllegalArgumentException("Building resources are only CARBON, IRON, SILICIUM. Not " + resource);
+		}
+	}
+	public void setResources(Resource resource, int resources) {
+		switch (resource) {
+			case CARBON:
+				setResourcesC(resources);
+				break;
+			case IRON:
+				setResourcesFe(resources);
+				break;
+			case SILICIUM:
+				setResourcesSi(resources);
+				break;
+			default:
+				throw new IllegalArgumentException("Building resources are only CARBON, IRON, SILICIUM. Not " + resource);
+		}
+	}
+	public void addResources(Resource resource, int resources) {
+		switch (resource) {
+			case CARBON:
+				addResourcesC(resources);
+				break;
+			case IRON:
+				addResourcesFe(resources);
+				break;
+			case SILICIUM:
+				addResourcesSi(resources);
+				break;
+			default:
+				throw new IllegalArgumentException("Building resources are only CARBON, IRON, SILICIUM. Not " + resource);
+		}
+	}
+	
+	public void addResources(BuildingResources resources) {
+		for (Resource res : BUILDING_RESOURCES) {
+			addResources(res, resources.getResources(res));
+		}
+	}
+}
