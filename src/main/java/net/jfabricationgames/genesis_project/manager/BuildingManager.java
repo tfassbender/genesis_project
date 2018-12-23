@@ -136,9 +136,4 @@ public class BuildingManager implements IBuildingManager {
 	public boolean canBuild(Building building, Field field) {
 		return findFirstPossibleBuildingPosition(building, field) != -1 && getNumBuildingsLeft(building) > 0;
 	}
-	
-	@Override
-	public Player getPlayer() {
-		return player;
-	}
 }
