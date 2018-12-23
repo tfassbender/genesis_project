@@ -14,13 +14,11 @@ public class ResearchManager implements IResearchManager {
 	private Map<ResearchArea, Integer> researchStates;
 	private Map<ResearchArea, Map<Integer, ResearchResources>> researchResourcesAdded;
 	
-	//private Player player;
 	private int playersInGame;
 	
 	private static final double EPSILON = 1e-2;//for rounding values because of the double epsilon
 	
 	public ResearchManager(Player player, int playersInGame) {
-		//this.player = player;
 		this.playersInGame = playersInGame;
 		initResearchResourcesAdded();
 		if (Constants.STARTING_RESEARCH_STATES != null) {

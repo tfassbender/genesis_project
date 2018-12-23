@@ -159,8 +159,9 @@ class BuildingManagerTest {
 	
 	@Test
 	public void testBuild() {
-		BuildingManager manager = getBuildingManager();
-		Field field = getFieldWithBuildings(null, null, new PlayerBuilding(Building.COLONY, manager.getPlayer()));
+		Player player1 = new Player(new User("Player1"));
+		BuildingManager manager = getBuildingManager(player1);
+		Field field = getFieldWithBuildings(null, null, new PlayerBuilding(Building.COLONY, player1));
 		
 		manager.build(Building.COLONY, field);
 		manager.build(Building.MINE, field);
@@ -173,8 +174,9 @@ class BuildingManagerTest {
 	
 	@Test
 	public void testBuild_noValidBuilding() {
-		BuildingManager manager = getBuildingManager();
-		Field field = getFieldWithBuildings(null, new PlayerBuilding(Building.COLONY, manager.getPlayer()), null);
+		Player player1 = new Player(new User("Player1"));
+		BuildingManager manager = getBuildingManager(player1);
+		Field field = getFieldWithBuildings(null, new PlayerBuilding(Building.COLONY, player1), null);
 		
 		assertThrows(IllegalArgumentException.class, () -> manager.build(Building.GOVERMENT, field));
 		assertThrows(IllegalArgumentException.class, () -> manager.build(Building.DRONE, field));
