@@ -109,11 +109,6 @@ public class ResourceManager implements IResourceManager {
 	}
 	
 	@Override
-	public Player getPlayer() {
-		return player;
-	}
-	
-	@Override
 	public int getResourcesPrimary() {
 		return buildingResources.getResourcesPrimary(player.getPlayerClass());
 	}

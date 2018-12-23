@@ -1,7 +1,5 @@
 package net.jfabricationgames.genesis_project.manager;
 
-import net.jfabricationgames.genesis_project.game.Player;
-
 public interface IResourceManager {
 	
 	public int getResourcesC();
@@ -42,6 +40,4 @@ public interface IResourceManager {
 	
 	public void collectGameStartResources();
 	public void collectTurnStartResources();
-	
-	public Player getPlayer();
 }
