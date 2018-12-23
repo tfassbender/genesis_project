@@ -1,0 +1,13 @@
+package net.jfabricationgames.genesis_project.game;
+
+public enum Technology {
+	
+	COLONY_POINTS,
+	TRAIDING_POST_POINTS,
+	BONUS_RESOURCES,
+	BONUS_RESEARCH_POINTS,
+	NEW_PLANET_POINTS,
+	MILITARY_FTL,
+	ALLIANCE_BUILDINGS,
+	BONUS_POINTS;
+}
