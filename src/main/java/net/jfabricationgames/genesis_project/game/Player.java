@@ -3,7 +3,9 @@ package net.jfabricationgames.genesis_project.game;
 import net.jfabricationgames.genesis_project.manager.BuildingManager;
 import net.jfabricationgames.genesis_project.manager.IBuildingManager;
 import net.jfabricationgames.genesis_project.manager.IPointManager;
+import net.jfabricationgames.genesis_project.manager.IResearchManager;
 import net.jfabricationgames.genesis_project.manager.IResourceManager;
+import net.jfabricationgames.genesis_project.manager.ITechnologyManager;
 import net.jfabricationgames.genesis_project.manager.PointManager;
 import net.jfabricationgames.genesis_project.manager.ResourceManager;
 import net.jfabricationgames.genesis_project.user.User;
@@ -15,10 +17,18 @@ public class Player {
 	private IPointManager pointManager;
 	private IResourceManager resourceManager;
 	private IBuildingManager buildingManager;
+	private IResearchManager researchManager;
+	private ITechnologyManager technologyManager;
 	
 	private PlayerClass playerClass;
 	
+	private Game game;
+	
 	public Player(User user) {
+		this(user, null);
+	}
+	public Player(User user, Game game) {
+		this.game = game;
 		this.user = user;
 		pointManager = new PointManager(this);
 		resourceManager = new ResourceManager(this);
@@ -44,8 +54,21 @@ public class Player {
 	public IBuildingManager getBuildingManager() {
 		return buildingManager;
 	}
+	public IResearchManager getResearchManager() {
+		return researchManager;
+	}
+	public ITechnologyManager getTechnologyManager() {
+		return technologyManager;
+	}
 	
 	public PlayerClass getPlayerClass() {
 		return playerClass;
+	}
+	
+	public Game getGame() {
+		return game;
+	}
+	public void setGame(Game game) {
+		this.game = game;
 	}
 }
