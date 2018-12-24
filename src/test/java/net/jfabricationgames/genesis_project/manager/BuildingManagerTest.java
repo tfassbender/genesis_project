@@ -47,7 +47,7 @@ class BuildingManagerTest {
 		BuildingManager manager = getBuildingManager();
 		
 		assertEquals(10, manager.getNumBuildingsLeft(Building.COLONY));
-		assertEquals(1, manager.getNumBuildingsLeft(Building.GOVERMENT));
+		assertEquals(1, manager.getNumBuildingsLeft(Building.GOVERNMENT));
 		assertEquals(2, manager.getNumBuildingsLeft(Building.CITY));
 	}
 	
@@ -59,7 +59,7 @@ class BuildingManagerTest {
 		manager.numBuildingsLeft.put(Building.CITY, 1);
 		
 		assertEquals(5, manager.getNumBuildingsOnField(Building.COLONY));
-		assertEquals(0, manager.getNumBuildingsOnField(Building.GOVERMENT));
+		assertEquals(0, manager.getNumBuildingsOnField(Building.GOVERNMENT));
 		assertEquals(1, manager.getNumBuildingsOnField(Building.CITY));
 	}
 	
@@ -114,7 +114,7 @@ class BuildingManagerTest {
 		assertEquals(-1, manager1.findFirstPossibleBuildingPosition(Building.COLONY, field));
 		assertEquals(-1, manager2.findFirstPossibleBuildingPosition(Building.COLONY, field));
 		assertEquals(-1, manager1.findFirstPossibleBuildingPosition(Building.MINE, field));
-		assertEquals(-1, manager2.findFirstPossibleBuildingPosition(Building.GOVERMENT, field));
+		assertEquals(-1, manager2.findFirstPossibleBuildingPosition(Building.GOVERNMENT, field));
 	}
 	
 	@Test
@@ -144,7 +144,7 @@ class BuildingManagerTest {
 		Field field = getFieldWithBuildings(null, null, null);
 		
 		assertTrue(manager.canBuild(Building.COLONY, field));
-		assertFalse(manager.canBuild(Building.GOVERMENT, field));
+		assertFalse(manager.canBuild(Building.GOVERNMENT, field));
 		assertFalse(manager.canBuild(Building.DRONE, field));
 	}
 	
@@ -178,7 +178,7 @@ class BuildingManagerTest {
 		BuildingManager manager = getBuildingManager(player1);
 		Field field = getFieldWithBuildings(null, new PlayerBuilding(Building.COLONY, player1), null);
 		
-		assertThrows(IllegalArgumentException.class, () -> manager.build(Building.GOVERMENT, field));
+		assertThrows(IllegalArgumentException.class, () -> manager.build(Building.GOVERNMENT, field));
 		assertThrows(IllegalArgumentException.class, () -> manager.build(Building.DRONE, field));
 	}
 }

@@ -6,7 +6,6 @@ import net.jfabricationgames.genesis_project.game.AllianceBonus;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.Field;
 import net.jfabricationgames.genesis_project.game.Game;
-import net.jfabricationgames.genesis_project.game.Planet;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
@@ -23,13 +22,13 @@ public class Move implements IMove {
 	private ResearchArea researchArea;
 	private ResearchResources researchResources;
 	private Technology technology;
-	private List<Planet> alliancePlanets;
+	private List<Field> alliancePlanets;
 	private List<Field> satelliteFields;
 	private AllianceBonus allianceBonus;
 	private boolean pass;
 	
 	protected Move(Game game, MoveType type, Player player, Field field, Building building, ResearchArea researchArea,
-			ResearchResources researchResources, Technology technology, List<Planet> alliancePlanets, List<Field> satelliteFields,
+			ResearchResources researchResources, Technology technology, List<Field> alliancePlanets, List<Field> satelliteFields,
 			AllianceBonus allianceBonus, boolean pass) {
 		this.game = game;
 		this.type = type;
@@ -91,7 +90,7 @@ public class Move implements IMove {
 	}
 	
 	@Override
-	public List<Planet> getAlliancePlanets() {
+	public List<Field> getAlliancePlanets() {
 		return alliancePlanets;
 	}
 	

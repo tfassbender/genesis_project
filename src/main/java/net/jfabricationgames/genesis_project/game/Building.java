@@ -9,7 +9,7 @@ public enum Building {
 	MINE(Constants.BUILDING_COSTS_MINE, COLONY, "mines/mine_"),//
 	TRAIDING_POST(Constants.BUILDING_COSTS_TRAIDING_POST, COLONY, "traiding_posts/traiding_post_"),//
 	LABORATORY(Constants.BUILDING_COSTS_LABORATORY, COLONY, "laboratories/laboratory_"),//
-	GOVERMENT(Constants.BUILDING_COSTS_GOVERMENT, TRAIDING_POST, "goverments/goverment_"),//
+	GOVERNMENT(Constants.BUILDING_COSTS_GOVERMENT, TRAIDING_POST, "goverments/goverment_"),//
 	CITY(Constants.BUILDING_COSTS_CITY, TRAIDING_POST, "cities/city_"),//
 	RESEARCH_CENTER(Constants.BUILDING_COSTS_RESEARCH_CENTER, LABORATORY, "research_centers/research_center_"),//
 	DRONE(Constants.BUILDING_COSTS_DRONE, null, "drones/drone_"),//
@@ -61,7 +61,7 @@ public enum Building {
 			case COLONY:
 			case MINE:
 			case TRAIDING_POST:
-			case GOVERMENT:
+			case GOVERNMENT:
 			case CITY:
 			case LABORATORY:
 			case RESEARCH_CENTER:

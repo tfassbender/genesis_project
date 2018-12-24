@@ -22,7 +22,7 @@ class FieldTest {
 		Constants.BUILDING_NUMBERS.put(Building.MINE, 6);
 		Constants.BUILDING_NUMBERS.put(Building.TRAIDING_POST, 6);
 		Constants.BUILDING_NUMBERS.put(Building.LABORATORY, 5);
-		Constants.BUILDING_NUMBERS.put(Building.GOVERMENT, 1);
+		Constants.BUILDING_NUMBERS.put(Building.GOVERNMENT, 1);
 		Constants.BUILDING_NUMBERS.put(Building.CITY, 2);
 		Constants.BUILDING_NUMBERS.put(Building.RESEARCH_CENTER, 3);
 		Constants.BUILDING_NUMBERS.put(Building.DRONE, 10);
@@ -38,10 +38,10 @@ class FieldTest {
 		
 		field.build(new PlayerBuilding(Building.CITY, player), 0);
 		field.build(new PlayerBuilding(Building.COLONY, player), 0);//overrides the city
-		field.build(new PlayerBuilding(Building.GOVERMENT, player), 1);
+		field.build(new PlayerBuilding(Building.GOVERNMENT, player), 1);
 		
 		assertEquals(Building.COLONY, field.getBuildings()[0].getBuilding());
-		assertEquals(Building.GOVERMENT, field.getBuildings()[1].getBuilding());
+		assertEquals(Building.GOVERNMENT, field.getBuildings()[1].getBuilding());
 		assertNull(field.getBuildings()[2]);
 	}
 	

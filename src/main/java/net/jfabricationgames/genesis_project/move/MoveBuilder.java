@@ -7,7 +7,6 @@ import net.jfabricationgames.genesis_project.game.AllianceBonus;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.Field;
 import net.jfabricationgames.genesis_project.game.Game;
-import net.jfabricationgames.genesis_project.game.Planet;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
@@ -29,7 +28,7 @@ public class MoveBuilder {
 	private ResearchArea researchArea;
 	private ResearchResources researchResources;
 	private Technology technology;
-	private List<Planet> alliancePlanets;
+	private List<Field> alliancePlanets;
 	private List<Field> satelliteFields;
 	private AllianceBonus allianceBonus;
 	private boolean pass;
@@ -145,10 +144,10 @@ public class MoveBuilder {
 		this.technology = technology;
 	}
 	
-	public List<Planet> getAlliancePlanets() {
+	public List<Field> getAlliancePlanets() {
 		return alliancePlanets;
 	}
-	public void setAlliancePlanets(List<Planet> alliancePlanets) {
+	public void setAlliancePlanets(List<Field> alliancePlanets) {
 		this.alliancePlanets = alliancePlanets;
 	}
 	

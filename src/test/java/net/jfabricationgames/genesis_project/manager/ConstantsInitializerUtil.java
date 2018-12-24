@@ -21,7 +21,7 @@ public class ConstantsInitializerUtil {
 		Constants.BUILDING_NUMBERS.put(Building.MINE, 6);
 		Constants.BUILDING_NUMBERS.put(Building.TRAIDING_POST, 6);
 		Constants.BUILDING_NUMBERS.put(Building.LABORATORY, 5);
-		Constants.BUILDING_NUMBERS.put(Building.GOVERMENT, 1);
+		Constants.BUILDING_NUMBERS.put(Building.GOVERNMENT, 1);
 		Constants.BUILDING_NUMBERS.put(Building.CITY, 2);
 		Constants.BUILDING_NUMBERS.put(Building.RESEARCH_CENTER, 3);
 		Constants.BUILDING_NUMBERS.put(Building.DRONE, 10);
