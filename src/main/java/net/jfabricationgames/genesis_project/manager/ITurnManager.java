@@ -8,6 +8,8 @@ public interface ITurnManager {
 	public int getTurn();
 	public void nextTurn();
 	
+	public void playerPassed(Player player);
+	
 	public void receivePointsForMove(IMove move);
 	
 	public boolean gameEnded();

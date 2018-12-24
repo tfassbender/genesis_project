@@ -28,6 +28,19 @@ public enum PlayerClass {
 		this.tertiaryResource = tertiaryResource;
 	}
 	
+	public int getPlanetDistance(Planet planet) {
+		if (planet == Planet.GENESIS || planet == Planet.CENTER) {
+			return 0;
+		}
+		
+		int distance = Math.abs(getColor().getColorIndex() - planet.getPlayerColor().getColorIndex());
+		if (distance > 3) {
+			distance = 6 - distance;
+		}
+		
+		return distance;
+	}
+	
 	public PlayerColor getColor() {
 		return color;
 	}

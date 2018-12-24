@@ -46,6 +46,12 @@ public class TurnManager implements ITurnManager {
 	}
 	
 	@Override
+	public void playerPassed(Player player) {
+		//TODO (?)
+		playerOrder.playerPassed(player);
+	}
+	
+	@Override
 	public boolean gameEnded() {
 		return turn >= Constants.TURNS_PLAYED;
 	}

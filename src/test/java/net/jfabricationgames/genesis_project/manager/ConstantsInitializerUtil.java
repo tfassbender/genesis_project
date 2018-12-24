@@ -90,4 +90,29 @@ public class ConstantsInitializerUtil {
 		Constants.RESEARCH_RESOURCES.get(ResearchArea.WEAPON).get(9).put(Resource.SCIENTISTS, Double.valueOf(1));
 		Constants.RESEARCH_RESOURCES.get(ResearchArea.WEAPON).get(10).put(Resource.SCIENTISTS, Double.valueOf(2));
 	}
+	
+	public static void initBuildingCostsForColonies() {
+		Constants.BUILDING_COSTS_COLONIE[0][0] = 2;
+		Constants.BUILDING_COSTS_COLONIE[0][1] = 1;
+		Constants.BUILDING_COSTS_COLONIE[0][2] = 0;
+		
+		Constants.BUILDING_COSTS_COLONIE[1][0] = 2;
+		Constants.BUILDING_COSTS_COLONIE[1][1] = 2;
+		Constants.BUILDING_COSTS_COLONIE[1][2] = 0;
+		
+		Constants.BUILDING_COSTS_COLONIE[2][0] = 3;
+		Constants.BUILDING_COSTS_COLONIE[2][1] = 3;
+		Constants.BUILDING_COSTS_COLONIE[2][2] = 0;
+		
+		Constants.BUILDING_COSTS_COLONIE[3][0] = 3;
+		Constants.BUILDING_COSTS_COLONIE[3][1] = 3;
+		Constants.BUILDING_COSTS_COLONIE[3][2] = 2;
+	}
+
+	public static void initAllianceValues() {
+		Constants.ALLIANCE_MIN_PLANETS = 3;
+		Constants.ALLIANCE_MIN_PLANETS_OTHER_PLAYERS = 2;
+		Constants.ALLIANCE_MIN_BUILDINGS = 6;//normally its 7 but 6 is better for the tests...
+		Constants.ALLIANCE_MIN_BUILDINGS_OTHER_PLAYERS = 2;
+	}
 }
