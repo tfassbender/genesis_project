@@ -1,6 +1,7 @@
 package net.jfabricationgames.genesis_project.move;
 
 import java.util.List;
+import java.util.Objects;
 
 import net.jfabricationgames.genesis_project.game.AllianceBonus;
 import net.jfabricationgames.genesis_project.game.Building;
@@ -34,6 +35,7 @@ public class MoveBuilder {
 	private boolean pass;
 	
 	public MoveBuilder(Game game) {
+		Objects.requireNonNull(game, "The game object mussn't be null.");
 		this.game = game;
 	}
 	
@@ -92,9 +94,6 @@ public class MoveBuilder {
 	
 	public boolean isBuildingMove() {
 		return buildingMove;
-	}
-	public void setBuildingMove(boolean buildingMove) {
-		this.buildingMove = buildingMove;
 	}
 	
 	public MoveType getType() {

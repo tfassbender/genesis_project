@@ -17,7 +17,7 @@ public class Game {
 	public void executeMove(IMove move) {
 		//TODO implement method
 	}
-	public boolean isMoveResourcesAvailable(IMove move) {
+	public boolean isMoveExecutable(IMove move) {
 		//TODO implement method
 		return false;
 	}

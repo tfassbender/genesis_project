@@ -51,8 +51,8 @@ public class Move implements IMove {
 	}
 	
 	@Override
-	public boolean isResourcesAvailable() {
-		return game.isMoveResourcesAvailable(this);
+	public boolean isExecutable() {
+		return game.isMoveExecutable(this);
 	}
 	
 	@Override

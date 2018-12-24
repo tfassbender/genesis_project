@@ -14,7 +14,7 @@ import net.jfabricationgames.genesis_project.game.Technology;
 public interface IMove {
 	
 	public void execute();
-	public boolean isResourcesAvailable();
+	public boolean isExecutable();
 	
 	public MoveType getType();
 	public Player getPlayer();
