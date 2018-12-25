@@ -12,6 +12,17 @@ public class Game {
 	
 	private ITurnManager turnManager;
 	private IResearchManager researchManager;
+
+	public void collectGameStartResources() {
+		for (Player player : players) {
+			player.getResourceManager().collectGameStartResources();
+		}
+	}
+	public void collectTurnStartResources() {
+		for (Player player : players) {
+			player.getResourceManager().collectTurnStartResources();
+		}
+	}
 	
 	public List<Player> getPlayers() {
 		return players;

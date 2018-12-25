@@ -115,7 +115,7 @@ public abstract class Constants {
 				return BUILDING_COSTS_SATELLITE[planetDistance];
 			case SPACE_STATION:
 				return BUILDING_COSTS_SPACE_STATION[planetDistance];
-			case TRAIDING_POST:
+			case TRADING_POST:
 				return BUILDING_COSTS_TRAIDING_POST[planetDistance];
 			default:
 				throw new IllegalArgumentException("The Building type " + building + " is unknown");

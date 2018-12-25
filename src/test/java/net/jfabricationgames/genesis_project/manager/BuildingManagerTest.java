@@ -93,7 +93,7 @@ class BuildingManagerTest {
 		Field field = getFieldWithBuildings(new PlayerBuilding(Building.COLONY, player1), new PlayerBuilding(Building.LABORATORY, player2), null);
 		
 		assertEquals(0, manager1.findFirstPossibleBuildingPosition(Building.MINE, field));
-		assertEquals(0, manager1.findFirstPossibleBuildingPosition(Building.TRAIDING_POST, field));
+		assertEquals(0, manager1.findFirstPossibleBuildingPosition(Building.TRADING_POST, field));
 		assertEquals(0, manager1.findFirstPossibleBuildingPosition(Building.LABORATORY, field));
 		
 		assertEquals(-1, manager1.findFirstPossibleBuildingPosition(Building.RESEARCH_CENTER, field));
@@ -175,11 +175,11 @@ class BuildingManagerTest {
 		
 		manager.build(Building.COLONY, field);
 		manager.build(Building.MINE, field);
-		manager.build(Building.TRAIDING_POST, field);
+		manager.build(Building.TRADING_POST, field);
 		
 		assertEquals(Building.MINE, field.getBuildings()[0].getBuilding());
 		assertNull(field.getBuildings()[1]);
-		assertEquals(Building.TRAIDING_POST, field.getBuildings()[2].getBuilding());
+		assertEquals(Building.TRADING_POST, field.getBuildings()[2].getBuilding());
 	}
 	
 	@Test
