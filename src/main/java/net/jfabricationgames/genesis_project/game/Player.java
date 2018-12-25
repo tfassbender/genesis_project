@@ -1,5 +1,7 @@
 package net.jfabricationgames.genesis_project.game;
 
+import java.util.Objects;
+
 import net.jfabricationgames.genesis_project.manager.BuildingManager;
 import net.jfabricationgames.genesis_project.manager.IAllianceManager;
 import net.jfabricationgames.genesis_project.manager.IBuildingManager;
@@ -38,8 +40,22 @@ public class Player {
 	}
 	
 	@Override
+	public int hashCode() {
+		return Objects.hash(user.getUsername());
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Player) {
+			Player p = (Player) obj;
+			return p.user.getUsername().equals(this.getUser().getUsername());
+		}
+		else {
+			return super.equals(obj);
+		}
+	}
+	@Override
 	public String toString() {
-		return user.toString();
+		return "Player[" + user.toString() + "]";
 	}
 	
 	public User getUser() {

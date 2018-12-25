@@ -20,7 +20,7 @@ class FieldTest {
 		
 		Constants.BUILDING_NUMBERS.put(Building.COLONY, 10);
 		Constants.BUILDING_NUMBERS.put(Building.MINE, 6);
-		Constants.BUILDING_NUMBERS.put(Building.TRAIDING_POST, 6);
+		Constants.BUILDING_NUMBERS.put(Building.TRADING_POST, 6);
 		Constants.BUILDING_NUMBERS.put(Building.LABORATORY, 5);
 		Constants.BUILDING_NUMBERS.put(Building.GOVERMENT, 1);
 		Constants.BUILDING_NUMBERS.put(Building.CITY, 2);

@@ -3,6 +3,9 @@ package net.jfabricationgames.genesis_project.game;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
+
+import com.google.common.annotations.VisibleForTesting;
 
 public class Field {
 	
@@ -32,6 +35,19 @@ public class Field {
 		return spaceBuildings;
 	}
 	
+	@Override
+	public int hashCode() {
+		return Objects.hash(position, planet);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		return this.hashCode() == obj.hashCode();
+	}
+	@Override
+	public String toString() {
+		return "Field[Position: " + position + "; Planet: " + planet.name() + "]";
+	}
+	
 	/**
 	 * Set a building without checking for any building conditions.
 	 */
@@ -56,5 +72,10 @@ public class Field {
 	
 	public boolean isPlanetField() {
 		return planet != null;
+	}
+	
+	@VisibleForTesting
+	public void setPlanet(Planet planet) {
+		this.planet = planet;
 	}
 }

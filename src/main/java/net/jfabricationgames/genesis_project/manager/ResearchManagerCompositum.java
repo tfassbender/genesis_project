@@ -22,7 +22,7 @@ public class ResearchManagerCompositum implements IResearchManager {
 			return globalManager.getState(ResearchArea.WEAPON);
 		}
 		else {
-			throw new UnsupportedOperationException("The compositum implementation can only handle WEAPON states");			
+			throw new UnsupportedOperationException("The compositum implementation can only handle WEAPON states");
 		}
 	}
 	
@@ -43,6 +43,11 @@ public class ResearchManagerCompositum implements IResearchManager {
 	}
 	
 	@Override
+	public int getNextResourceNeedingState(ResearchArea area) {
+		return globalManager.getNextResourceNeedingState(area);
+	}
+	
+	@Override
 	public ResearchResources getResearchResourcesNeededTotal(ResearchArea area, int state) {
 		return globalManager.getResearchResourcesNeededTotal(area, state);
 	}
@@ -58,12 +63,12 @@ public class ResearchManagerCompositum implements IResearchManager {
 	}
 	
 	@Override
-	public void addResearchResources(Resource resource, int amount, ResearchArea area, int state) {
-		globalManager.addResearchResources(resource, amount, area, state);
+	public void addResearchResources(Resource resource, int amount, ResearchArea area) {
+		globalManager.addResearchResources(resource, amount, area);
 	}
 	
 	@Override
-	public void addResearchResources(ResearchResources resources, ResearchArea area, int state) {
-		globalManager.addResearchResources(resources, area, state);
+	public void addResearchResources(ResearchResources resources, ResearchArea area) {
+		globalManager.addResearchResources(resources, area);
 	}
 }
