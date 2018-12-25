@@ -20,7 +20,6 @@ import net.jfabricationgames.genesis_project.game.Planet;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.PlayerBuilding;
 import net.jfabricationgames.genesis_project.game.PlayerClass;
-import net.jfabricationgames.genesis_project.user.User;
 
 class BuildingManagerTest {
 	
@@ -86,8 +85,8 @@ class BuildingManagerTest {
 	@Test
 	public void testFindFirstPossibleBuildingPosition_upgradeBuilding() {
 		ConstantsInitializerUtil.initBuildingNumbers();
-		Player player1 = new Player(new User("Player1"));
-		Player player2 = new Player(new User("Player2"));
+		Player player1 = mock(Player.class);
+		Player player2 = mock(Player.class);
 		BuildingManager manager1 = getBuildingManager(player1);
 		BuildingManager manager2 = getBuildingManager(player2);
 		Field field = getFieldWithBuildings(new PlayerBuilding(Building.COLONY, player1), new PlayerBuilding(Building.LABORATORY, player2), null);
@@ -108,8 +107,8 @@ class BuildingManagerTest {
 	@Test
 	public void testFindFirstPossibleBuildingPosition_emptySpaceField() {
 		ConstantsInitializerUtil.initBuildingNumbers();
-		Player player1 = new Player(new User("Player1"));
-		Player player2 = new Player(new User("Player2"));
+		Player player1 = mock(Player.class);
+		Player player2 = mock(Player.class);
 		BuildingManager manager1 = getBuildingManager(player1);
 		BuildingManager manager2 = getBuildingManager(player2);
 		Field field = new Field(new Board.Position(0, 0), null);
@@ -130,8 +129,8 @@ class BuildingManagerTest {
 	@Test
 	public void testFindFirstPossibleBuildingPosition_spaceFieldWithSatellitesAndDrones() {
 		ConstantsInitializerUtil.initBuildingNumbers();
-		Player player1 = new Player(new User("Player1"));
-		Player player2 = new Player(new User("Player2"));
+		Player player1 = mock(Player.class);
+		Player player2 = mock(Player.class);
 		BuildingManager manager1 = getBuildingManager(player1);
 		BuildingManager manager2 = getBuildingManager(player2);
 		Field field = new Field(new Board.Position(0, 0), null);
@@ -169,7 +168,10 @@ class BuildingManagerTest {
 	
 	@Test
 	public void testBuild() {
-		Player player1 = new Player(new User("Player1"));
+		Player player1 = mock(Player.class);
+		when(player1.getPlayerClass()).thenReturn(PlayerClass.ENCOR);
+		IResourceManager resourceManager = mock(ResourceManager.class);
+		when(player1.getResourceManager()).thenReturn(resourceManager);
 		BuildingManager manager = getBuildingManager(player1);
 		Field field = getFieldWithBuildings(null, null, new PlayerBuilding(Building.COLONY, player1));
 		
@@ -184,12 +186,23 @@ class BuildingManagerTest {
 	
 	@Test
 	public void testBuild_noValidBuilding() {
-		Player player1 = new Player(new User("Player1"));
+		Player player1 = mock(Player.class);
 		BuildingManager manager = getBuildingManager(player1);
 		Field field = getFieldWithBuildings(null, new PlayerBuilding(Building.COLONY, player1), null);
 		
 		assertThrows(IllegalArgumentException.class, () -> manager.build(Building.GOVERNMENT, field));
 		assertThrows(IllegalArgumentException.class, () -> manager.build(Building.DRONE, field));
+	}
+	
+	@Test
+	public void testBuildOnInvalidFields() {
+		Player player1 = mock(Player.class);
+		BuildingManager manager = getBuildingManager(player1);
+		Field planetField = new Field(new Position(0, 0), Planet.BLACK);
+		Field spaceField = new Field(new Position(3, 3), null);
+		
+		assertThrows(IllegalArgumentException.class, () -> manager.build(Building.COLONY, spaceField));
+		assertThrows(IllegalArgumentException.class, () -> manager.build(Building.SATELLITE, planetField));
 	}
 	
 	@Test
@@ -222,5 +235,25 @@ class BuildingManagerTest {
 		assertFalse(manager.canBuild(Building.COLONY, fieldBlack));
 		assertTrue(manager.canBuild(Building.COLONY, fieldYellow));
 		assertTrue(manager.canBuild(Building.COLONY, fieldRed));
+	}
+	
+	@Test
+	public void testIsResourcesAvailable_spaceBuildings() {
+		ConstantsInitializerUtil.initializeBuildingCostsForSpaceBuildings();
+		ConstantsInitializerUtil.initBuildingNumbers();
+		
+		Player player = mock(Player.class);
+		when(player.getPlayerClass()).thenReturn(PlayerClass.ENCOR);//blue class
+		IResourceManager resourceManager = new ResourceManager(player);
+		when(player.getResourceManager()).thenReturn(resourceManager);
+		resourceManager.addResources(new BuildingResources(3, 3, 1));//enough for satellites and drones but not for space stations
+		
+		BuildingManager manager = new BuildingManager(player);
+		
+		Field spaceField = new Field(new Position(0, 0), null);
+		
+		assertTrue(manager.canBuild(Building.SATELLITE, spaceField));
+		assertTrue(manager.canBuild(Building.DRONE, spaceField));
+		assertFalse(manager.canBuild(Building.SPACE_STATION, spaceField));
 	}
 }

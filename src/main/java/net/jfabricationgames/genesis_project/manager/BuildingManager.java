@@ -46,10 +46,22 @@ public class BuildingManager implements IBuildingManager {
 	
 	@Override
 	public void build(Building building, Field field) throws IllegalStateException {
+		if (!field.isPlanetField() && !(building == Building.SATELLITE || building == Building.DRONE || building == Building.SPACE_STATION)) {
+			throw new IllegalArgumentException("Can't build a planetary building (" + building + ") on a space field.");
+		}
+		else if (field.isPlanetField() && (building == Building.SATELLITE || building == Building.DRONE || building == Building.SPACE_STATION)) {
+			throw new IllegalArgumentException("Can't build a space building (" + building + ") on a planet field.");
+		}
+		
 		PlayerBuilding playerBuilding = new PlayerBuilding(building, player);
 		int position = findFirstPossibleBuildingPosition(building, field);
 		if (position != -1) {
 			field.build(playerBuilding, position);
+			
+			//take the resources
+			BuildingResources resources = getResourcesNeededForBuilding(building, field);
+			IResourceManager resourceManager = player.getResourceManager();
+			resourceManager.reduceResources(resources);
 		}
 		else {
 			throw new IllegalArgumentException("No possible position found for this building on this field.");
@@ -124,20 +136,20 @@ public class BuildingManager implements IBuildingManager {
 		return firstPossibleField;
 	}
 	
-	@VisibleForTesting
-	protected boolean isResourcesAvailable(Building building, Field field) {
+	@Override
+	public boolean isResourcesAvailable(Building building, Field field) {
 		BuildingResources buildingResources = getResourcesNeededForBuilding(building, field);
 		return player.getResourceManager().isResourcesAvailable(buildingResources);
 	}
 	
-	@VisibleForTesting
-	protected BuildingResources getResourcesNeededForBuilding(Building building, Field field) {
+	@Override
+	public BuildingResources getResourcesNeededForBuilding(Building building, Field field) {
 		BuildingResources resourcesNeeded = new BuildingResources();
 		
-		int[] costs = Constants.getBuildingCosts(building, player.getPlayerClass(), field.getPlanet());
-		resourcesNeeded.addResources(player.getPlayerClass().getPrimaryResource(), costs[0]);
-		resourcesNeeded.addResources(player.getPlayerClass().getSecundaryResource(), costs[1]);
-		resourcesNeeded.addResources(player.getPlayerClass().getTertiaryResource(), costs[2]);
+		int[] costs = Constants.getBuildingCosts(building, getPlayer().getPlayerClass(), field.getPlanet());
+		resourcesNeeded.addResources(getPlayer().getPlayerClass().getPrimaryResource(), costs[0]);
+		resourcesNeeded.addResources(getPlayer().getPlayerClass().getSecundaryResource(), costs[1]);
+		resourcesNeeded.addResources(getPlayer().getPlayerClass().getTertiaryResource(), costs[2]);
 		
 		return resourcesNeeded;
 	}
@@ -145,5 +157,10 @@ public class BuildingManager implements IBuildingManager {
 	@Override
 	public boolean canBuild(Building building, Field field) {
 		return findFirstPossibleBuildingPosition(building, field) != -1 && getNumBuildingsLeft(building) > 0 && isResourcesAvailable(building, field);
+	}
+	
+	@VisibleForTesting
+	protected Player getPlayer() {
+		return player;
 	}
 }

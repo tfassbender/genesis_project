@@ -28,8 +28,8 @@ public class BuildingResources implements Cloneable {
 	}
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof ResearchResources) {
-			ResearchResources res = (ResearchResources) obj;
+		if (obj instanceof BuildingResources) {
+			BuildingResources res = (BuildingResources) obj;
 			return this.getResourcesC() == res.getResourcesC() && this.getResourcesSi() == res.getResourcesSi()
 					&& this.getResourcesFe() == res.getResourcesFe();
 		}

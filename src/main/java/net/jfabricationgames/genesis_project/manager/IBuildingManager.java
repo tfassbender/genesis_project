@@ -1,6 +1,7 @@
 package net.jfabricationgames.genesis_project.manager;
 
 import net.jfabricationgames.genesis_project.game.Building;
+import net.jfabricationgames.genesis_project.game.BuildingResources;
 import net.jfabricationgames.genesis_project.game.Field;
 
 public interface IBuildingManager {
@@ -8,6 +9,9 @@ public interface IBuildingManager {
 	public int getNumBuildingsLeft(Building building);
 	public int getNumBuildingsOnField(Building building);
 	
+	/**
+	 * Build the given building on the field and take the resources from the player.
+	 */
 	public void build(Building building, Field field);
 	/**
 	 * Checks whether the building can be build on the field (also checks for resources)
@@ -21,4 +25,7 @@ public interface IBuildingManager {
 	 * </p>
 	 */
 	public boolean canBuild(Building building, Field field);
+	
+	public boolean isResourcesAvailable(Building building, Field field);
+	public BuildingResources getResourcesNeededForBuilding(Building building, Field field);
 }

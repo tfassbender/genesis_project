@@ -63,12 +63,13 @@ public class TurnManager implements ITurnManager {
 	
 	@Override
 	public void receivePointsForMove(IMove move) {
-		/*int totalPoints = 0;
+		int totalPoints = 0;
 		int turnGoalPoints = getActiveTurnGoal().getPointsForMove(move);
 		//TODO implement technology bonus, ...
 		
 		totalPoints += turnGoalPoints;
-		//TODO get the player from the move and add the points (when moves are implemented)*/
+		Player player = move.getPlayer();
+		player.getPointManager().addPoints(totalPoints);
 	}
 	
 	@Override

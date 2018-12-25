@@ -108,7 +108,21 @@ public class ConstantsInitializerUtil {
 		Constants.BUILDING_COSTS_COLONIE[3][1] = 3;
 		Constants.BUILDING_COSTS_COLONIE[3][2] = 2;
 	}
+	
+	public static void initializeBuildingCostsForSpaceBuildings() {
+		Constants.BUILDING_COSTS_SATELLITE[0][0] = 1;
+		Constants.BUILDING_COSTS_SATELLITE[0][1] = 1;
+		Constants.BUILDING_COSTS_SATELLITE[0][2] = 0;
 
+		Constants.BUILDING_COSTS_DRONE[0][0] = 2;
+		Constants.BUILDING_COSTS_DRONE[0][1] = 2;
+		Constants.BUILDING_COSTS_DRONE[0][2] = 1;
+
+		Constants.BUILDING_COSTS_SPACE_STATION[0][0] = 4;
+		Constants.BUILDING_COSTS_SPACE_STATION[0][1] = 4;
+		Constants.BUILDING_COSTS_SPACE_STATION[0][2] = 2;
+	}
+	
 	public static void initAllianceValues() {
 		Constants.ALLIANCE_MIN_PLANETS = 3;
 		Constants.ALLIANCE_MIN_PLANETS_OTHER_PLAYERS = 2;

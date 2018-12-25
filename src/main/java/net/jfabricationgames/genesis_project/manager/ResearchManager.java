@@ -22,7 +22,14 @@ public class ResearchManager implements IResearchManager {
 		this.playersInGame = playersInGame;
 		initResearchResourcesAdded();
 		if (Constants.STARTING_RESEARCH_STATES != null) {
-			researchStates = new HashMap<ResearchArea, Integer>(Constants.STARTING_RESEARCH_STATES.get(player.getPlayerClass()));
+			if (player != null) {
+				researchStates = new HashMap<ResearchArea, Integer>(Constants.STARTING_RESEARCH_STATES.get(player.getPlayerClass()));				
+			}
+			else {
+				//when player is null the research manager is for a composite implementation -> states are not needed
+				researchStates = new HashMap<ResearchArea, Integer>();
+				researchStates.put(ResearchArea.WEAPON, 0);
+			}
 		}
 		else {
 			throw new IllegalStateException("The field STARTING_RESEARCH_STATES in the class Constants has not been initialized.");
