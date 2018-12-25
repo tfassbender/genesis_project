@@ -70,7 +70,39 @@ public class ResearchManager implements IResearchManager {
 	
 	@Override
 	public boolean isStateAccessible(ResearchArea area, int state) {
-		return getResearchResourcesNeededLeft(area, state).isEmpty();
+		int maximumState = Constants.MAX_RESEARCH_STATE_DEFAULT;
+		if (area == ResearchArea.WEAPON) {
+			maximumState = Constants.MAX_RESEARCH_STATE_WEAPON;
+		}
+		
+		if (state < 0 || state > maximumState) {
+			throw new IllegalArgumentException(
+					"The requested state is out of the valid range (range: [" + 0 + " - " + maximumState + "], state: " + state + ")");
+		}
+		
+		boolean allStatesAccessible = true;
+		for (int i = 0; i <= state; i++) {
+			allStatesAccessible &= getResearchResourcesNeededLeft(area, i).isEmpty();
+		}
+		return allStatesAccessible;
+	}
+	
+	@Override
+	public int getNextResourceNeedingState(ResearchArea area) {
+		int nextResourceNeedingState = -1;
+		int maxResearchState = Constants.MAX_RESEARCH_STATE_DEFAULT;
+		
+		if (area == ResearchArea.WEAPON) {
+			maxResearchState = Constants.MAX_RESEARCH_STATE_WEAPON;
+		}
+		
+		for (int i = 1; i < maxResearchState + 1; i++) {
+			if (nextResourceNeedingState == -1 && !isStateAccessible(area, i)) {
+				nextResourceNeedingState = i;
+			}
+		}
+		
+		return nextResourceNeedingState;
 	}
 	
 	@Override
@@ -106,16 +138,21 @@ public class ResearchManager implements IResearchManager {
 	}
 	
 	@Override
-	public void addResearchResources(Resource resource, int amount, ResearchArea area, int state) {
+	public void addResearchResources(Resource resource, int amount, ResearchArea area) {
 		ResearchResources adding = new ResearchResources();
 		adding.addResources(resource, amount);
-		addResearchResources(adding, area, state);
+		addResearchResources(adding, area);
 	}
 	
 	@Override
-	public void addResearchResources(ResearchResources resources, ResearchArea area, int state) {
-		ResearchResources added = researchResourcesAdded.get(area).get(state);//don't call getter here because it returns a clone
-		ResearchResources neededLeft = getResearchResourcesNeededLeft(area, state);
+	public void addResearchResources(ResearchResources resources, ResearchArea area) {
+		int nextResourcesNeedingState = getNextResourceNeedingState(area);
+		if (nextResourcesNeedingState == -1) {
+			throw new IllegalArgumentException("Trying to add resources to a research area that is already completely accessible.");
+		}
+		
+		ResearchResources added = researchResourcesAdded.get(area).get(nextResourcesNeedingState);//don't call getter here because it returns a clone
+		ResearchResources neededLeft = getResearchResourcesNeededLeft(area, nextResourcesNeedingState);
 		
 		//check whether the resources that shall be added are more than needed
 		boolean moreThanNeeded = false;

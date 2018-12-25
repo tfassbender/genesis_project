@@ -5,22 +5,32 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
 
 import net.jfabricationgames.genesis_project.game.Board;
+import net.jfabricationgames.genesis_project.game.Board.Position;
 import net.jfabricationgames.genesis_project.game.Building;
+import net.jfabricationgames.genesis_project.game.BuildingResources;
 import net.jfabricationgames.genesis_project.game.Field;
 import net.jfabricationgames.genesis_project.game.Planet;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.PlayerBuilding;
+import net.jfabricationgames.genesis_project.game.PlayerClass;
 import net.jfabricationgames.genesis_project.user.User;
 
 class BuildingManagerTest {
 	
 	private BuildingManager getBuildingManager() {
 		ConstantsInitializerUtil.initBuildingNumbers();
-		Player player = new Player(new User("User"));
+		Player player = mock(Player.class);
+		when(player.getPlayerClass()).thenReturn(PlayerClass.ENCOR);
+		IResourceManager resourceManager = mock(ResourceManager.class);
+		when(resourceManager.isResourcesAvailable(any(BuildingResources.class))).thenReturn(true);
+		when(player.getResourceManager()).thenReturn(resourceManager);
 		return getBuildingManager(player);
 	}
 	private BuildingManager getBuildingManager(Player player) {
@@ -83,7 +93,7 @@ class BuildingManagerTest {
 		Field field = getFieldWithBuildings(new PlayerBuilding(Building.COLONY, player1), new PlayerBuilding(Building.LABORATORY, player2), null);
 		
 		assertEquals(0, manager1.findFirstPossibleBuildingPosition(Building.MINE, field));
-		assertEquals(0, manager1.findFirstPossibleBuildingPosition(Building.TRAIDING_POST, field));
+		assertEquals(0, manager1.findFirstPossibleBuildingPosition(Building.TRADING_POST, field));
 		assertEquals(0, manager1.findFirstPossibleBuildingPosition(Building.LABORATORY, field));
 		
 		assertEquals(-1, manager1.findFirstPossibleBuildingPosition(Building.RESEARCH_CENTER, field));
@@ -108,7 +118,7 @@ class BuildingManagerTest {
 		assertEquals(0, manager2.findFirstPossibleBuildingPosition(Building.DRONE, field));
 		assertEquals(0, manager1.findFirstPossibleBuildingPosition(Building.SATELLITE, field));
 		assertEquals(0, manager2.findFirstPossibleBuildingPosition(Building.SATELLITE, field));
-
+		
 		assertEquals(-1, manager1.findFirstPossibleBuildingPosition(Building.SPACE_STATION, field));
 		assertEquals(-1, manager2.findFirstPossibleBuildingPosition(Building.SPACE_STATION, field));
 		assertEquals(-1, manager1.findFirstPossibleBuildingPosition(Building.COLONY, field));
@@ -132,7 +142,7 @@ class BuildingManagerTest {
 		assertEquals(0, manager1.findFirstPossibleBuildingPosition(Building.SATELLITE, field));
 		assertEquals(-1, manager1.findFirstPossibleBuildingPosition(Building.DRONE, field));
 		assertEquals(0, manager1.findFirstPossibleBuildingPosition(Building.SPACE_STATION, field));
-
+		
 		assertEquals(-1, manager2.findFirstPossibleBuildingPosition(Building.SATELLITE, field));
 		assertEquals(-1, manager2.findFirstPossibleBuildingPosition(Building.DRONE, field));
 		assertEquals(-1, manager2.findFirstPossibleBuildingPosition(Building.SPACE_STATION, field));
@@ -165,11 +175,11 @@ class BuildingManagerTest {
 		
 		manager.build(Building.COLONY, field);
 		manager.build(Building.MINE, field);
-		manager.build(Building.TRAIDING_POST, field);
+		manager.build(Building.TRADING_POST, field);
 		
 		assertEquals(Building.MINE, field.getBuildings()[0].getBuilding());
 		assertNull(field.getBuildings()[1]);
-		assertEquals(Building.TRAIDING_POST, field.getBuildings()[2].getBuilding());
+		assertEquals(Building.TRADING_POST, field.getBuildings()[2].getBuilding());
 	}
 	
 	@Test
@@ -180,5 +190,37 @@ class BuildingManagerTest {
 		
 		assertThrows(IllegalArgumentException.class, () -> manager.build(Building.GOVERNMENT, field));
 		assertThrows(IllegalArgumentException.class, () -> manager.build(Building.DRONE, field));
+	}
+	
+	@Test
+	public void testIsResourcesAvailable() {
+		ConstantsInitializerUtil.initBuildingCostsForColonies();
+		ConstantsInitializerUtil.initBuildingNumbers();
+		
+		Player player = mock(Player.class);
+		when(player.getPlayerClass()).thenReturn(PlayerClass.ENCOR);//blue class
+		IResourceManager resourceManager = new ResourceManager(player);
+		when(player.getResourceManager()).thenReturn(resourceManager);
+		resourceManager.addResources(new BuildingResources(3, 3, 1));//enough for colonies on 0, 1, and 2 distance planets, but not 3 distance
+		
+		BuildingManager manager = new BuildingManager(player);
+		
+		Field fieldBlue = new Field(new Position(0, 0), Planet.BLUE);
+		Field fieldGenesis = new Field(new Position(0, 0), Planet.GENESIS);
+		Field fieldCenter = new Field(new Position(0, 0), Planet.CENTER);
+		Field fieldGreen = new Field(new Position(0, 0), Planet.GREEN);
+		Field fieldGray = new Field(new Position(0, 0), Planet.GRAY);
+		Field fieldBlack = new Field(new Position(0, 0), Planet.BLACK);
+		Field fieldYellow = new Field(new Position(0, 0), Planet.YELLOW);
+		Field fieldRed = new Field(new Position(0, 0), Planet.RED);
+		
+		assertTrue(manager.canBuild(Building.COLONY, fieldBlue));
+		assertTrue(manager.canBuild(Building.COLONY, fieldGenesis));
+		assertTrue(manager.canBuild(Building.COLONY, fieldCenter));
+		assertTrue(manager.canBuild(Building.COLONY, fieldGreen));
+		assertTrue(manager.canBuild(Building.COLONY, fieldGray));
+		assertFalse(manager.canBuild(Building.COLONY, fieldBlack));
+		assertTrue(manager.canBuild(Building.COLONY, fieldYellow));
+		assertTrue(manager.canBuild(Building.COLONY, fieldRed));
 	}
 }

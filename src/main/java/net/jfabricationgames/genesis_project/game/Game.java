@@ -14,6 +14,17 @@ public class Game {
 	
 	private ITurnManager turnManager;
 	private IResearchManager researchManager;
+
+	public void collectGameStartResources() {
+		for (Player player : players) {
+			player.getResourceManager().collectGameStartResources();
+		}
+	}
+	public void collectTurnStartResources() {
+		for (Player player : players) {
+			player.getResourceManager().collectTurnStartResources();
+		}
+	}
 	
 	/**
 	 * Executes a move without checking for it's validity. When the move can't be executed a RuntimeException will occur.
