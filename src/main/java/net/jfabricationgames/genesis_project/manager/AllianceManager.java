@@ -9,23 +9,25 @@ import com.google.common.annotations.VisibleForTesting;
 import net.jfabricationgames.genesis_project.game.Alliance;
 import net.jfabricationgames.genesis_project.game.AllianceBonus;
 import net.jfabricationgames.genesis_project.game.Board;
+import net.jfabricationgames.genesis_project.game.Board.Position;
 import net.jfabricationgames.genesis_project.game.Building;
+import net.jfabricationgames.genesis_project.game.BuildingResources;
 import net.jfabricationgames.genesis_project.game.Constants;
 import net.jfabricationgames.genesis_project.game.Field;
 import net.jfabricationgames.genesis_project.game.Planet;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.PlayerBuilding;
+import net.jfabricationgames.genesis_project.game.Resource;
 
 public class AllianceManager implements IAllianceManager {
 	
 	private List<Alliance> alliances;
 	
 	private Player player;
-	private Board board;
 	
-	public AllianceManager(Player player, Board board) {
+	public AllianceManager(Player player) {
 		this.player = player;
-		this.board = board;
+		alliances = new ArrayList<Alliance>(3);
 	}
 	
 	@Override
@@ -44,8 +46,15 @@ public class AllianceManager implements IAllianceManager {
 	}
 	@Override
 	public void addAlliance(List<Field> planets, List<Field> satelliteFields, AllianceBonus bonus) {
+		//build the satellites
+		IBuildingManager buildingManager = player.getBuildingManager();
+		for (Field satelliteField : satelliteFields) {
+			buildingManager.build(Building.SATELLITE, satelliteField);
+		}
+		
 		Alliance alliance = new Alliance(planets, satelliteFields, bonus);
 		alliances.add(alliance);
+		player.getPointManager().addPoints(bonus.getPoints());
 	}
 	
 	@Override
@@ -58,6 +67,7 @@ public class AllianceManager implements IAllianceManager {
 		boolean allPlanetsValid = true;//all planets must contain at least one planet of the player (the central planet is not valid)
 		boolean satelliteFieldsValid = true;//the satellite fields connect the planets and can be built on the given fields
 		boolean centerPlanetIncluded = false;//the center planet can not be used for an alliance
+		boolean satelliteResourcesAvailable = false;//the player has to have enough resources to build the satellites
 		
 		for (Field field : planets) {
 			boolean planetValid = true;
@@ -68,7 +78,7 @@ public class AllianceManager implements IAllianceManager {
 					if (building.getPlayer().equals(getPlayer())) {
 						playersBuildings++;
 						numPlayerBuildings++;
-						if (building.getBuilding() == Building.GOVERMENT || building.getBuilding() == Building.CITY) {
+						if (building.getBuilding() == Building.GOVERNMENT || building.getBuilding() == Building.CITY) {
 							govermentOrCityIncluded = true;
 						}
 					}
@@ -87,6 +97,7 @@ public class AllianceManager implements IAllianceManager {
 		}
 		
 		satelliteFieldsValid = isSatelliteConnectionValid(planets, satelliteFields);
+		satelliteResourcesAvailable = isSatelliteResourcesAvailable(satelliteFields.size());
 		
 		boolean allianceValid = true;
 		
@@ -98,8 +109,29 @@ public class AllianceManager implements IAllianceManager {
 		allianceValid &= allPlanetsValid;
 		allianceValid &= satelliteFieldsValid;
 		allianceValid &= !centerPlanetIncluded;
+		allianceValid &= satelliteResourcesAvailable;
+		allianceValid &= bonus != null;
 		
 		return allianceValid;
+	}
+	
+	@VisibleForTesting
+	protected boolean isSatelliteResourcesAvailable(int satellites) {
+		IBuildingManager manager = getPlayer().getBuildingManager();
+		
+		//use a dummy field here because the implementation only needs to know what type of planet is on the field
+		Field field = new Field(new Position(0, 0), null);
+		BuildingResources satelliteResources = manager.getResourcesNeededForBuilding(Building.SATELLITE, field);
+		
+		BuildingResources allSatelliteResources = new BuildingResources();
+		for (Resource resource : BuildingResources.BUILDING_RESOURCES) {
+			allSatelliteResources.addResources(resource, satelliteResources.getResources(resource) * satellites);
+		}
+		
+		IResourceManager resourceManager = getPlayer().getResourceManager();
+		boolean resourcesAvailable = resourceManager.isResourcesAvailable(allSatelliteResources);
+		
+		return resourcesAvailable;
 	}
 	
 	@VisibleForTesting
@@ -198,6 +230,6 @@ public class AllianceManager implements IAllianceManager {
 	}
 	@VisibleForTesting
 	protected Board getBoard() {
-		return board;
+		return player.getGame().getBoard();
 	}
 }

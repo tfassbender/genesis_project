@@ -13,7 +13,8 @@ public interface IAllianceManager {
 	
 	public void addAlliance(Alliance alliance);
 	/**
-	 * Creates a new alliance consulting of the given planets and adds it to the list of alliances.
+	 * Creates a new alliance consulting of the given planets and adds it to the list of alliances.</br>
+	 * The satellites for the alliance are built and the points are collected.
 	 * 
 	 * The input is not tested for validity.<br>
 	 * Use isAllianceValid(List<Field>, List<Field>, AllianceBonus) to check this before adding an alliance.

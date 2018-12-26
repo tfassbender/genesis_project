@@ -23,6 +23,7 @@ public class TurnManager implements ITurnManager {
 	public TurnManager(Game game) {
 		this.game = game;
 		playerOrder = new PlayerOrder<Player>(game.getPlayers().size());
+		playerOrder.startGame(game.getPlayers());
 		turn = 0;
 		chooseRandomTurnGoals();
 	}
@@ -32,7 +33,7 @@ public class TurnManager implements ITurnManager {
 		chooseRandomTurnGoals(TurnGoal.values(), random);
 	}
 	@VisibleForTesting
-	protected void chooseRandomTurnGoals(TurnGoal[] goals, Random randomGenerator) {
+	public void chooseRandomTurnGoals(TurnGoal[] goals, Random randomGenerator) {
 		TurnGoal swap;
 		int random;
 		for (int i = 0; i < goals.length; i++) {
@@ -63,12 +64,13 @@ public class TurnManager implements ITurnManager {
 	
 	@Override
 	public void receivePointsForMove(IMove move) {
-		/*int totalPoints = 0;
+		int totalPoints = 0;
 		int turnGoalPoints = getActiveTurnGoal().getPointsForMove(move);
 		//TODO implement technology bonus, ...
 		
 		totalPoints += turnGoalPoints;
-		//TODO get the player from the move and add the points (when moves are implemented)*/
+		Player player = move.getPlayer();
+		player.getPointManager().addPoints(totalPoints);
 	}
 	
 	@Override

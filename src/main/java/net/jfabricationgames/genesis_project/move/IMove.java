@@ -5,7 +5,6 @@ import java.util.List;
 import net.jfabricationgames.genesis_project.game.AllianceBonus;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.Field;
-import net.jfabricationgames.genesis_project.game.Planet;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
@@ -24,7 +23,7 @@ public interface IMove {
 	public ResearchArea getResearchArea();
 	public ResearchResources getResearchResources();
 	public Technology getTechnology();
-	public List<Planet> getAlliancePlanets();
+	public List<Field> getAlliancePlanets();
 	public List<Field> getSatelliteFields();
 	public AllianceBonus getAllianceBonus();
 	public boolean isPassing();

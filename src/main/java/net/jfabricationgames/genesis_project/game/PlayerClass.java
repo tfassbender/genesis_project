@@ -29,7 +29,7 @@ public enum PlayerClass {
 	}
 	
 	public int getPlanetDistance(Planet planet) {
-		if (planet == Planet.GENESIS || planet == Planet.CENTER) {
+		if (planet == Planet.GENESIS || planet == Planet.CENTER || planet == null) {
 			return 0;
 		}
 		

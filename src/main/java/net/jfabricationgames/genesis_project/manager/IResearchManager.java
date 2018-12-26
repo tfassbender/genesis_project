@@ -8,13 +8,16 @@ public interface IResearchManager {
 	
 	public int getState(ResearchArea area);
 	/**
-	 * Increases the state of an area if possible.
+	 * Increases the state of an area if possible.<br>
 	 * The next state has to be accessible to increase to the state.
+	 * 
+	 * The resources for the state are NOT taken here because that causes problems when increasing the weapon state (not everyone pays for this
+	 * increase, but everyone gets the increase).
 	 */
 	public void increaseState(ResearchArea area);
 	
 	/**
-	 * Checks whether a state of an research area is accessible.
+	 * Checks whether a state of an research area is accessible.<br>
 	 * A state is accessible when there are no resources needed for this state and all states below this state are accessible too.
 	 */
 	public boolean isStateAccessible(ResearchArea area, int state);

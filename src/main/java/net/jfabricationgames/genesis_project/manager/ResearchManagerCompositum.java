@@ -1,5 +1,7 @@
 package net.jfabricationgames.genesis_project.manager;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import net.jfabricationgames.genesis_project.game.Game;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
@@ -9,7 +11,7 @@ public class ResearchManagerCompositum implements IResearchManager {
 	
 	private Game game;
 	
-	private ResearchManager globalManager;
+	private IResearchManager globalManager;
 	
 	public ResearchManagerCompositum(Game game) {
 		this.game = game;
@@ -22,7 +24,7 @@ public class ResearchManagerCompositum implements IResearchManager {
 			return globalManager.getState(ResearchArea.WEAPON);
 		}
 		else {
-			throw new UnsupportedOperationException("The compositum implementation can only handle WEAPON states");
+			throw new IllegalArgumentException("The compositum implementation can only handle WEAPON states");
 		}
 	}
 	
@@ -33,7 +35,7 @@ public class ResearchManagerCompositum implements IResearchManager {
 			game.getPlayers().forEach((p) -> p.getResearchManager().increaseState(ResearchArea.WEAPON));
 		}
 		else {
-			throw new UnsupportedOperationException("The compositum implementation can only handle WEAPON states");
+			throw new IllegalArgumentException("The compositum implementation can only handle WEAPON states");
 		}
 	}
 	
@@ -70,5 +72,10 @@ public class ResearchManagerCompositum implements IResearchManager {
 	@Override
 	public void addResearchResources(ResearchResources resources, ResearchArea area) {
 		globalManager.addResearchResources(resources, area);
+	}
+	
+	@VisibleForTesting
+	protected Game getGame() {
+		return game;
 	}
 }

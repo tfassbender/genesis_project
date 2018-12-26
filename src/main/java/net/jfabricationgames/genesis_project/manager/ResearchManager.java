@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.jfabricationgames.genesis_project.game.Constants;
+import net.jfabricationgames.genesis_project.game.Game;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
@@ -16,13 +17,26 @@ public class ResearchManager implements IResearchManager {
 	
 	private int playersInGame;
 	
+	private Player player;
+	
 	private static final double EPSILON = 1e-2;//for rounding values because of the double epsilon
 	
+	public ResearchManager(Player player) {
+		this(player, -1);
+	}
 	public ResearchManager(Player player, int playersInGame) {
+		this.player = player;
 		this.playersInGame = playersInGame;
 		initResearchResourcesAdded();
 		if (Constants.STARTING_RESEARCH_STATES != null) {
-			researchStates = new HashMap<ResearchArea, Integer>(Constants.STARTING_RESEARCH_STATES.get(player.getPlayerClass()));
+			if (player != null) {
+				researchStates = new HashMap<ResearchArea, Integer>(Constants.STARTING_RESEARCH_STATES.get(player.getPlayerClass()));
+			}
+			else {
+				//when player is null the research manager is for a composite implementation -> states are not needed
+				researchStates = new HashMap<ResearchArea, Integer>();
+				researchStates.put(ResearchArea.WEAPON, 0);
+			}
 		}
 		else {
 			throw new IllegalStateException("The field STARTING_RESEARCH_STATES in the class Constants has not been initialized.");
@@ -61,7 +75,8 @@ public class ResearchManager implements IResearchManager {
 		int currentState = getState(area);
 		if (currentState < Constants.MAX_RESEARCH_STATE_DEFAULT
 				|| (area == ResearchArea.WEAPON && currentState < Constants.MAX_RESEARCH_STATE_WEAPON)) {
-			researchStates.put(area, currentState + 1);
+			
+			researchStates.put(area, currentState + 1);				
 		}
 		else {
 			throw new IllegalStateException("The maximum research state (in research area: " + area + ") is already reached.");
@@ -111,7 +126,7 @@ public class ResearchManager implements IResearchManager {
 		if (resources != null) {
 			ResearchResources researchResources = new ResearchResources();
 			for (Resource resource : ResearchResources.RESEARCH_RESOURCES) {
-				researchResources.setResources(resource, (int) (resources.get(resource) * playersInGame + EPSILON));
+				researchResources.setResources(resource, (int) (resources.get(resource) * getNumPlayersInGame() + EPSILON));
 			}
 			return researchResources;
 		}
@@ -179,5 +194,18 @@ public class ResearchManager implements IResearchManager {
 			//add the resources
 			added.addResources(resources);
 		}
+	}
+	
+	private int getNumPlayersInGame() {
+		if (playersInGame == -1) {
+			Game game = player.getGame();
+			if (game != null) {
+				playersInGame = game.getPlayers().size();
+			}
+			else {
+				throw new IllegalStateException("The field 'playersInGame' has not yet been set.");
+			}
+		}
+		return playersInGame;
 	}
 }

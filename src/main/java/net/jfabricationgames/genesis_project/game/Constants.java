@@ -13,6 +13,10 @@ public abstract class Constants {
 	public static int TURNS_PLAYED = 6;
 	public static int MAX_RESEARCH_STATE_DEFAULT = 6;
 	public static int MAX_RESEARCH_STATE_WEAPON = 10;
+	public static int RESEARCH_POINTS_FOR_STATE_INCREASE = 5;
+	public static int RESEARCH_SCIENTISTS_FOR_LOW_STATE = 0;
+	public static int RESEARCH_SCIENTISTS_FOR_HIGH_STATE = 1;
+	public static int RESEARCH_STATE_HIGH = 5;//5 or above
 	
 	//alliances
 	public static int ALLIANCE_MIN_PLANETS;
@@ -103,7 +107,7 @@ public abstract class Constants {
 				return BUILDING_COSTS_COLONIE[planetDistance];
 			case DRONE:
 				return BUILDING_COSTS_DRONE[planetDistance];
-			case GOVERMENT:
+			case GOVERNMENT:
 				return BUILDING_COSTS_GOVERNMENT[planetDistance];
 			case LABORATORY:
 				return BUILDING_COSTS_LABORATORY[planetDistance];

@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,7 +15,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import net.jfabricationgames.genesis_project.game.Player;
-import net.jfabricationgames.genesis_project.user.User;
 
 public class PlayerOrderTest {
 	
@@ -28,11 +28,11 @@ public class PlayerOrderTest {
 	@Before
 	public void initPlayerOrder() {
 		playerOrder = new PlayerOrder<Player>(5);
-		user1 = new Player(new User("user1"));
-		user2 = new Player(new User("user2"));
-		user3 = new Player(new User("user3"));
-		user4 = new Player(new User("user4"));
-		user5 = new Player(new User("user5"));
+		user1 = mock(Player.class);
+		user2 = mock(Player.class);
+		user3 = mock(Player.class);
+		user4 = mock(Player.class);
+		user5 = mock(Player.class);
 		Random randomGenerator = new Random(42);//use a deterministic random generator for the tests
 		playerOrder.chooseRandomOrder(Arrays.asList(user1, user2, user3, user4, user5), randomGenerator);
 	}

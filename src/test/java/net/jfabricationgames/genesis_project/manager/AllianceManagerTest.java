@@ -3,6 +3,7 @@ package net.jfabricationgames.genesis_project.manager;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -17,11 +18,14 @@ import org.mockito.Matchers;
 import net.jfabricationgames.genesis_project.game.AllianceBonus;
 import net.jfabricationgames.genesis_project.game.Board;
 import net.jfabricationgames.genesis_project.game.Board.Position;
+import net.jfabricationgames.genesis_project.testUtils.ConstantsInitializerUtil;
 import net.jfabricationgames.genesis_project.game.Building;
+import net.jfabricationgames.genesis_project.game.BuildingResources;
 import net.jfabricationgames.genesis_project.game.Field;
 import net.jfabricationgames.genesis_project.game.Planet;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.PlayerBuilding;
+import net.jfabricationgames.genesis_project.game.PlayerClass;
 import net.jfabricationgames.genesis_project.user.User;
 
 class AllianceManagerTest {
@@ -160,6 +164,7 @@ class AllianceManagerTest {
 		//satellite connections are tested separately
 		when(manager.isSatelliteConnectionValid(Matchers.<List<Field>> any(), Matchers.<List<Field>> any())).thenReturn(true);
 		when(manager.isAllianceValid(Matchers.<List<Field>> any(), Matchers.<List<Field>> any(), any(AllianceBonus.class))).thenCallRealMethod();
+		when(manager.isSatelliteResourcesAvailable(anyInt())).thenReturn(true);
 		Player player = mock(Player.class);
 		when(manager.getPlayer()).thenReturn(player);
 		Board board = initializeBoard(player);
@@ -192,7 +197,8 @@ class AllianceManagerTest {
 		AllianceManager manager = mock(AllianceManager.class);
 		when(manager.isSatelliteConnectionValid(Matchers.<List<Field>> any(), Matchers.<List<Field>> any())).thenCallRealMethod();
 		when(manager.isAllFieldsConnected(Matchers.<List<Field>> any())).thenCallRealMethod();
-		Player player = new Player(new User("player1"));//using a real player here because equals(Object) can't be mocked
+		when(manager.isSatelliteResourcesAvailable(anyInt())).thenReturn(true);
+		Player player = new Player(new User("player1"), PlayerClass.ENCOR);//using a real player here because equals(Object) can't be mocked
 		when(manager.getPlayer()).thenReturn(player);
 		Board board = initializeBoard(player);
 		when(manager.getBoard()).thenReturn(board);
@@ -221,6 +227,7 @@ class AllianceManagerTest {
 		when(manager.isSatelliteConnectionValid(Matchers.<List<Field>> any(), Matchers.<List<Field>> any())).thenCallRealMethod();
 		when(manager.isAllianceValid(Matchers.<List<Field>> any(), Matchers.<List<Field>> any(), any(AllianceBonus.class))).thenCallRealMethod();
 		when(manager.isAllFieldsConnected(Matchers.<List<Field>> any())).thenCallRealMethod();
+		when(manager.isSatelliteResourcesAvailable(anyInt())).thenReturn(true);
 		Player player = mock(Player.class);
 		when(manager.getPlayer()).thenReturn(player);
 		Board board = initializeBoard(player);
@@ -243,5 +250,29 @@ class AllianceManagerTest {
 		assertFalse(manager.isAllianceValid(alliance8, satellites8, bonus));
 		assertFalse(manager.isAllianceValid(alliance9, satellites9, bonus));
 		assertFalse(manager.isAllianceValid(alliance10, satellites10, bonus));
+	}
+	
+	@Test
+	public void testIsSatelliteResourcesAvailable() {
+		ConstantsInitializerUtil.initializeBuildingCostsForSpaceBuildings();
+		Player player = mock(Player.class);
+		when(player.getPlayerClass()).thenReturn(PlayerClass.ENCOR);//blue class
+		IResourceManager resourceManager = new ResourceManager(player);
+		when(player.getResourceManager()).thenReturn(resourceManager);
+		resourceManager.addResources(new BuildingResources(3, 4, 1));//enough for 3 satellites
+		BuildingManager buildingManager = mock(BuildingManager.class);
+		when(buildingManager.getResourcesNeededForBuilding(any(Building.class), any(Field.class))).thenCallRealMethod();
+		when(buildingManager.getPlayer()).thenReturn(player);
+		when(player.getBuildingManager()).thenReturn(buildingManager);
+		
+		AllianceManager manager = mock(AllianceManager.class);
+		when(manager.isSatelliteResourcesAvailable(anyInt())).thenCallRealMethod();
+		when(manager.getPlayer()).thenReturn(player);
+		
+		assertTrue(manager.isSatelliteResourcesAvailable(1));
+		assertTrue(manager.isSatelliteResourcesAvailable(2));
+		assertTrue(manager.isSatelliteResourcesAvailable(3));
+		assertFalse(manager.isSatelliteResourcesAvailable(4));
+		assertFalse(manager.isSatelliteResourcesAvailable(5));
 	}
 }
