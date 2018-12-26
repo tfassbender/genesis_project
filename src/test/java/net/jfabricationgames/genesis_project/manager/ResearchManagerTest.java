@@ -15,6 +15,7 @@ import net.jfabricationgames.genesis_project.game.PlayerClass;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
 import net.jfabricationgames.genesis_project.game.Resource;
+import net.jfabricationgames.genesis_project.testUtils.ConstantsInitializerUtil;
 
 class ResearchManagerTest {
 	

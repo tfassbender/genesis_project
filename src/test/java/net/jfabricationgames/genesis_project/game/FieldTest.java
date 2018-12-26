@@ -4,13 +4,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import java.util.HashMap;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-
-import net.jfabricationgames.genesis_project.user.User;
 
 class FieldTest {
 	
@@ -33,7 +32,7 @@ class FieldTest {
 	@Test
 	public void testBuild() {
 		initBuildingNumbers();
-		Player player = new Player(new User("player1"));
+		Player player = mock(Player.class);
 		Field field = new Field(new Board.Position(0, 0), Planet.GENESIS);
 		
 		field.build(new PlayerBuilding(Building.CITY, player), 0);
@@ -48,7 +47,7 @@ class FieldTest {
 	@Test
 	public void testBuild_spaceStation_replacesDrone() {
 		initBuildingNumbers();
-		Player player = new Player(new User("player1"));
+		Player player = mock(Player.class);
 		Field field = new Field(new Board.Position(0, 0), null);
 		
 		field.build(new PlayerBuilding(Building.DRONE, player), 0);

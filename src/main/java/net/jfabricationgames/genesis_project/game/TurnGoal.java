@@ -28,7 +28,7 @@ public enum TurnGoal {
 		MoveType type = move.getType();
 		Building building = move.getBuilding();
 		Field field = move.getField();
-		PlayerBuilding[] fieldBuildings = field.getBuildings();
+		PlayerBuilding[] fieldBuildings;
 		
 		boolean pointMove = false;
 		switch (this) {

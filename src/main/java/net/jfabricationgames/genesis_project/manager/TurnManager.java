@@ -23,6 +23,7 @@ public class TurnManager implements ITurnManager {
 	public TurnManager(Game game) {
 		this.game = game;
 		playerOrder = new PlayerOrder<Player>(game.getPlayers().size());
+		playerOrder.startGame(game.getPlayers());
 		turn = 0;
 		chooseRandomTurnGoals();
 	}
@@ -32,7 +33,7 @@ public class TurnManager implements ITurnManager {
 		chooseRandomTurnGoals(TurnGoal.values(), random);
 	}
 	@VisibleForTesting
-	protected void chooseRandomTurnGoals(TurnGoal[] goals, Random randomGenerator) {
+	public void chooseRandomTurnGoals(TurnGoal[] goals, Random randomGenerator) {
 		TurnGoal swap;
 		int random;
 		for (int i = 0; i < goals.length; i++) {

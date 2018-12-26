@@ -122,7 +122,7 @@ public class ResourceManager implements IResourceManager {
 		
 		return resourcesAvailable;
 	}
-
+	
 	@Override
 	public int getResources(Resource resource) {
 		switch (resource) {
@@ -194,6 +194,11 @@ public class ResourceManager implements IResourceManager {
 	}
 	@Override
 	public void reduceResources(Resource resource, int amount) {
+		if (getResources(resource) < amount) {
+			throw new IllegalArgumentException("Trying to take more resources than present (type: " + resource + "current: " + getResources(resource)
+					+ "; to be taken: " + amount + ")");
+		}
+		
 		switch (resource) {
 			case CARBON:
 				addResourcesC(-amount);
@@ -217,7 +222,7 @@ public class ResourceManager implements IResourceManager {
 				throw new IllegalArgumentException("The Resource " + resource + " is unknown");
 		}
 	}
-
+	
 	@Override
 	public void addResources(BuildingResources resources) {
 		for (Resource resource : BuildingResources.BUILDING_RESOURCES) {
@@ -226,11 +231,15 @@ public class ResourceManager implements IResourceManager {
 	}
 	@Override
 	public void reduceResources(BuildingResources resources) {
+		if (!isResourcesAvailable(resources)) {
+			throw new IllegalArgumentException(
+					"Trying to take more resources than present (current: " + getBuildingResources() + "; to be taken: " + resources + ")");
+		}
 		for (Resource resource : BuildingResources.BUILDING_RESOURCES) {
 			reduceResources(resource, resources.getResources(resource));
 		}
 	}
-
+	
 	@Override
 	public void addResources(ResearchResources resources) {
 		for (Resource resource : ResearchResources.RESEARCH_RESOURCES) {
@@ -239,6 +248,10 @@ public class ResourceManager implements IResourceManager {
 	}
 	@Override
 	public void reduceResources(ResearchResources resources) {
+		if (!isResourcesAvailable(resources)) {
+			throw new IllegalArgumentException(
+					"Trying to take more resources than present (current: " + getResearchResources() + "; to be taken: " + resources + ")");
+		}
 		for (Resource resource : ResearchResources.RESEARCH_RESOURCES) {
 			reduceResources(resource, resources.getResources(resource));
 		}
@@ -293,5 +306,12 @@ public class ResourceManager implements IResourceManager {
 	@Override
 	public void addResourcesTertiary(int resources) {
 		buildingResources.addResourcesTertiary(player.getPlayerClass(), resources);
+	}
+	
+	private BuildingResources getBuildingResources() {
+		return new BuildingResources(getResourcesC(), getResourcesSi(), getResourcesFe());
+	}
+	private ResearchResources getResearchResources() {
+		return new ResearchResources(getResourcesC(), getResourcesSi(), getResourcesFe(), getScientists());
 	}
 }

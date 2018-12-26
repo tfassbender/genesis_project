@@ -11,7 +11,7 @@ public class ResearchManagerCompositum implements IResearchManager {
 	
 	private Game game;
 	
-	private ResearchManager globalManager;
+	private IResearchManager globalManager;
 	
 	public ResearchManagerCompositum(Game game) {
 		this.game = game;
@@ -41,72 +41,37 @@ public class ResearchManagerCompositum implements IResearchManager {
 	
 	@Override
 	public boolean isStateAccessible(ResearchArea area, int state) {
-		if (area == ResearchArea.WEAPON) {
-			return globalManager.isStateAccessible(area, state);
-		}
-		else {
-			throw new IllegalArgumentException("The compositum implementation can only handle WEAPON states");
-		}
+		return globalManager.isStateAccessible(area, state);
 	}
 	
 	@Override
 	public int getNextResourceNeedingState(ResearchArea area) {
-		if (area == ResearchArea.WEAPON) {
-			return globalManager.getNextResourceNeedingState(area);
-		}
-		else {
-			throw new IllegalArgumentException("The compositum implementation can only handle WEAPON states");
-		}
+		return globalManager.getNextResourceNeedingState(area);
 	}
 	
 	@Override
 	public ResearchResources getResearchResourcesNeededTotal(ResearchArea area, int state) {
-		if (area == ResearchArea.WEAPON) {
-			return globalManager.getResearchResourcesNeededTotal(area, state);
-		}
-		else {
-			throw new IllegalArgumentException("The compositum implementation can only handle WEAPON states");
-		}
+		return globalManager.getResearchResourcesNeededTotal(area, state);
 	}
 	
 	@Override
 	public ResearchResources getResearchResourcesNeededLeft(ResearchArea area, int state) {
-		if (area == ResearchArea.WEAPON) {
-			return globalManager.getResearchResourcesNeededLeft(area, state);
-		}
-		else {
-			throw new IllegalArgumentException("The compositum implementation can only handle WEAPON states");
-		}
+		return globalManager.getResearchResourcesNeededLeft(area, state);
 	}
 	
 	@Override
 	public ResearchResources getResearchResourcesAdded(ResearchArea area, int state) {
-		if (area == ResearchArea.WEAPON) {
-			return globalManager.getResearchResourcesAdded(area, state);
-		}
-		else {
-			throw new IllegalArgumentException("The compositum implementation can only handle WEAPON states");
-		}
+		return globalManager.getResearchResourcesAdded(area, state);
 	}
 	
 	@Override
 	public void addResearchResources(Resource resource, int amount, ResearchArea area) {
-		if (area == ResearchArea.WEAPON) {
-			globalManager.addResearchResources(resource, amount, area);
-		}
-		else {
-			throw new IllegalArgumentException("The compositum implementation can only handle WEAPON states");
-		}
+		globalManager.addResearchResources(resource, amount, area);
 	}
 	
 	@Override
 	public void addResearchResources(ResearchResources resources, ResearchArea area) {
-		if (area == ResearchArea.WEAPON) {
-			globalManager.addResearchResources(resources, area);
-		}
-		else {
-			throw new IllegalArgumentException("The compositum implementation can only handle WEAPON states");
-		}
+		globalManager.addResearchResources(resources, area);
 	}
 	
 	@VisibleForTesting

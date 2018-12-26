@@ -18,6 +18,7 @@ import org.mockito.Matchers;
 import net.jfabricationgames.genesis_project.game.AllianceBonus;
 import net.jfabricationgames.genesis_project.game.Board;
 import net.jfabricationgames.genesis_project.game.Board.Position;
+import net.jfabricationgames.genesis_project.testUtils.ConstantsInitializerUtil;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.BuildingResources;
 import net.jfabricationgames.genesis_project.game.Field;
@@ -197,7 +198,7 @@ class AllianceManagerTest {
 		when(manager.isSatelliteConnectionValid(Matchers.<List<Field>> any(), Matchers.<List<Field>> any())).thenCallRealMethod();
 		when(manager.isAllFieldsConnected(Matchers.<List<Field>> any())).thenCallRealMethod();
 		when(manager.isSatelliteResourcesAvailable(anyInt())).thenReturn(true);
-		Player player = new Player(new User("player1"));//using a real player here because equals(Object) can't be mocked
+		Player player = new Player(new User("player1"), PlayerClass.ENCOR);//using a real player here because equals(Object) can't be mocked
 		when(manager.getPlayer()).thenReturn(player);
 		Board board = initializeBoard(player);
 		when(manager.getBoard()).thenReturn(board);

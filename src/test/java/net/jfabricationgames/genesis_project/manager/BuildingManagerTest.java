@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import net.jfabricationgames.genesis_project.game.Board;
 import net.jfabricationgames.genesis_project.game.Board.Position;
+import net.jfabricationgames.genesis_project.testUtils.ConstantsInitializerUtil;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.BuildingResources;
 import net.jfabricationgames.genesis_project.game.Field;

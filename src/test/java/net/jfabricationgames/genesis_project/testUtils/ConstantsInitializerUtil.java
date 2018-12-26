@@ -1,4 +1,4 @@
-package net.jfabricationgames.genesis_project.manager;
+package net.jfabricationgames.genesis_project.testUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -91,6 +91,12 @@ public class ConstantsInitializerUtil {
 		Constants.RESEARCH_RESOURCES.get(ResearchArea.WEAPON).get(10).put(Resource.SCIENTISTS, Double.valueOf(2));
 	}
 	
+	public static void initBuildingCosts() {
+		initBuildingCostsForColonies();
+		initBuildingCostsForMines();
+		initBuildingCostsForResearchCenters();
+		initializeBuildingCostsForSpaceBuildings();
+	}
 	public static void initBuildingCostsForColonies() {
 		Constants.BUILDING_COSTS_COLONIE[0][0] = 2;
 		Constants.BUILDING_COSTS_COLONIE[0][1] = 1;
@@ -107,6 +113,40 @@ public class ConstantsInitializerUtil {
 		Constants.BUILDING_COSTS_COLONIE[3][0] = 3;
 		Constants.BUILDING_COSTS_COLONIE[3][1] = 3;
 		Constants.BUILDING_COSTS_COLONIE[3][2] = 2;
+	}
+	public static void initBuildingCostsForMines() {
+		Constants.BUILDING_COSTS_MINE[0][0] = 2;
+		Constants.BUILDING_COSTS_MINE[0][1] = 2;
+		Constants.BUILDING_COSTS_MINE[0][2] = 0;
+		
+		Constants.BUILDING_COSTS_MINE[1][0] = 3;
+		Constants.BUILDING_COSTS_MINE[1][1] = 3;
+		Constants.BUILDING_COSTS_MINE[1][2] = 0;
+		
+		Constants.BUILDING_COSTS_MINE[2][0] = 5;
+		Constants.BUILDING_COSTS_MINE[2][1] = 4;
+		Constants.BUILDING_COSTS_MINE[2][2] = 1;
+		
+		Constants.BUILDING_COSTS_MINE[3][0] = 5;
+		Constants.BUILDING_COSTS_MINE[3][1] = 5;
+		Constants.BUILDING_COSTS_MINE[3][2] = 2;
+	}
+	public static void initBuildingCostsForResearchCenters() {
+		Constants.BUILDING_COSTS_RESEARCH_CENTER[0][0] = 5;
+		Constants.BUILDING_COSTS_RESEARCH_CENTER[0][1] = 5;
+		Constants.BUILDING_COSTS_RESEARCH_CENTER[0][2] = 2;
+		
+		Constants.BUILDING_COSTS_RESEARCH_CENTER[1][0] = 6;
+		Constants.BUILDING_COSTS_RESEARCH_CENTER[1][1] = 6;
+		Constants.BUILDING_COSTS_RESEARCH_CENTER[1][2] = 2;
+		
+		Constants.BUILDING_COSTS_RESEARCH_CENTER[2][0] = 8;
+		Constants.BUILDING_COSTS_RESEARCH_CENTER[2][1] = 8;
+		Constants.BUILDING_COSTS_RESEARCH_CENTER[2][2] = 4;
+		
+		Constants.BUILDING_COSTS_RESEARCH_CENTER[3][0] = 9;
+		Constants.BUILDING_COSTS_RESEARCH_CENTER[3][1] = 9;
+		Constants.BUILDING_COSTS_RESEARCH_CENTER[3][2] = 4;
 	}
 	
 	public static void initializeBuildingCostsForSpaceBuildings() {

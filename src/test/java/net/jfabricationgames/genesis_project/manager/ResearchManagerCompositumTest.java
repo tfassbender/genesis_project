@@ -19,6 +19,7 @@ import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
 import net.jfabricationgames.genesis_project.game.Resource;
+import net.jfabricationgames.genesis_project.testUtils.ConstantsInitializerUtil;
 
 class ResearchManagerCompositumTest {
 	
@@ -77,9 +78,6 @@ class ResearchManagerCompositumTest {
 		
 		assertEquals(new ResearchResources(5, 5, 5, 1), manager.getResearchResourcesNeededTotal(ResearchArea.WEAPON, 7));
 		assertEquals(new ResearchResources(14, 14, 14, 8), manager.getResearchResourcesNeededTotal(ResearchArea.WEAPON, 10));
-		
-		assertThrows(IllegalArgumentException.class, () -> manager.getResearchResourcesNeededTotal(ResearchArea.MINES, 2));
-		assertThrows(IllegalArgumentException.class, () -> manager.getResearchResourcesNeededTotal(ResearchArea.FTL, 2));
 	}
 	
 	@Test

@@ -38,6 +38,10 @@ public class BuildingManager implements IBuildingManager {
 	public int getNumBuildingsLeft(Building building) {
 		return numBuildingsLeft.get(building).intValue();
 	}
+	@VisibleForTesting
+	public void setNumBuildingsLeft(Building building, int left) {
+		numBuildingsLeft.put(building, left);
+	}
 	
 	@Override
 	public int getNumBuildingsOnField(Building building) {

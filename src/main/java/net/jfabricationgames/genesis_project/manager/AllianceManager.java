@@ -24,11 +24,10 @@ public class AllianceManager implements IAllianceManager {
 	private List<Alliance> alliances;
 	
 	private Player player;
-	private Board board;
 	
-	public AllianceManager(Player player, Board board) {
+	public AllianceManager(Player player) {
 		this.player = player;
-		this.board = board;
+		alliances = new ArrayList<Alliance>(3);
 	}
 	
 	@Override
@@ -55,6 +54,7 @@ public class AllianceManager implements IAllianceManager {
 		
 		Alliance alliance = new Alliance(planets, satelliteFields, bonus);
 		alliances.add(alliance);
+		player.getPointManager().addPoints(bonus.getPoints());
 	}
 	
 	@Override
@@ -110,6 +110,7 @@ public class AllianceManager implements IAllianceManager {
 		allianceValid &= satelliteFieldsValid;
 		allianceValid &= !centerPlanetIncluded;
 		allianceValid &= satelliteResourcesAvailable;
+		allianceValid &= bonus != null;
 		
 		return allianceValid;
 	}
@@ -229,6 +230,6 @@ public class AllianceManager implements IAllianceManager {
 	}
 	@VisibleForTesting
 	protected Board getBoard() {
-		return board;
+		return player.getGame().getBoard();
 	}
 }

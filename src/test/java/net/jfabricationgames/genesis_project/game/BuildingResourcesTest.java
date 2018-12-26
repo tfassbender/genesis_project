@@ -52,4 +52,14 @@ class BuildingResourcesTest {
 		assertTrue(resources2.equals(clone));
 		assertFalse(resources3.equals(clone));
 	}
+	
+	@Test
+	public void testAddResources() {
+		BuildingResources resources1 = new BuildingResources(1, 2, 3);
+		BuildingResources resources2 = new BuildingResources(2, 3, 4);
+		
+		resources1.addResources(resources2);
+		
+		assertEquals(new BuildingResources(3, 5, 7), resources1);
+	}
 }

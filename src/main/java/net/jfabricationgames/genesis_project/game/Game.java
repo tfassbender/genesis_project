@@ -6,7 +6,10 @@ import java.util.Objects;
 import net.jfabricationgames.genesis_project.manager.IAllianceManager;
 import net.jfabricationgames.genesis_project.manager.IBuildingManager;
 import net.jfabricationgames.genesis_project.manager.IResearchManager;
+import net.jfabricationgames.genesis_project.manager.IResourceManager;
 import net.jfabricationgames.genesis_project.manager.ITurnManager;
+import net.jfabricationgames.genesis_project.manager.ResearchManagerCompositum;
+import net.jfabricationgames.genesis_project.manager.TurnManager;
 import net.jfabricationgames.genesis_project.move.IMove;
 
 public class Game {
@@ -16,6 +19,16 @@ public class Game {
 	
 	private ITurnManager turnManager;
 	private IResearchManager researchManager;
+	
+	public Game(List<Player> players) {
+		this.players = players;
+		this.board = new Board();
+		this.turnManager = new TurnManager(this);
+		this.researchManager = new ResearchManagerCompositum(this);
+		for (Player player : players) {
+			player.setGame(this);
+		}
+	}
 	
 	public void collectGameStartResources() {
 		for (Player player : players) {
@@ -34,7 +47,14 @@ public class Game {
 	public void executeMove(IMove move) {
 		Objects.requireNonNull(move, "Can't execute a move that is null");
 		
+		Player player;
 		ResearchArea area;
+		IResourceManager resourceManager;
+		
+		if (!turnManager.getPlayerOrder().isPlayersTurn(move.getPlayer())) {
+			throw new IllegalArgumentException("It's not the players turn (move from player: " + move.getPlayer() + "; current player: "
+					+ turnManager.getPlayerOrder().getActivePlayer() + ")");
+		}
 		
 		switch (move.getType()) {
 			case BUILD:
@@ -42,6 +62,7 @@ public class Game {
 				Field field = move.getField();
 				IBuildingManager buildingManager = move.getPlayer().getBuildingManager();
 				buildingManager.build(building, field);
+				turnManager.getPlayerOrder().nextMove();
 				break;
 			case ALLIANCE:
 				List<Field> planets = move.getAlliancePlanets();
@@ -50,9 +71,27 @@ public class Game {
 				
 				IAllianceManager allianceManager = move.getPlayer().getAllianceManager();
 				allianceManager.addAlliance(planets, satellites, bonus);
+				turnManager.getPlayerOrder().nextMove();
 				break;
 			case RESEARCH:
 				area = move.getResearchArea();
+				
+				//pay here because not everyone pays for a WEAPON increase but everyone gets the increase
+				int currentState = move.getPlayer().getResearchManager().getState(area);
+				int nextState = currentState + 1;
+				
+				player = move.getPlayer();
+				researchManager = player.getResearchManager();
+				resourceManager = player.getResourceManager();
+				int researchPointsNeeded = Constants.RESEARCH_POINTS_FOR_STATE_INCREASE;
+				int researchScientistsNeeded = Constants.RESEARCH_SCIENTISTS_FOR_LOW_STATE;
+				if (nextState >= Constants.RESEARCH_STATE_HIGH) {
+					researchScientistsNeeded = Constants.RESEARCH_SCIENTISTS_FOR_HIGH_STATE;
+				}
+				
+				resourceManager.reduceResources(Resource.RESEARCH_POINTS, researchPointsNeeded);
+				resourceManager.reduceResources(Resource.SCIENTISTS, researchScientistsNeeded);
+				
 				if (area == ResearchArea.WEAPON) {
 					//WEAPON upgrades are executed on the global IResearchManager (composite)
 					researchManager.increaseState(area);
@@ -61,16 +100,23 @@ public class Game {
 					//other ResearchAreas are executed locally on the player's IResearchManager
 					move.getPlayer().getResearchManager().increaseState(area);
 				}
+				turnManager.getPlayerOrder().nextMove();
 				break;
 			case RESEARCH_RESOURCES:
 				ResearchResources resources = move.getResearchResources();
 				area = move.getResearchArea();
 				
+				//pay here because resources are added on the global manager that has no player references
+				player = move.getPlayer();
+				resourceManager = player.getResourceManager();
+				resourceManager.reduceResources(resources);
+				
 				researchManager.addResearchResources(resources, area);
 				break;
 			case PASS:
-				Player player = move.getPlayer();
+				player = move.getPlayer();
 				turnManager.playerPassed(player);
+				turnManager.getPlayerOrder().nextMove();
 				break;
 			default:
 				throw new IllegalArgumentException("The MoveType " + move.getType() + " is unknown.");
@@ -92,6 +138,8 @@ public class Game {
 		
 		ResearchArea area;
 		Player player;
+		IResourceManager resourceManager;
+		IResearchManager researchManager;
 		
 		switch (move.getType()) {
 			case BUILD:
@@ -118,14 +166,28 @@ public class Game {
 				int currentState = move.getPlayer().getResearchManager().getState(area);
 				int nextState = currentState + 1;
 				
-				moveExecutable &= move.getPlayer().getResearchManager().isStateAccessible(area, nextState);
+				researchManager = move.getPlayer().getResearchManager();
+				resourceManager = move.getPlayer().getResourceManager();
+				int researchPointsNeeded = Constants.RESEARCH_POINTS_FOR_STATE_INCREASE;
+				int researchScientistsNeeded = Constants.RESEARCH_SCIENTISTS_FOR_LOW_STATE;
+				if (nextState >= Constants.RESEARCH_STATE_HIGH) {
+					researchScientistsNeeded = Constants.RESEARCH_SCIENTISTS_FOR_HIGH_STATE;
+				}
+				
+				boolean stateAccessible = move.getPlayer().getResearchManager().isStateAccessible(area, nextState);
+				boolean resourcesAvialable = resourceManager.isResourceAvailable(Resource.RESEARCH_POINTS, researchPointsNeeded);
+				resourcesAvialable &= resourceManager.isResourceAvailable(Resource.SCIENTISTS, researchScientistsNeeded);
+				
+				moveExecutable &= stateAccessible & resourcesAvialable;
 				break;
 			case RESEARCH_RESOURCES:
 				//the player has to have the resources and the resources have to be needed
 				ResearchResources resourcesAdded = move.getResearchResources();
 				
 				player = move.getPlayer();
+				researchManager = player.getResearchManager();
 				moveExecutable &= player.getResourceManager().isResourcesAvailable(resourcesAdded);
+				moveExecutable &= !move.getResearchResources().isEmpty();
 				
 				area = move.getResearchArea();
 				int nextResoucesNeedingState = researchManager.getNextResourceNeedingState(area);
@@ -136,6 +198,10 @@ public class Game {
 					for (Resource resource : ResearchResources.RESEARCH_RESOURCES) {
 						moveExecutable &= neededLeft.getResources(resource) >= resourcesAdded.getResources(resource);
 					}
+				}
+				else {
+					//the state needs no resources because all states are accessible
+					moveExecutable = false;
 				}
 				break;
 			case PASS:
