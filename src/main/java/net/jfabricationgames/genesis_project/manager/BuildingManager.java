@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import com.google.common.annotations.VisibleForTesting;
 
 import net.jfabricationgames.genesis_project.game.Building;
+import net.jfabricationgames.genesis_project.game.BuildingResources;
 import net.jfabricationgames.genesis_project.game.Constants;
 import net.jfabricationgames.genesis_project.game.Field;
 import net.jfabricationgames.genesis_project.game.Player;
@@ -37,6 +38,10 @@ public class BuildingManager implements IBuildingManager {
 	public int getNumBuildingsLeft(Building building) {
 		return numBuildingsLeft.get(building).intValue();
 	}
+	@VisibleForTesting
+	public void setNumBuildingsLeft(Building building, int left) {
+		numBuildingsLeft.put(building, left);
+	}
 	
 	@Override
 	public int getNumBuildingsOnField(Building building) {
@@ -45,10 +50,22 @@ public class BuildingManager implements IBuildingManager {
 	
 	@Override
 	public void build(Building building, Field field) throws IllegalStateException {
+		if (!field.isPlanetField() && !(building == Building.SATELLITE || building == Building.DRONE || building == Building.SPACE_STATION)) {
+			throw new IllegalArgumentException("Can't build a planetary building (" + building + ") on a space field.");
+		}
+		else if (field.isPlanetField() && (building == Building.SATELLITE || building == Building.DRONE || building == Building.SPACE_STATION)) {
+			throw new IllegalArgumentException("Can't build a space building (" + building + ") on a planet field.");
+		}
+		
 		PlayerBuilding playerBuilding = new PlayerBuilding(building, player);
 		int position = findFirstPossibleBuildingPosition(building, field);
 		if (position != -1) {
 			field.build(playerBuilding, position);
+			
+			//take the resources
+			BuildingResources resources = getResourcesNeededForBuilding(building, field);
+			IResourceManager resourceManager = player.getResourceManager();
+			resourceManager.reduceResources(resources);
 		}
 		else {
 			throw new IllegalArgumentException("No possible position found for this building on this field.");
@@ -86,7 +103,8 @@ public class BuildingManager implements IBuildingManager {
 				else if (building == Building.SPACE_STATION) {
 					//only one drone (or any satellites) of the building player has to be on the space field to upgrade it to a space station
 					List<PlayerBuilding> militaryBuildings = spaceBuildings.stream()
-							.filter((b) -> b.getBuilding() == Building.DRONE || b.getBuilding() == Building.SPACE_STATION).collect(Collectors.toList());
+							.filter((b) -> b.getBuilding() == Building.DRONE || b.getBuilding() == Building.SPACE_STATION)
+							.collect(Collectors.toList());
 					if (militaryBuildings.size() == 1) {
 						PlayerBuilding onlyMilitaryBuilding = militaryBuildings.get(0);
 						if (onlyMilitaryBuilding.getBuilding() == Building.DRONE && onlyMilitaryBuilding.getPlayer().equals(player)) {
@@ -94,7 +112,7 @@ public class BuildingManager implements IBuildingManager {
 							firstPossibleField = 0;
 						}
 					}
-				}				
+				}
 			}
 		}
 		else if (field.isPlanetField()) {
@@ -122,23 +140,31 @@ public class BuildingManager implements IBuildingManager {
 		return firstPossibleField;
 	}
 	
-	/**
-	 * Checks whether the building can be build on the field (without testing for any resources, ...)
-	 * 
-	 * Tested conditions are:
-	 * <p>
-	 * - Space left on the field (only for mines, drones and satellites) <br>
-	 * - Player has a building on the field that can be upgraded (all but the above) <br>
-	 * - The player has left at least one building of this type
-	 * </p>
-	 */
 	@Override
-	public boolean canBuild(Building building, Field field) {
-		return findFirstPossibleBuildingPosition(building, field) != -1 && getNumBuildingsLeft(building) > 0;
+	public boolean isResourcesAvailable(Building building, Field field) {
+		BuildingResources buildingResources = getResourcesNeededForBuilding(building, field);
+		return player.getResourceManager().isResourcesAvailable(buildingResources);
 	}
 	
 	@Override
-	public Player getPlayer() {
+	public BuildingResources getResourcesNeededForBuilding(Building building, Field field) {
+		BuildingResources resourcesNeeded = new BuildingResources();
+		
+		int[] costs = Constants.getBuildingCosts(building, getPlayer().getPlayerClass(), field.getPlanet());
+		resourcesNeeded.addResources(getPlayer().getPlayerClass().getPrimaryResource(), costs[0]);
+		resourcesNeeded.addResources(getPlayer().getPlayerClass().getSecundaryResource(), costs[1]);
+		resourcesNeeded.addResources(getPlayer().getPlayerClass().getTertiaryResource(), costs[2]);
+		
+		return resourcesNeeded;
+	}
+
+	@Override
+	public boolean canBuild(Building building, Field field) {
+		return findFirstPossibleBuildingPosition(building, field) != -1 && getNumBuildingsLeft(building) > 0 && isResourcesAvailable(building, field);
+	}
+	
+	@VisibleForTesting
+	protected Player getPlayer() {
 		return player;
 	}
 }

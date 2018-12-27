@@ -1,4 +1,4 @@
-package net.jfabricationgames.genesis_project.manager;
+package net.jfabricationgames.genesis_project.testUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,9 +19,9 @@ public class ConstantsInitializerUtil {
 		
 		Constants.BUILDING_NUMBERS.put(Building.COLONY, 10);
 		Constants.BUILDING_NUMBERS.put(Building.MINE, 6);
-		Constants.BUILDING_NUMBERS.put(Building.TRAIDING_POST, 6);
+		Constants.BUILDING_NUMBERS.put(Building.TRADING_POST, 6);
 		Constants.BUILDING_NUMBERS.put(Building.LABORATORY, 5);
-		Constants.BUILDING_NUMBERS.put(Building.GOVERMENT, 1);
+		Constants.BUILDING_NUMBERS.put(Building.GOVERNMENT, 1);
 		Constants.BUILDING_NUMBERS.put(Building.CITY, 2);
 		Constants.BUILDING_NUMBERS.put(Building.RESEARCH_CENTER, 3);
 		Constants.BUILDING_NUMBERS.put(Building.DRONE, 10);
@@ -89,5 +89,84 @@ public class ConstantsInitializerUtil {
 		Constants.RESEARCH_RESOURCES.get(ResearchArea.WEAPON).get(8).put(Resource.SCIENTISTS, Double.valueOf(0.7));
 		Constants.RESEARCH_RESOURCES.get(ResearchArea.WEAPON).get(9).put(Resource.SCIENTISTS, Double.valueOf(1));
 		Constants.RESEARCH_RESOURCES.get(ResearchArea.WEAPON).get(10).put(Resource.SCIENTISTS, Double.valueOf(2));
+	}
+	
+	public static void initBuildingCosts() {
+		initBuildingCostsForColonies();
+		initBuildingCostsForMines();
+		initBuildingCostsForResearchCenters();
+		initializeBuildingCostsForSpaceBuildings();
+	}
+	public static void initBuildingCostsForColonies() {
+		Constants.BUILDING_COSTS_COLONIE[0][0] = 2;
+		Constants.BUILDING_COSTS_COLONIE[0][1] = 1;
+		Constants.BUILDING_COSTS_COLONIE[0][2] = 0;
+		
+		Constants.BUILDING_COSTS_COLONIE[1][0] = 2;
+		Constants.BUILDING_COSTS_COLONIE[1][1] = 2;
+		Constants.BUILDING_COSTS_COLONIE[1][2] = 0;
+		
+		Constants.BUILDING_COSTS_COLONIE[2][0] = 3;
+		Constants.BUILDING_COSTS_COLONIE[2][1] = 3;
+		Constants.BUILDING_COSTS_COLONIE[2][2] = 0;
+		
+		Constants.BUILDING_COSTS_COLONIE[3][0] = 3;
+		Constants.BUILDING_COSTS_COLONIE[3][1] = 3;
+		Constants.BUILDING_COSTS_COLONIE[3][2] = 2;
+	}
+	public static void initBuildingCostsForMines() {
+		Constants.BUILDING_COSTS_MINE[0][0] = 2;
+		Constants.BUILDING_COSTS_MINE[0][1] = 2;
+		Constants.BUILDING_COSTS_MINE[0][2] = 0;
+		
+		Constants.BUILDING_COSTS_MINE[1][0] = 3;
+		Constants.BUILDING_COSTS_MINE[1][1] = 3;
+		Constants.BUILDING_COSTS_MINE[1][2] = 0;
+		
+		Constants.BUILDING_COSTS_MINE[2][0] = 5;
+		Constants.BUILDING_COSTS_MINE[2][1] = 4;
+		Constants.BUILDING_COSTS_MINE[2][2] = 1;
+		
+		Constants.BUILDING_COSTS_MINE[3][0] = 5;
+		Constants.BUILDING_COSTS_MINE[3][1] = 5;
+		Constants.BUILDING_COSTS_MINE[3][2] = 2;
+	}
+	public static void initBuildingCostsForResearchCenters() {
+		Constants.BUILDING_COSTS_RESEARCH_CENTER[0][0] = 5;
+		Constants.BUILDING_COSTS_RESEARCH_CENTER[0][1] = 5;
+		Constants.BUILDING_COSTS_RESEARCH_CENTER[0][2] = 2;
+		
+		Constants.BUILDING_COSTS_RESEARCH_CENTER[1][0] = 6;
+		Constants.BUILDING_COSTS_RESEARCH_CENTER[1][1] = 6;
+		Constants.BUILDING_COSTS_RESEARCH_CENTER[1][2] = 2;
+		
+		Constants.BUILDING_COSTS_RESEARCH_CENTER[2][0] = 8;
+		Constants.BUILDING_COSTS_RESEARCH_CENTER[2][1] = 8;
+		Constants.BUILDING_COSTS_RESEARCH_CENTER[2][2] = 4;
+		
+		Constants.BUILDING_COSTS_RESEARCH_CENTER[3][0] = 9;
+		Constants.BUILDING_COSTS_RESEARCH_CENTER[3][1] = 9;
+		Constants.BUILDING_COSTS_RESEARCH_CENTER[3][2] = 4;
+	}
+	
+	public static void initializeBuildingCostsForSpaceBuildings() {
+		Constants.BUILDING_COSTS_SATELLITE[0][0] = 1;
+		Constants.BUILDING_COSTS_SATELLITE[0][1] = 1;
+		Constants.BUILDING_COSTS_SATELLITE[0][2] = 0;
+
+		Constants.BUILDING_COSTS_DRONE[0][0] = 2;
+		Constants.BUILDING_COSTS_DRONE[0][1] = 2;
+		Constants.BUILDING_COSTS_DRONE[0][2] = 1;
+
+		Constants.BUILDING_COSTS_SPACE_STATION[0][0] = 4;
+		Constants.BUILDING_COSTS_SPACE_STATION[0][1] = 4;
+		Constants.BUILDING_COSTS_SPACE_STATION[0][2] = 2;
+	}
+	
+	public static void initAllianceValues() {
+		Constants.ALLIANCE_MIN_PLANETS = 3;
+		Constants.ALLIANCE_MIN_PLANETS_OTHER_PLAYERS = 2;
+		Constants.ALLIANCE_MIN_BUILDINGS = 6;//normally its 7 but 6 is better for the tests...
+		Constants.ALLIANCE_MIN_BUILDINGS_OTHER_PLAYERS = 2;
 	}
 }

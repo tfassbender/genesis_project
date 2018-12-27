@@ -35,4 +35,31 @@ class BuildingResourcesTest {
 		resources.addResourcesTertiary(clazz, 2);
 		assertEquals(11, resources.getResourcesTertiary(clazz));
 	}
+	
+	@Test
+	public void testEquals() {
+		BuildingResources resources1 = new BuildingResources(1, 2, 3);
+		BuildingResources resources2 = new BuildingResources(1, 2, 3);
+		BuildingResources resources3 = new BuildingResources(1, 2, 2);
+		BuildingResources clone = resources1.clone();
+		
+		assertTrue(resources1.equals(resources2));
+		assertTrue(resources2.equals(resources1));
+		assertFalse(resources1.equals(resources3));
+		assertFalse(resources2.equals(resources3));
+		
+		assertTrue(resources1.equals(clone));
+		assertTrue(resources2.equals(clone));
+		assertFalse(resources3.equals(clone));
+	}
+	
+	@Test
+	public void testAddResources() {
+		BuildingResources resources1 = new BuildingResources(1, 2, 3);
+		BuildingResources resources2 = new BuildingResources(2, 3, 4);
+		
+		resources1.addResources(resources2);
+		
+		assertEquals(new BuildingResources(3, 5, 7), resources1);
+	}
 }

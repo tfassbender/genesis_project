@@ -2,6 +2,8 @@ package net.jfabricationgames.genesis_project.manager;
 
 import net.jfabricationgames.genesis_project.game.BuildingResources;
 import net.jfabricationgames.genesis_project.game.Player;
+import net.jfabricationgames.genesis_project.game.ResearchResources;
+import net.jfabricationgames.genesis_project.game.Resource;
 
 public class ResourceManager implements IResourceManager {
 	
@@ -97,6 +99,165 @@ public class ResourceManager implements IResourceManager {
 	}
 	
 	@Override
+	public boolean isResourceAvailable(Resource resource, int amount) {
+		return getResources(resource) >= amount;
+	}
+	@Override
+	public boolean isResourcesAvailable(BuildingResources resources) {
+		boolean resourcesAvailable = true;
+		
+		for (Resource resource : BuildingResources.BUILDING_RESOURCES) {
+			resourcesAvailable &= isResourceAvailable(resource, resources.getResources(resource));
+		}
+		
+		return resourcesAvailable;
+	}
+	@Override
+	public boolean isResourcesAvailable(ResearchResources resources) {
+		boolean resourcesAvailable = true;
+		
+		for (Resource resource : ResearchResources.RESEARCH_RESOURCES) {
+			resourcesAvailable &= isResourceAvailable(resource, resources.getResources(resource));
+		}
+		
+		return resourcesAvailable;
+	}
+	
+	@Override
+	public int getResources(Resource resource) {
+		switch (resource) {
+			case CARBON:
+				return getResourcesC();
+			case FTL:
+				return getFTL();
+			case IRON:
+				return getResourcesFe();
+			case RESEARCH_POINTS:
+				return getResearchPoints();
+			case SCIENTISTS:
+				return getScientists();
+			case SILICIUM:
+				return getResourcesSi();
+			default:
+				throw new IllegalArgumentException("The Resource " + resource + " is unknown");
+		}
+	}
+	@Override
+	public void setResources(Resource resource, int amount) {
+		switch (resource) {
+			case CARBON:
+				setResourcesC(amount);
+				break;
+			case FTL:
+				setFTL(amount);
+				break;
+			case IRON:
+				setResourcesFe(amount);
+				break;
+			case RESEARCH_POINTS:
+				setResearchPoints(amount);
+				break;
+			case SCIENTISTS:
+				setScientists(amount);
+				break;
+			case SILICIUM:
+				setResourcesSi(amount);
+				break;
+			default:
+				throw new IllegalArgumentException("The Resource " + resource + " is unknown");
+		}
+	}
+	@Override
+	public void addResources(Resource resource, int amount) {
+		switch (resource) {
+			case CARBON:
+				addResourcesC(amount);
+				break;
+			case FTL:
+				addFTL(amount);
+				break;
+			case IRON:
+				addResourcesFe(amount);
+				break;
+			case RESEARCH_POINTS:
+				addResearchPoints(amount);
+				break;
+			case SCIENTISTS:
+				addScientists(amount);
+				break;
+			case SILICIUM:
+				addResourcesSi(amount);
+				break;
+			default:
+				throw new IllegalArgumentException("The Resource " + resource + " is unknown");
+		}
+	}
+	@Override
+	public void reduceResources(Resource resource, int amount) {
+		if (getResources(resource) < amount) {
+			throw new IllegalArgumentException("Trying to take more resources than present (type: " + resource + "current: " + getResources(resource)
+					+ "; to be taken: " + amount + ")");
+		}
+		
+		switch (resource) {
+			case CARBON:
+				addResourcesC(-amount);
+				break;
+			case FTL:
+				addFTL(-amount);
+				break;
+			case IRON:
+				addResourcesFe(-amount);
+				break;
+			case RESEARCH_POINTS:
+				addResearchPoints(-amount);
+				break;
+			case SCIENTISTS:
+				addScientists(-amount);
+				break;
+			case SILICIUM:
+				addResourcesSi(-amount);
+				break;
+			default:
+				throw new IllegalArgumentException("The Resource " + resource + " is unknown");
+		}
+	}
+	
+	@Override
+	public void addResources(BuildingResources resources) {
+		for (Resource resource : BuildingResources.BUILDING_RESOURCES) {
+			addResources(resource, resources.getResources(resource));
+		}
+	}
+	@Override
+	public void reduceResources(BuildingResources resources) {
+		if (!isResourcesAvailable(resources)) {
+			throw new IllegalArgumentException(
+					"Trying to take more resources than present (current: " + getBuildingResources() + "; to be taken: " + resources + ")");
+		}
+		for (Resource resource : BuildingResources.BUILDING_RESOURCES) {
+			reduceResources(resource, resources.getResources(resource));
+		}
+	}
+	
+	@Override
+	public void addResources(ResearchResources resources) {
+		for (Resource resource : ResearchResources.RESEARCH_RESOURCES) {
+			addResources(resource, resources.getResources(resource));
+		}
+	}
+	@Override
+	public void reduceResources(ResearchResources resources) {
+		if (!isResourcesAvailable(resources)) {
+			throw new IllegalArgumentException(
+					"Trying to take more resources than present (current: " + getResearchResources() + "; to be taken: " + resources + ")");
+		}
+		for (Resource resource : ResearchResources.RESEARCH_RESOURCES) {
+			reduceResources(resource, resources.getResources(resource));
+		}
+	}
+	
+	@Override
 	public void collectGameStartResources() {
 		// TODO Auto-generated method stub
 		
@@ -106,11 +267,6 @@ public class ResourceManager implements IResourceManager {
 	public void collectTurnStartResources() {
 		// TODO Auto-generated method stub
 		
-	}
-	
-	@Override
-	public Player getPlayer() {
-		return player;
 	}
 	
 	@Override
@@ -150,5 +306,12 @@ public class ResourceManager implements IResourceManager {
 	@Override
 	public void addResourcesTertiary(int resources) {
 		buildingResources.addResourcesTertiary(player.getPlayerClass(), resources);
+	}
+	
+	private BuildingResources getBuildingResources() {
+		return new BuildingResources(getResourcesC(), getResourcesSi(), getResourcesFe());
+	}
+	private ResearchResources getResearchResources() {
+		return new ResearchResources(getResourcesC(), getResourcesSi(), getResourcesFe(), getScientists());
 	}
 }

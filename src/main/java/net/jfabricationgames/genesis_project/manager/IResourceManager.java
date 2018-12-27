@@ -1,6 +1,8 @@
 package net.jfabricationgames.genesis_project.manager;
 
-import net.jfabricationgames.genesis_project.game.Player;
+import net.jfabricationgames.genesis_project.game.BuildingResources;
+import net.jfabricationgames.genesis_project.game.ResearchResources;
+import net.jfabricationgames.genesis_project.game.Resource;
 
 public interface IResourceManager {
 	
@@ -15,7 +17,7 @@ public interface IResourceManager {
 	public int getResourcesFe();
 	public void setResourcesFe(int resources);
 	public void addResourcesFe(int resources);
-
+	
 	public int getResourcesPrimary();
 	public void setResourcesPrimary(int resources);
 	public void addResourcesPrimary(int resources);
@@ -40,8 +42,27 @@ public interface IResourceManager {
 	public void setFTL(int ftl);
 	public void addFTL(int ftl);
 	
-	public void collectGameStartResources();
-	public void collectTurnStartResources();
+	public boolean isResourceAvailable(Resource resource, int amount);
+	public boolean isResourcesAvailable(BuildingResources resources);
+	public boolean isResourcesAvailable(ResearchResources resources);
 	
-	public Player getPlayer();
+	public int getResources(Resource resource);
+	public void setResources(Resource resource, int amount);
+	public void addResources(Resource resource, int amount);
+	public void reduceResources(Resource resource, int amount);
+	
+	public void addResources(BuildingResources resources);
+	public void reduceResources(BuildingResources resources);
+	
+	public void addResources(ResearchResources resources);
+	public void reduceResources(ResearchResources resources);
+	
+	/**
+	 * Collect all resources a player gets at the start of the game.
+	 */
+	public void collectGameStartResources();
+	/**
+	 * Collect all resources a player gets at the start of the turn.
+	 */
+	public void collectTurnStartResources();
 }

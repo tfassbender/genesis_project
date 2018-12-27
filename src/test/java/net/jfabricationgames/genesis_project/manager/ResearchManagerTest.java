@@ -15,6 +15,7 @@ import net.jfabricationgames.genesis_project.game.PlayerClass;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
 import net.jfabricationgames.genesis_project.game.Resource;
+import net.jfabricationgames.genesis_project.testUtils.ConstantsInitializerUtil;
 
 class ResearchManagerTest {
 	
@@ -83,14 +84,14 @@ class ResearchManagerTest {
 		//before adding
 		assertEquals(new ResearchResources(8, 8, 8, 0), manager.getResearchResourcesNeededLeft(ResearchArea.FTL, 4));
 		
-		manager.addResearchResources(Resource.CARBON, 3, ResearchArea.FTL, 4);
+		manager.addResearchResources(Resource.CARBON, 3, ResearchArea.FTL);
 		
-		assertEquals(new ResearchResources(5, 8, 8, 0), manager.getResearchResourcesNeededLeft(ResearchArea.FTL, 4));
+		assertEquals(new ResearchResources(1, 4, 4, 0), manager.getResearchResourcesNeededLeft(ResearchArea.FTL, 2));
 		
-		ResearchResources resourcesAdded = new ResearchResources(3, 4, 5, 0);
-		manager.addResearchResources(resourcesAdded, ResearchArea.FTL, 4);
+		ResearchResources resourcesAdded = new ResearchResources(1, 2, 3, 0);
+		manager.addResearchResources(resourcesAdded, ResearchArea.FTL);
 		
-		assertEquals(new ResearchResources(2, 4, 3, 0), manager.getResearchResourcesNeededLeft(ResearchArea.FTL, 4));
+		assertEquals(new ResearchResources(0, 2, 1, 0), manager.getResearchResourcesNeededLeft(ResearchArea.FTL, 2));
 	}
 	
 	@Test
@@ -98,19 +99,19 @@ class ResearchManagerTest {
 		ResearchManager manager = getResearchManager();
 		
 		//more resources than needed
-		assertThrows(IllegalArgumentException.class, () -> manager.addResearchResources(Resource.CARBON, 3, ResearchArea.MINES, 2));
-		assertThrows(IllegalArgumentException.class, () -> manager.addResearchResources(Resource.CARBON, 5, ResearchArea.FTL, 2));
+		assertThrows(IllegalArgumentException.class, () -> manager.addResearchResources(Resource.CARBON, 3, ResearchArea.MINES));
+		assertThrows(IllegalArgumentException.class, () -> manager.addResearchResources(Resource.CARBON, 5, ResearchArea.FTL));
 		
 		//negative resources
 		ResearchResources resources = new ResearchResources(1, 1, -1, 0);
-		assertThrows(IllegalArgumentException.class, () -> manager.addResearchResources(resources, ResearchArea.FTL, 2));
+		assertThrows(IllegalArgumentException.class, () -> manager.addResearchResources(resources, ResearchArea.FTL));
 		
 		//empty resources
 		ResearchResources resources2 = new ResearchResources();
-		assertThrows(IllegalArgumentException.class, () -> manager.addResearchResources(resources2, ResearchArea.FTL, 2));
+		assertThrows(IllegalArgumentException.class, () -> manager.addResearchResources(resources2, ResearchArea.FTL));
 		
 		//no research resources
-		assertThrows(IllegalArgumentException.class, () -> manager.addResearchResources(Resource.RESEARCH_POINTS, 4, ResearchArea.FTL, 2));
+		assertThrows(IllegalArgumentException.class, () -> manager.addResearchResources(Resource.RESEARCH_POINTS, 4, ResearchArea.FTL));
 	}
 	
 	@Test
@@ -125,10 +126,11 @@ class ResearchManagerTest {
 		//in the area FTL the states 2 and 4 are not directly accessible
 		assertTrue(manager.isStateAccessible(ResearchArea.FTL, 1));
 		assertFalse(manager.isStateAccessible(ResearchArea.FTL, 2));
-		assertTrue(manager.isStateAccessible(ResearchArea.FTL, 3));
+		//none of the above is accessible because the previous state (state 2) is not accessible
+		assertFalse(manager.isStateAccessible(ResearchArea.FTL, 3));
 		assertFalse(manager.isStateAccessible(ResearchArea.FTL, 4));
-		assertTrue(manager.isStateAccessible(ResearchArea.FTL, 5));
-		assertTrue(manager.isStateAccessible(ResearchArea.FTL, 6));
+		assertFalse(manager.isStateAccessible(ResearchArea.FTL, 5));
+		assertFalse(manager.isStateAccessible(ResearchArea.FTL, 6));
 	}
 	
 	@Test
@@ -136,7 +138,7 @@ class ResearchManagerTest {
 		ResearchManager manager = getResearchManager();
 		
 		ResearchResources neededLeft = manager.getResearchResourcesNeededLeft(ResearchArea.FTL, 2);
-		manager.addResearchResources(neededLeft, ResearchArea.FTL, 2);
+		manager.addResearchResources(neededLeft, ResearchArea.FTL);
 		
 		assertTrue(manager.isStateAccessible(ResearchArea.FTL, 2));
 	}

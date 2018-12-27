@@ -13,6 +13,10 @@ public abstract class Constants {
 	public static int TURNS_PLAYED = 6;
 	public static int MAX_RESEARCH_STATE_DEFAULT = 6;
 	public static int MAX_RESEARCH_STATE_WEAPON = 10;
+	public static int RESEARCH_POINTS_FOR_STATE_INCREASE = 5;
+	public static int RESEARCH_SCIENTISTS_FOR_LOW_STATE = 0;
+	public static int RESEARCH_SCIENTISTS_FOR_HIGH_STATE = 1;
+	public static int RESEARCH_STATE_HIGH = 5;//5 or above
 	
 	//alliances
 	public static int ALLIANCE_MIN_PLANETS;
@@ -87,12 +91,40 @@ public abstract class Constants {
 	public static int[][] BUILDING_COSTS_MINE = new int[4][3];
 	public static int[][] BUILDING_COSTS_TRAIDING_POST = new int[4][3];
 	public static int[][] BUILDING_COSTS_LABORATORY = new int[4][3];
-	public static int[][] BUILDING_COSTS_GOVERMENT = new int[4][3];
+	public static int[][] BUILDING_COSTS_GOVERNMENT = new int[4][3];
 	public static int[][] BUILDING_COSTS_CITY = new int[4][3];
 	public static int[][] BUILDING_COSTS_RESEARCH_CENTER = new int[4][3];
 	public static int[][] BUILDING_COSTS_DRONE = new int[1][3];
 	public static int[][] BUILDING_COSTS_SPACE_STATION = new int[1][3];
 	public static int[][] BUILDING_COSTS_SATELLITE = new int[1][3];
+	
+	public static int[] getBuildingCosts(Building building, PlayerClass playerClass, Planet planet) {
+		int planetDistance = playerClass.getPlanetDistance(planet);
+		switch (building) {
+			case CITY:
+				return BUILDING_COSTS_CITY[planetDistance];
+			case COLONY:
+				return BUILDING_COSTS_COLONIE[planetDistance];
+			case DRONE:
+				return BUILDING_COSTS_DRONE[planetDistance];
+			case GOVERNMENT:
+				return BUILDING_COSTS_GOVERNMENT[planetDistance];
+			case LABORATORY:
+				return BUILDING_COSTS_LABORATORY[planetDistance];
+			case MINE:
+				return BUILDING_COSTS_MINE[planetDistance];
+			case RESEARCH_CENTER:
+				return BUILDING_COSTS_RESEARCH_CENTER[planetDistance];
+			case SATELLITE:
+				return BUILDING_COSTS_SATELLITE[planetDistance];
+			case SPACE_STATION:
+				return BUILDING_COSTS_SPACE_STATION[planetDistance];
+			case TRADING_POST:
+				return BUILDING_COSTS_TRAIDING_POST[planetDistance];
+			default:
+				throw new IllegalArgumentException("The Building type " + building + " is unknown");
+		}
+	}
 	
 	/**
 	 * The number of buildings per player at game start (on field and class board).

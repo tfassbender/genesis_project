@@ -7,10 +7,10 @@ public enum Building {
 	
 	COLONY(Constants.BUILDING_COSTS_COLONIE, null, "colonies/colonie_"),//
 	MINE(Constants.BUILDING_COSTS_MINE, COLONY, "mines/mine_"),//
-	TRAIDING_POST(Constants.BUILDING_COSTS_TRAIDING_POST, COLONY, "traiding_posts/traiding_post_"),//
+	TRADING_POST(Constants.BUILDING_COSTS_TRAIDING_POST, COLONY, "traiding_posts/traiding_post_"),//
 	LABORATORY(Constants.BUILDING_COSTS_LABORATORY, COLONY, "laboratories/laboratory_"),//
-	GOVERMENT(Constants.BUILDING_COSTS_GOVERMENT, TRAIDING_POST, "goverments/goverment_"),//
-	CITY(Constants.BUILDING_COSTS_CITY, TRAIDING_POST, "cities/city_"),//
+	GOVERNMENT(Constants.BUILDING_COSTS_GOVERNMENT, TRADING_POST, "goverments/goverment_"),//
+	CITY(Constants.BUILDING_COSTS_CITY, TRADING_POST, "cities/city_"),//
 	RESEARCH_CENTER(Constants.BUILDING_COSTS_RESEARCH_CENTER, LABORATORY, "research_centers/research_center_"),//
 	DRONE(Constants.BUILDING_COSTS_DRONE, null, "drones/drone_"),//
 	SPACE_STATION(Constants.BUILDING_COSTS_SPACE_STATION, DRONE, "space_stations/space_station_"),//
@@ -60,8 +60,8 @@ public enum Building {
 		switch (this) {
 			case COLONY:
 			case MINE:
-			case TRAIDING_POST:
-			case GOVERMENT:
+			case TRADING_POST:
+			case GOVERNMENT:
 			case CITY:
 			case LABORATORY:
 			case RESEARCH_CENTER:
