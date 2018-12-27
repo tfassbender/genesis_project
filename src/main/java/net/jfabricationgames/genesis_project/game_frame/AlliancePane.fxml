@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ScrollPane prefHeight="722.0" prefWidth="1212.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <content>
+            <GridPane>
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="30.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="30.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="30.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="30.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="30.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="30.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="30.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <ImageView fx:id="imageAllianceBonusMilitaryRange1" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/alliance_markers/alliance_marker_drone_station_range.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageAllianceBonusPrimaryResources1" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/alliance_markers/alliance_marker_prim_resource.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageAllianceBonusSecundaryResources1" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="6" GridPane.rowIndex="1">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/alliance_markers/alliance_marker_sec_resource.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageAllianceBonusScientists1" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8" GridPane.rowIndex="1">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/alliance_markers/alliance_marker_eierkoeppe.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageAllianceBonusResearchPoints1" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="10" GridPane.rowIndex="1">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/alliance_markers/alliance_marker_research_points.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageAllianceBonusPoints1" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="12" GridPane.rowIndex="1">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/alliance_markers/alliance_marker_points.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageAllianceBonusSelectedMilitaryRange1" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/cross.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageAllianceBonusSelectedPrimaryResources1" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="5">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/cross.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageAllianceBonusSelectedSecundaryResources1" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="6" GridPane.rowIndex="5">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/cross.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageAllianceBonusSelectedScientists1" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8" GridPane.rowIndex="5">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/cross.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageAllianceBonusSelectedResearchPoints1" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="10" GridPane.rowIndex="5">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/cross.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageAllianceBonusSelectedPoints1" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="12" GridPane.rowIndex="5">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/cross.png" />
+                     </image>
+                  </ImageView>
+                  <Button fx:id="buttonPurchaseAllianceBonusMilitaryRange1" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                     <styleClass>
+                        <String fx:value="alliance" />
+                        <String fx:value="purchase" />
+                     </styleClass>
+                  </Button>
+                  <Button fx:id="buttonPurchaseAllianceBonusPrimaryResources1" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="4" GridPane.rowIndex="3">
+                     <styleClass>
+                        <String fx:value="alliance" />
+                        <String fx:value="purchase" />
+                     </styleClass>
+                  </Button>
+                  <Button fx:id="buttonPurchaseAllianceBonusSecundaryResources1" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="6" GridPane.rowIndex="3">
+                     <styleClass>
+                        <String fx:value="alliance" />
+                        <String fx:value="purchase" />
+                     </styleClass>
+                  </Button>
+                  <Button fx:id="buttonPurchaseAllianceBonusScientists1" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="8" GridPane.rowIndex="3">
+                     <styleClass>
+                        <String fx:value="alliance" />
+                        <String fx:value="purchase" />
+                     </styleClass>
+                  </Button>
+                  <Button fx:id="buttonPurchaseAllianceBonusResearchPoints1" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="10" GridPane.rowIndex="3">
+                     <styleClass>
+                        <String fx:value="alliance" />
+                        <String fx:value="purchase" />
+                     </styleClass>
+                  </Button>
+                  <Button fx:id="buttonPurchaseAllianceBonusPoints1" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="12" GridPane.rowIndex="3">
+                     <styleClass>
+                        <String fx:value="alliance" />
+                        <String fx:value="purchase" />
+                     </styleClass>
+                  </Button>
+                  <ImageView fx:id="imageAllianceBonusMilitaryRange2" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="7">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/alliance_markers/alliance_marker_drone_station_range.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageAllianceBonusPrimaryResources2" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="7">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/alliance_markers/alliance_marker_prim_resource.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageAllianceBonusSecundaryResources2" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="6" GridPane.rowIndex="7">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/alliance_markers/alliance_marker_sec_resource.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageAllianceBonusPoints2" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="12" GridPane.rowIndex="7">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/alliance_markers/alliance_marker_points.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageAllianceBonusResearchPoints2" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="10" GridPane.rowIndex="7">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/alliance_markers/alliance_marker_research_points.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageAllianceBonusScientists2" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8" GridPane.rowIndex="7">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/alliance_markers/alliance_marker_eierkoeppe.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageAllianceBonusSelectedMilitaryRange2" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="11">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/cross.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageAllianceBonusSelectedPrimaryResources2" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="11">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/cross.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageAllianceBonusSelectedSecundaryResources2" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="6" GridPane.rowIndex="11">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/cross.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageAllianceBonusSelectedScientists2" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8" GridPane.rowIndex="11">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/cross.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageAllianceBonusSelectedResearchPoints2" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="10" GridPane.rowIndex="11">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/cross.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageAllianceBonusSelectedPoints2" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="12" GridPane.rowIndex="11">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/cross.png" />
+                     </image>
+                  </ImageView>
+                  <Button fx:id="buttonPurchaseAllianceBonusMilitaryRange2" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="2" GridPane.rowIndex="9">
+                     <styleClass>
+                        <String fx:value="alliance" />
+                        <String fx:value="purchase" />
+                     </styleClass>
+                  </Button>
+                  <Button fx:id="buttonPurchaseAllianceBonusPrimaryResources2" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="4" GridPane.rowIndex="9">
+                     <styleClass>
+                        <String fx:value="alliance" />
+                        <String fx:value="purchase" />
+                     </styleClass>
+                  </Button>
+                  <Button fx:id="buttonPurchaseAllianceBonusSecundaryResources2" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="6" GridPane.rowIndex="9">
+                     <styleClass>
+                        <String fx:value="alliance" />
+                        <String fx:value="purchase" />
+                     </styleClass>
+                  </Button>
+                  <Button fx:id="buttonPurchaseAllianceBonusScientists2" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="8" GridPane.rowIndex="9">
+                     <styleClass>
+                        <String fx:value="alliance" />
+                        <String fx:value="purchase" />
+                     </styleClass>
+                  </Button>
+                  <Button fx:id="buttonPurchaseAllianceBonusResearchPoints2" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="10" GridPane.rowIndex="9">
+                     <styleClass>
+                        <String fx:value="alliance" />
+                        <String fx:value="purchase" />
+                     </styleClass>
+                  </Button>
+                  <Button fx:id="buttonPurchaseAllianceBonusPoints2" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="12" GridPane.rowIndex="9">
+                     <styleClass>
+                        <String fx:value="alliance" />
+                        <String fx:value="purchase" />
+                     </styleClass>
+                  </Button>
+                  <Label text="Allianzboni:" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <styleClass>
+                        <String fx:value="alliance" />
+                        <String fx:value="header" />
+                     </styleClass>
+                  </Label>
+                  <Label text="Allianzboni:" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                     <styleClass>
+                        <String fx:value="alliance" />
+                        <String fx:value="header" />
+                     </styleClass>
+                  </Label>
+                  <Label text="Ausgewählt:" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                     <styleClass>
+                        <String fx:value="alliance" />
+                        <String fx:value="header" />
+                     </styleClass>
+                  </Label>
+                  <Label text="Ausgewählt:" GridPane.columnIndex="1" GridPane.rowIndex="11">
+                     <styleClass>
+                        <String fx:value="alliance" />
+                        <String fx:value="header" />
+                     </styleClass>
+                  </Label>
+               </children>
+            </GridPane>
+         </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>

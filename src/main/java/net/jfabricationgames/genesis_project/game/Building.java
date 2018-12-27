@@ -14,7 +14,7 @@ public enum Building {
 	RESEARCH_CENTER(Constants.BUILDING_COSTS_RESEARCH_CENTER, LABORATORY, "research_centers/research_center_"),//
 	DRONE(Constants.BUILDING_COSTS_DRONE, null, "drones/drone_"),//
 	SPACE_STATION(Constants.BUILDING_COSTS_SPACE_STATION, DRONE, "space_stations/space_station_"),//
-	SATELLITE(Constants.BUILDING_COSTS_SATELLITE, null, null);//TODO add satellite images
+	SATELLITE(Constants.BUILDING_COSTS_SATELLITE, null, "satellites/satellite_");//
 	
 	private final int[][] costs;
 	

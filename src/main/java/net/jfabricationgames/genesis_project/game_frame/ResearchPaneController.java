@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import net.jfabricationgames.genesis_project.game.ResearchArea;
 
 public class ResearchPaneController implements Initializable {
 	
@@ -111,18 +112,31 @@ public class ResearchPaneController implements Initializable {
 	private Pane panelResearchCoverMilitary0;
 	
 	@FXML
-	private Spinner<?> spinnerResearchAddCarbon;
+	private Spinner<Integer> spinnerResearchAddCarbon;
 	@FXML
-	private Spinner<?> spinnerResearchAddIron;
+	private Spinner<Integer> spinnerResearchAddIron;
 	@FXML
-	private Spinner<?> spinnerResearchAddSilicium;
+	private Spinner<Integer> spinnerResearchAddSilicium;
+	@FXML
+	private Spinner<Integer> spinnerResearchAddScientists;
 	
 	@FXML
-	private ComboBox<?> comboBoxResearchAddResourcesSelectArea;
+	private ComboBox<ResearchArea> comboBoxResearchAddResourcesSelectArea;
 	
 	@FXML
 	private Button buttonResearchAddResources;
 	
+	@FXML
+	private Label labelResearchCarbonNeeded;
+	@FXML
+	private Label labelResearchSiliciumNeeded;
+	@FXML
+	private Label labelResearchIronNeeded;
+	@FXML
+	private Label labelResearchScientistsNeeded;
+	
+	@FXML
+	private Label labelAccessibleResearchState;
 	@FXML
 	private Label labelResearchStateMine;
 	@FXML

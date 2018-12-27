@@ -25,6 +25,8 @@ public class GameFrameController implements Initializable {
 	private AnchorPane anchorResearchPane;
 	@FXML
 	private AnchorPane anchorTechnologyPane;
+    @FXML
+    private AnchorPane anchorAlliancePanel;
 	@FXML
 	private AnchorPane anchorTurnPane;
 	@FXML
@@ -48,6 +50,7 @@ public class GameFrameController implements Initializable {
 		insertPane("ClassPane.fxml", anchorClassPane, new ClassPaneController(), null);
 		insertPane("ResearchPane.fxml", anchorResearchPane, new ResearchPaneController(), null);
 		insertPane("TechnologyPane.fxml", anchorTechnologyPane, new TechnologyPaneController(), null);
+		insertPane("AlliancePane.fxml", anchorAlliancePanel, new AlliancePaneController(), null);
 		insertPane("TurnPane.fxml", anchorTurnPane, new TurnPaneController(), null);
 		insertPane("PlanetInfoPane.fxml", anchorPlanetInfoPane, new PlanetInfoPaneController(), null);
 		insertPane("PlaningToolPane.fxml", anchorPlaningToolPane, new PlaningToolPaneController(), null);
