@@ -4,10 +4,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 
@@ -15,98 +12,11 @@ import net.jfabricationgames.genesis_project.game.Board.Position;
 import net.jfabricationgames.genesis_project.manager.BuildingManager;
 import net.jfabricationgames.genesis_project.manager.IResearchManager;
 import net.jfabricationgames.genesis_project.manager.IResourceManager;
-import net.jfabricationgames.genesis_project.manager.PlayerOrder;
-import net.jfabricationgames.genesis_project.manager.TurnManager;
 import net.jfabricationgames.genesis_project.move.IMove;
-import net.jfabricationgames.genesis_project.testUtils.ConstantsInitializerUtil;
+import net.jfabricationgames.genesis_project.testUtils.GameCreationUtil;
 import net.jfabricationgames.genesis_project.testUtils.MoveCreaterUtil;
-import net.jfabricationgames.genesis_project.user.User;
 
 class GameTest {
-	
-	private Game getGame() {
-		ConstantsInitializerUtil.initBuildingNumbers();
-		ConstantsInitializerUtil.initStartingResearchStates();
-		ConstantsInitializerUtil.initResearchResources();
-		ConstantsInitializerUtil.initBuildingCosts();
-		List<Player> players = new ArrayList<Player>(4);
-		for (int i = 0; i < 2; i++) {
-			Player player = new Player(new User("Player" + (i + 1)), PlayerClass.ENCOR);
-			players.add(player);
-		}
-		Game game = new Game(players);
-		//Game turns: [MINE_TRADING_POST, ALLIANCE, GOVERNMENT_CITY, LABORATORY_RESEARCH_CENTER, NEW_PLANETS, NEIGHBORS, GENESIS_PLANET, COLONY]
-		((TurnManager) game.getTurnManager()).chooseRandomTurnGoals(TurnGoal.values(), new Random(42));
-		game.getTurnManager().nextTurn();
-		initializeBoard(game);
-		
-		//player 1 has to be the active player
-		PlayerOrder<Player> playerOrder = game.getTurnManager().getPlayerOrder();
-		Player player2 = game.getPlayers().get(1);
-		if (playerOrder.getActivePlayer().equals(player2)) {
-			playerOrder.nextMove();
-		}
-		
-		return game;
-	}
-	
-	private void initializeBoard(Game game) {
-		Board board = game.getBoard();
-		//initialize the board with some fields
-		for (int x = 0; x < 6; x++) {
-			for (int y = 0; y < 6; y++) {
-				Position pos = new Position(x, y);
-				Field field = new Field(pos, null);
-				board.getFields().put(pos, field);
-			}
-		}
-		
-		Player player = game.getPlayers().get(0);
-		Player player2 = game.getPlayers().get(1);
-		
-		//planet with 2 player buildings and one opponent building
-		board.getFields().get(new Position(0, 0)).setPlanet(Planet.BLACK);
-		board.getFields().get(new Position(0, 0)).build(new PlayerBuilding(Building.COLONY, player), 0);
-		board.getFields().get(new Position(0, 0)).build(new PlayerBuilding(Building.MINE, player), 1);
-		board.getFields().get(new Position(0, 0)).build(new PlayerBuilding(Building.MINE, player2), 2);
-		
-		//planet with 2 player buildings (one is a CITY) and 1 opponent building
-		board.getFields().get(new Position(1, 1)).setPlanet(Planet.GENESIS);
-		board.getFields().get(new Position(1, 1)).build(new PlayerBuilding(Building.COLONY, player), 0);
-		board.getFields().get(new Position(1, 1)).build(new PlayerBuilding(Building.CITY, player), 1);
-		board.getFields().get(new Position(1, 1)).build(new PlayerBuilding(Building.COLONY, player2), 2);
-		
-		//planet with 3 player buildings
-		board.getFields().get(new Position(0, 3)).setPlanet(Planet.BLUE);
-		board.getFields().get(new Position(0, 3)).build(new PlayerBuilding(Building.TRADING_POST, player), 0);
-		board.getFields().get(new Position(0, 3)).build(new PlayerBuilding(Building.LABORATORY, player), 1);
-		board.getFields().get(new Position(0, 3)).build(new PlayerBuilding(Building.COLONY, player), 2);
-		
-		//planet with 2 player buildings and one opponent building
-		board.getFields().get(new Position(2, 0)).setPlanet(Planet.BLACK);
-		board.getFields().get(new Position(2, 0)).build(new PlayerBuilding(Building.LABORATORY, player), 0);
-		board.getFields().get(new Position(2, 0)).build(new PlayerBuilding(Building.COLONY, player), 1);
-		board.getFields().get(new Position(2, 0)).build(new PlayerBuilding(Building.COLONY, player2), 2);
-		
-		//planet with 1 player building
-		board.getFields().get(new Position(3, 1)).setPlanet(Planet.GREEN);
-		board.getFields().get(new Position(3, 1)).build(new PlayerBuilding(Building.COLONY, player), 0);
-		
-		//planet with 2 opponent buildings
-		board.getFields().get(new Position(2, 3)).setPlanet(Planet.RED);
-		board.getFields().get(new Position(2, 3)).build(new PlayerBuilding(Building.LABORATORY, player2), 0);
-		board.getFields().get(new Position(2, 3)).build(new PlayerBuilding(Building.COLONY, player2), 1);
-		
-		//planet with 1 player building and one opponent building
-		board.getFields().get(new Position(4, 2)).setPlanet(Planet.YELLOW);
-		board.getFields().get(new Position(4, 2)).build(new PlayerBuilding(Building.TRADING_POST, player), 0);
-		board.getFields().get(new Position(4, 2)).build(new PlayerBuilding(Building.COLONY, player2), 1);
-		
-		//CENTER planet with 1 player building and one opponent building
-		board.getFields().get(new Position(5, 0)).setPlanet(Planet.CENTER);
-		board.getFields().get(new Position(5, 0)).build(new PlayerBuilding(Building.COLONY, player), 0);
-		board.getFields().get(new Position(5, 0)).build(new PlayerBuilding(Building.COLONY, player2), 1);
-	}
 	
 	private void skipPlayersTurn(Game game) {
 		//two players -> skip the other players turn
@@ -115,7 +25,7 @@ class GameTest {
 	
 	@Test
 	public void testExecuteMove_buildMoves() {
-		Game game = getGame();
+		Game game = GameCreationUtil.createGame();
 		Player player = game.getPlayers().get(0);
 		//enough resources for the first colony and the research center but not for the mine
 		player.getResourceManager().setResourcesPrimary(8);
@@ -155,7 +65,7 @@ class GameTest {
 	
 	@Test
 	public void testExecuteMove_allianceMoves() {
-		Game game = getGame();
+		Game game = GameCreationUtil.createGame();
 		Player player = game.getPlayers().get(0);
 		//enough resources for 5 satellites
 		player.getResourceManager().setResourcesPrimary(5);
@@ -210,7 +120,7 @@ class GameTest {
 	
 	@Test
 	public void testExecuteMove_researchMoves() {
-		Game game = getGame();
+		Game game = GameCreationUtil.createGame();
 		Player player = game.getPlayers().get(0);
 		IResourceManager resourceManager = player.getResourceManager();
 		resourceManager.setResearchPoints(17);
@@ -238,7 +148,7 @@ class GameTest {
 	
 	@Test
 	public void testExecuteMove_researchResourcesMoves() {
-		Game game = getGame();
+		Game game = GameCreationUtil.createGame();
 		Player player = game.getPlayers().get(0);
 		IResourceManager resourceManager = player.getResourceManager();
 		resourceManager.addResources(new ResearchResources(9, 7, 6, 2));
@@ -269,7 +179,7 @@ class GameTest {
 	
 	@Test
 	public void testExecuteMove_passMoves() {
-		Game game = getGame();
+		Game game = GameCreationUtil.createGame();
 		Player player = game.getPlayers().get(0);
 		
 		IMove pass = MoveCreaterUtil.getPassMove(game, player);
@@ -286,7 +196,7 @@ class GameTest {
 	
 	@Test
 	public void testIsMoveExecutable_buildingMoves() {
-		Game game = getGame();
+		Game game = GameCreationUtil.createGame();
 		Player player = game.getPlayers().get(0);
 		Player player2 = game.getPlayers().get(1);
 		((BuildingManager) player.getBuildingManager()).setNumBuildingsLeft(Building.GOVERNMENT, 0);
@@ -320,7 +230,7 @@ class GameTest {
 	
 	@Test
 	public void testIsMoveExecutable_allianceMoves() {
-		Game game = getGame();
+		Game game = GameCreationUtil.createGame();
 		Player player = game.getPlayers().get(0);
 		//enough resources for 3 satellites
 		player.getResourceManager().setResourcesPrimary(3);
@@ -357,7 +267,7 @@ class GameTest {
 	
 	@Test
 	public void testIsMoveExecutable_ResearchMoves() {
-		Game game = getGame();
+		Game game = GameCreationUtil.createGame();
 		Player player = game.getPlayers().get(0);
 		IResourceManager resourceManager = player.getResourceManager();
 		resourceManager.setResearchPoints(5);
@@ -385,7 +295,7 @@ class GameTest {
 	
 	@Test
 	public void testIsMoveExecutable_ResearchResourcesMoves() {
-		Game game = getGame();
+		Game game = GameCreationUtil.createGame();
 		Player player = game.getPlayers().get(0);
 		IResourceManager resourceManager = player.getResourceManager();
 		resourceManager.addResources(new ResearchResources(5, 5, 5, 2));
@@ -409,7 +319,7 @@ class GameTest {
 	
 	@Test
 	public void testIsMoveExecutable_PassMoves() {
-		Game game = getGame();
+		Game game = GameCreationUtil.createGame();
 		Player player = game.getPlayers().get(0);
 		Player player2 = game.getPlayers().get(1);
 		

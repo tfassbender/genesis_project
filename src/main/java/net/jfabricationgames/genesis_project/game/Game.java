@@ -2,6 +2,7 @@ package net.jfabricationgames.genesis_project.game;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import net.jfabricationgames.genesis_project.manager.IAllianceManager;
 import net.jfabricationgames.genesis_project.manager.IBuildingManager;
@@ -15,13 +16,16 @@ import net.jfabricationgames.genesis_project.move.IMove;
 public class Game {
 	
 	private List<Player> players;
+	private transient String localPlayerName;
+	
 	private Board board;
 	
 	private ITurnManager turnManager;
 	private IResearchManager researchManager;
 	
-	public Game(List<Player> players) {
+	public Game(List<Player> players, String localPlayerName) {
 		this.players = players;
+		this.localPlayerName = localPlayerName;
 		this.board = new Board();
 		this.turnManager = new TurnManager(this);
 		this.researchManager = new ResearchManagerCompositum(this);
@@ -216,6 +220,10 @@ public class Game {
 	
 	public List<Player> getPlayers() {
 		return players;
+	}
+	public Player getLocalPlayer() {
+		Optional<Player> local = players.stream().filter(p -> p.getUser().getUsername().equals(localPlayerName)).findFirst();
+		return local.orElseThrow(() -> new IllegalStateException("No local player found."));
 	}
 	
 	public Board getBoard() {
