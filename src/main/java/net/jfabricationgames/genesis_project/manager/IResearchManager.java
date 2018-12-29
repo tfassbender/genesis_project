@@ -1,5 +1,7 @@
 package net.jfabricationgames.genesis_project.manager;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
 import net.jfabricationgames.genesis_project.game.Resource;
@@ -42,4 +44,8 @@ public interface IResearchManager {
 	 * Add resources to the next state of the given area that needs resources to be made accessible.
 	 */
 	public void addResearchResources(ResearchResources resources, ResearchArea area);
+	
+	public IntegerProperty getStateProperty(ResearchArea area);
+	public IntegerProperty getMaxReachableStateProperty(ResearchArea area);
+	public ObjectProperty<ResearchResources> getResearchResourcesNeededLeftProperties(ResearchArea area);
 }

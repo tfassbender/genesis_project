@@ -49,6 +49,15 @@ public enum PlayerClass {
 		return color;
 	}
 	
+	public String getClassEffectDescription() {
+		//TODO implement method
+		return "";
+	}
+	public String getGovernmentEffectDescription() {
+		//TODO implement method
+		return "";
+	}
+	
 	public String getClassPaneImagePath() {
 		return classPaneImagePath;
 	}

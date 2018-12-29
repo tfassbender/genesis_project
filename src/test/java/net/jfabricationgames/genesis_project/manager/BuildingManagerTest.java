@@ -65,8 +65,8 @@ class BuildingManagerTest {
 	public void testGetNumBuildingsOnField() {
 		BuildingManager manager = getBuildingManager();
 		
-		manager.numBuildingsLeft.put(Building.COLONY, 5);
-		manager.numBuildingsLeft.put(Building.CITY, 1);
+		manager.setNumBuildingsLeft(Building.COLONY, 5);
+		manager.setNumBuildingsLeft(Building.CITY, 1);
 		
 		assertEquals(5, manager.getNumBuildingsOnField(Building.COLONY));
 		assertEquals(0, manager.getNumBuildingsOnField(Building.GOVERNMENT));
@@ -162,7 +162,7 @@ class BuildingManagerTest {
 	public void testCanBuild_noBuildingsLeft() {
 		BuildingManager manager = getBuildingManager();
 		Field field = getFieldWithBuildings(null, null, null);
-		manager.numBuildingsLeft.put(Building.COLONY, 0);
+		manager.setNumBuildingsLeft(Building.COLONY, 0);
 		
 		assertFalse(manager.canBuild(Building.COLONY, field));
 	}

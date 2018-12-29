@@ -97,5 +97,7 @@ public class Player {
 	}
 	public void setGame(Game game) {
 		this.game = game;
+		//initialize the number of players in the research manager by calling the counter method
+		((ResearchManager) researchManager).getNumPlayersInGame();
 	}
 }

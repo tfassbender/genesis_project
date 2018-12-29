@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import com.google.common.annotations.VisibleForTesting;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.BuildingResources;
 import net.jfabricationgames.genesis_project.game.Constants;
@@ -21,12 +23,17 @@ public class BuildingManager implements IBuildingManager {
 	
 	//the buildings left on the class board
 	@VisibleForTesting
-	protected Map<Building, Integer> numBuildingsLeft;
+	protected Map<Building, IntegerProperty> numBuildingsLeft;
 	
 	public BuildingManager(Player player) {
 		this.player = player;
 		if (Constants.BUILDING_NUMBERS != null) {
-			numBuildingsLeft = new HashMap<Building, Integer>(Constants.BUILDING_NUMBERS);
+			numBuildingsLeft = new HashMap<Building, IntegerProperty>();
+			for (Map.Entry<Building, Integer> buildings : Constants.BUILDING_NUMBERS.entrySet()) {
+				IntegerProperty property = new SimpleIntegerProperty(this, "buildingsLeft_" + buildings.getKey().name());
+				property.set(buildings.getValue().intValue());
+				numBuildingsLeft.put(buildings.getKey(), property);
+			}
 		}
 		else {
 			throw new IllegalStateException(
@@ -36,11 +43,12 @@ public class BuildingManager implements IBuildingManager {
 	
 	@Override
 	public int getNumBuildingsLeft(Building building) {
-		return numBuildingsLeft.get(building).intValue();
+		return numBuildingsLeft.get(building).get();
 	}
 	@VisibleForTesting
 	public void setNumBuildingsLeft(Building building, int left) {
-		numBuildingsLeft.put(building, left);
+		IntegerProperty buildingsLeft = numBuildingsLeft.get(building);
+		buildingsLeft.set(left);
 	}
 	
 	@Override
@@ -166,5 +174,10 @@ public class BuildingManager implements IBuildingManager {
 	@VisibleForTesting
 	protected Player getPlayer() {
 		return player;
+	}
+
+	@Override
+	public IntegerProperty getNumBuildingsLeftProperty(Building building) {
+		return numBuildingsLeft.get(building);
 	}
 }

@@ -1,5 +1,6 @@
 package net.jfabricationgames.genesis_project.manager;
 
+import javafx.beans.property.IntegerProperty;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.BuildingResources;
 import net.jfabricationgames.genesis_project.game.Field;
@@ -28,4 +29,6 @@ public interface IBuildingManager {
 	
 	public boolean isResourcesAvailable(Building building, Field field);
 	public BuildingResources getResourcesNeededForBuilding(Building building, Field field);
+	
+	public IntegerProperty getNumBuildingsLeftProperty(Building building);
 }

@@ -100,4 +100,7 @@ public class ResearchResources extends BuildingResources implements Cloneable {
 			addResources(res, resources.getResources(res));
 		}
 	}
+	public String getShortenedDescription() {
+		return "[C/Si/Fe/Ek]: " + getResourcesC() + "/" + getResourcesSi() + "/" + getResourcesFe() + "/" + getScientists();
+	}
 }

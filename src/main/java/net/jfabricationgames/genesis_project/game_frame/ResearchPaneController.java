@@ -3,15 +3,25 @@ package net.jfabricationgames.genesis_project.game_frame;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import net.jfabricationgames.genesis_project.game.Constants;
+import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
+import net.jfabricationgames.genesis_project.game.ResearchResources;
+import net.jfabricationgames.genesis_project.game.Resource;
+import net.jfabricationgames.genesis_project.manager.IResearchManager;
 
 public class ResearchPaneController implements Initializable {
 	
@@ -179,30 +189,173 @@ public class ResearchPaneController implements Initializable {
 	@FXML
 	private Label labelResearchPossibleStateMines;
 	@FXML
-	private Label labelResearchNextStateResourcesMines;
-	@FXML
 	private Label labelResearchPossibleStateEconomy;
-	@FXML
-	private Label labelResearchNextStateResourcesEconomy;
 	@FXML
 	private Label labelResearchPossibleStateFtl;
 	@FXML
-	private Label labelResearchNextStateResourcesFtl;
-	@FXML
 	private Label labelResearchPossibleStateResearch;
-	@FXML
-	private Label labelResearchNextStateResourcesResearch;
 	@FXML
 	private Label labelResearchPossibleStateMilitary;
 	@FXML
-	private Label labelResearchNextStateResourcesMilitary;
-	@FXML
 	private Label labelResearchPossibleStateWeapon;
-	@FXML
-	private Label labelResearchNextStateResourcesWeapon;
+	
+	private IResearchManager globalResearchManager;
+	private Player player;
+	
+	public ResearchPaneController(IResearchManager globalResearchManager, Player player) {
+		this.globalResearchManager = globalResearchManager;
+		this.player = player;
+	}
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		GuiUtils.loadImageToView("research/research_panel.png", true, imageViewResearchBackground);
+		
+		bindStateLabels();
+		bindIncreaseStateButtonsDisabledProperties();
+		bindResourcesNeededLabels();
+		bindReachableStateLabels();
+
+		addResourceAddingListeners();
+		initializeResourceSpinners();
+		initializeResearchAreaComboBox();
+		
+		//TODO add research state descriptions
+	}
+	
+	private void bindStateLabels() {
+		IResearchManager researchManager = player.getResearchManager();
+		labelResearchStateMine.textProperty().bind(Bindings.convert(researchManager.getStateProperty(ResearchArea.MINES)));
+		labelResearchStateEconomy.textProperty().bind(Bindings.convert(researchManager.getStateProperty(ResearchArea.ECONOMY)));
+		labelResearchStateFtl.textProperty().bind(Bindings.convert(researchManager.getStateProperty(ResearchArea.FTL)));
+		labelResearchStateResearch.textProperty().bind(Bindings.convert(researchManager.getStateProperty(ResearchArea.RESEARCH)));
+		labelResearchStateMilitary.textProperty().bind(Bindings.convert(researchManager.getStateProperty(ResearchArea.MILITARY)));
+		
+		labelResearchStateWeapon.textProperty().bind(Bindings.convert(globalResearchManager.getStateProperty(ResearchArea.WEAPON)));
+	}
+	
+	private void bindIncreaseStateButtonsDisabledProperties() {
+		BooleanBinding researchPointsAvailable = player.getResourceManager().getResearchPointsProperty()
+				.greaterThanOrEqualTo(Constants.RESEARCH_POINTS_FOR_STATE_INCREASE);
+		
+		buttonResearchPromotionMines.disableProperty().bind(researchPointsAvailable.and(stateAccessible(ResearchArea.MINES)).not());
+		buttonResearchPromotionEconomy.disableProperty().bind(researchPointsAvailable.and(stateAccessible(ResearchArea.ECONOMY)).not());
+		buttonResearchPromotionFtl.disableProperty().bind(researchPointsAvailable.and(stateAccessible(ResearchArea.FTL)).not());
+		buttonResearchPromotionResearch.disableProperty().bind(researchPointsAvailable.and(stateAccessible(ResearchArea.RESEARCH)).not());
+		buttonResearchPromotionMilitary.disableProperty().bind(researchPointsAvailable.and(stateAccessible(ResearchArea.MILITARY)).not());
+		buttonResearchPromotionWeapon.disableProperty().bind(researchPointsAvailable.and(stateAccessible(ResearchArea.WEAPON)).not());
+	}
+	
+	private BooleanBinding stateAccessible(ResearchArea area) {
+		IResearchManager researchManager = player.getResearchManager();
+		BooleanBinding promotionEnabled = globalResearchManager.getMaxReachableStateProperty(ResearchArea.MINES)
+				.greaterThanOrEqualTo(researchManager.getStateProperty(ResearchArea.MINES).add(1));
+		
+		return promotionEnabled;
+	}
+	
+	private void bindResourcesNeededLabels() {
+		IResearchManager researchManager = player.getResearchManager();
+		labelResearchResourcesMines.textProperty().bind(new SimpleStringProperty(
+				researchManager.getResearchResourcesNeededLeftProperties(ResearchArea.MINES).getValue().getShortenedDescription()));
+		labelResearchResourcesEconomy.textProperty().bind(new SimpleStringProperty(
+				researchManager.getResearchResourcesNeededLeftProperties(ResearchArea.ECONOMY).getValue().getShortenedDescription()));
+		labelResearchResourcesFtl.textProperty().bind(new SimpleStringProperty(
+				researchManager.getResearchResourcesNeededLeftProperties(ResearchArea.FTL).getValue().getShortenedDescription()));
+		labelResearchResourcesResearch.textProperty().bind(new SimpleStringProperty(
+				researchManager.getResearchResourcesNeededLeftProperties(ResearchArea.RESEARCH).getValue().getShortenedDescription()));
+		labelResearchResourcesMilitary.textProperty().bind(new SimpleStringProperty(
+				researchManager.getResearchResourcesNeededLeftProperties(ResearchArea.MILITARY).getValue().getShortenedDescription()));
+		labelResearchResourcesWeapon.textProperty().bind(new SimpleStringProperty(
+				researchManager.getResearchResourcesNeededLeftProperties(ResearchArea.WEAPON).getValue().getShortenedDescription()));
+	}
+	
+	private void bindReachableStateLabels() {
+		IResearchManager researchManager = player.getResearchManager();
+		labelResearchPossibleStateMines.textProperty().bind(Bindings.convert(researchManager.getMaxReachableStateProperty(ResearchArea.MINES)));
+		labelResearchPossibleStateEconomy.textProperty().bind(Bindings.convert(researchManager.getMaxReachableStateProperty(ResearchArea.ECONOMY)));
+		labelResearchPossibleStateFtl.textProperty().bind(Bindings.convert(researchManager.getMaxReachableStateProperty(ResearchArea.FTL)));
+		labelResearchPossibleStateResearch.textProperty().bind(Bindings.convert(researchManager.getMaxReachableStateProperty(ResearchArea.RESEARCH)));
+		labelResearchPossibleStateMilitary.textProperty().bind(Bindings.convert(researchManager.getMaxReachableStateProperty(ResearchArea.MILITARY)));
+		labelResearchPossibleStateWeapon.textProperty().bind(Bindings.convert(researchManager.getMaxReachableStateProperty(ResearchArea.WEAPON)));
+	}
+	
+	private void initializeResearchAreaComboBox() {
+		comboBoxResearchAddResourcesSelectArea.getItems().addAll(ResearchArea.values());
+		comboBoxResearchAddResourcesSelectArea.getSelectionModel().select(0);
+	}
+	
+	private void initializeResourceSpinners() {
+		SpinnerValueFactory<Integer> carbonSpinnerValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 0);
+		SpinnerValueFactory<Integer> siliciumSpinnerValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 0);
+		SpinnerValueFactory<Integer> ironSpinnerValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 0);
+		SpinnerValueFactory<Integer> scientistsSpinnerValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 0);
+		
+		spinnerResearchAddCarbon.setValueFactory(carbonSpinnerValueFactory);
+		spinnerResearchAddSilicium.setValueFactory(siliciumSpinnerValueFactory);
+		spinnerResearchAddIron.setValueFactory(ironSpinnerValueFactory);
+		spinnerResearchAddScientists.setValueFactory(scientistsSpinnerValueFactory);
+		
+		carbonSpinnerValueFactory.valueProperty().addListener((observer, oldVal, newVal) -> updateAddResourcesButtonState());
+		siliciumSpinnerValueFactory.valueProperty().addListener((observer, oldVal, newVal) -> updateAddResourcesButtonState());
+		ironSpinnerValueFactory.valueProperty().addListener((observer, oldVal, newVal) -> updateAddResourcesButtonState());
+		scientistsSpinnerValueFactory.valueProperty().addListener((observer, oldVal, newVal) -> updateAddResourcesButtonState());
+	}
+	
+	private void addResourceAddingListeners() {
+		IResearchManager researchManager = player.getResearchManager();
+		comboBoxResearchAddResourcesSelectArea.valueProperty().addListener((observer, oldVal, newVal) -> updateResourceAdding());
+		for (ResearchArea area : ResearchArea.values()) {
+			researchManager.getResearchResourcesNeededLeftProperties(area).addListener((observer, oldVal, newVal) -> updateResourceAdding());
+		}
+	}
+	
+	private void updateResourceAdding() {
+		IResearchManager researchManager = player.getResearchManager();
+		ResearchArea area = comboBoxResearchAddResourcesSelectArea.getValue();
+		int nextResouceNeedingState = researchManager.getNextResourceNeedingState(area);
+		
+		//find the needed resources
+		ResearchResources neededResources;
+		if (nextResouceNeedingState == -1) {
+			neededResources = new ResearchResources();
+		}
+		else {
+			neededResources = researchManager.getResearchResourcesNeededLeft(area, nextResouceNeedingState);
+		}
+		
+		//set the spinner maximum
+		((IntegerSpinnerValueFactory) spinnerResearchAddCarbon.getValueFactory()).setMax(neededResources.getResources(Resource.CARBON));
+		((IntegerSpinnerValueFactory) spinnerResearchAddSilicium.getValueFactory()).setMax(neededResources.getResources(Resource.SILICIUM));
+		((IntegerSpinnerValueFactory) spinnerResearchAddIron.getValueFactory()).setMax(neededResources.getResources(Resource.IRON));
+		((IntegerSpinnerValueFactory) spinnerResearchAddScientists.getValueFactory()).setMax(neededResources.getResources(Resource.SCIENTISTS));
+		
+		//set the labels
+		labelResearchCarbonNeeded.setText("/ " + neededResources.getResources(Resource.CARBON));
+		labelResearchSiliciumNeeded.setText("/ " + neededResources.getResources(Resource.SILICIUM));
+		labelResearchIronNeeded.setText("/ " + neededResources.getResources(Resource.IRON));
+		labelResearchScientistsNeeded.setText("/ " + neededResources.getResources(Resource.SCIENTISTS));
+		
+		int maxAccessibleState = researchManager.getMaxReachableStateProperty(area).get();
+		labelAccessibleResearchState.setText(Integer.toString(maxAccessibleState));
+		
+		//set the add resources button's disabled property
+		updateAddResourcesButtonState();
+	}
+	
+	private void updateAddResourcesButtonState() {
+		IResearchManager researchManager = player.getResearchManager();
+		ResearchArea area = comboBoxResearchAddResourcesSelectArea.getValue();
+		//enable the button
+		boolean enableAdding = false;
+		//any resource to add
+		enableAdding |= spinnerResearchAddCarbon.getValue().intValue() > 0;
+		enableAdding |= spinnerResearchAddSilicium.getValue().intValue() > 0;
+		enableAdding |= spinnerResearchAddIron.getValue().intValue() > 0;
+		enableAdding |= spinnerResearchAddScientists.getValue().intValue() > 0;
+		//resources needed
+		enableAdding &= researchManager.getNextResourceNeedingState(area) != -1;
+		
+		buttonResearchAddResources.setDisable(!enableAdding);
 	}
 }
