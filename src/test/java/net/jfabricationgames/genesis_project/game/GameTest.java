@@ -2,6 +2,7 @@ package net.jfabricationgames.genesis_project.game;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
@@ -78,8 +79,8 @@ class GameTest {
 		Field[] satellites1 = new Field[] {fields.get(new Position(0, 1)), fields.get(new Position(0, 2))};
 		Field[] planets2 = new Field[] {fields.get(new Position(0, 0)), fields.get(new Position(1, 1)), fields.get(new Position(2, 0))};
 		Field[] satellites2 = new Field[] {fields.get(new Position(1, 0))};
-		IMove allianceMove1 = MoveCreaterUtil.getAllianceMove(game, player, planets1, satellites1, AllianceBonus.MILITARY_RANGE);
-		IMove allianceMove2 = MoveCreaterUtil.getAllianceMove(game, player, planets2, satellites2, AllianceBonus.POINTS);
+		IMove allianceMove1 = MoveCreaterUtil.getAllianceMove(game, player, planets1, satellites1, AllianceBonus.MILITARY_RANGE, 0);
+		IMove allianceMove2 = MoveCreaterUtil.getAllianceMove(game, player, planets2, satellites2, AllianceBonus.POINTS, 0);
 		
 		game.executeMove(allianceMove1);
 		//new alliance created
@@ -243,8 +244,8 @@ class GameTest {
 		Field[] satellites1 = new Field[] {fields.get(new Position(0, 1)), fields.get(new Position(0, 2))};
 		Field[] planets2 = new Field[] {fields.get(new Position(0, 0)), fields.get(new Position(1, 1)), fields.get(new Position(2, 0))};
 		Field[] satellites2 = new Field[] {fields.get(new Position(1, 0))};
-		IMove allianceMove1 = MoveCreaterUtil.getAllianceMove(game, player, planets1, satellites1, AllianceBonus.MILITARY_RANGE);
-		IMove allianceMove2 = MoveCreaterUtil.getAllianceMove(game, player, planets2, satellites2, AllianceBonus.POINTS);
+		IMove allianceMove1 = MoveCreaterUtil.getAllianceMove(game, player, planets1, satellites1, AllianceBonus.MILITARY_RANGE, 0);
+		IMove allianceMove2 = MoveCreaterUtil.getAllianceMove(game, player, planets2, satellites2, AllianceBonus.POINTS, 0);
 		
 		//illegal moves
 		Field[] planets3 = new Field[] {fields.get(new Position(1, 1)), fields.get(new Position(0, 3)), fields.get(new Position(2, 0))};//valid
@@ -253,16 +254,16 @@ class GameTest {
 		Field[] satellites4 = new Field[] {fields.get(new Position(2, 1)), fields.get(new Position(3, 0))};//more than needed but possible
 		Field[] planets5 = new Field[] {fields.get(new Position(0, 0)), fields.get(new Position(1, 1)), fields.get(new Position(2, 0))};//valid
 		Field[] satellites5 = new Field[] {fields.get(new Position(1, 0))};//valid
-		IMove allianceMove3 = MoveCreaterUtil.getAllianceMove(game, player, planets3, satellites3, AllianceBonus.PRIMARY_RESOURCES);
-		IMove allianceMove4 = MoveCreaterUtil.getAllianceMove(game, player, planets4, satellites4, AllianceBonus.SCIENTISTS);
-		IMove allianceMove5 = MoveCreaterUtil.getAllianceMove(game, player, planets5, satellites5, null);//alliance possible but no bonus chosen
+		IMove allianceMove3 = MoveCreaterUtil.getAllianceMove(game, player, planets3, satellites3, AllianceBonus.PRIMARY_RESOURCES, 0);
+		IMove allianceMove4 = MoveCreaterUtil.getAllianceMove(game, player, planets4, satellites4, AllianceBonus.SCIENTISTS, 0);
+		IMove allianceMove5 = MoveCreaterUtil.getAllianceMove(game, player, planets5, satellites5, null, 0);//alliance possible but no bonus chosen
 		
 		assertTrue(game.isMoveExecutable(allianceMove1));
 		assertTrue(game.isMoveExecutable(allianceMove2));
 		
 		assertFalse(game.isMoveExecutable(allianceMove3));
 		assertFalse(game.isMoveExecutable(allianceMove4));
-		assertFalse(game.isMoveExecutable(allianceMove5));
+		assertThrows(NullPointerException.class, () -> game.isMoveExecutable(allianceMove5));
 	}
 	
 	@Test

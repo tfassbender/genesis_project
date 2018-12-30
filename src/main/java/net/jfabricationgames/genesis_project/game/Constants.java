@@ -17,6 +17,7 @@ public abstract class Constants {
 	public static int RESEARCH_SCIENTISTS_FOR_LOW_STATE = 0;
 	public static int RESEARCH_SCIENTISTS_FOR_HIGH_STATE = 1;
 	public static int RESEARCH_STATE_HIGH = 5;//5 or above
+	public static int ALLIANCE_BONUS_COPIES = 2;
 	
 	//alliances
 	public static int ALLIANCE_MIN_PLANETS;

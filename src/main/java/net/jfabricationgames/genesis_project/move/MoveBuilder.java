@@ -31,6 +31,7 @@ public class MoveBuilder {
 	private List<Field> alliancePlanets;
 	private List<Field> satelliteFields;
 	private AllianceBonus allianceBonus;
+	private int allianceBonusIndex;
 	private boolean pass;
 	
 	public MoveBuilder(Game game) {
@@ -61,6 +62,7 @@ public class MoveBuilder {
 			alliancePlanets = null;
 			satelliteFields = null;
 			allianceBonus = null;
+			allianceBonusIndex = -1;
 			pass = false;
 		}
 	}
@@ -74,7 +76,7 @@ public class MoveBuilder {
 	public IMove getMove() throws IllegalStateException {
 		if (buildingMove) {
 			IMove move = new Move(game, type, player, field, building, researchArea, researchResources, technology, alliancePlanets, satelliteFields,
-					allianceBonus, pass);
+					allianceBonus, allianceBonusIndex, pass);
 			buildingMove = false;
 			return move;
 		}
@@ -163,6 +165,13 @@ public class MoveBuilder {
 	}
 	public void setAllianceBonus(AllianceBonus allianceBonus) {
 		this.allianceBonus = allianceBonus;
+	}
+	
+	public int getAllianceBonusIndex() {
+		return allianceBonusIndex;
+	}
+	public void setAllianceBonusIndex(int allianceBonusIndex) {
+		this.allianceBonusIndex = allianceBonusIndex;
 	}
 	
 	public boolean isPass() {

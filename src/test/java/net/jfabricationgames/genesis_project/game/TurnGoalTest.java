@@ -40,7 +40,7 @@ class TurnGoalTest {
 	public void testAllianceTurnGoal() {
 		Player player = mock(Player.class);
 		Game game = getInitializedGame(player);
-		IMove move = MoveCreaterUtil.getAllianceMove(game, player, new Field[0], new Field[0], null);
+		IMove move = MoveCreaterUtil.getAllianceMove(game, player, new Field[0], new Field[0], null, 0);
 		
 		assertEquals(5, TurnGoal.ALLIANCE.getPointsForMove(move));
 	}

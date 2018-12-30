@@ -108,37 +108,37 @@
                         <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/cross.png" />
                      </image>
                   </ImageView>
-                  <Button fx:id="buttonPurchaseAllianceBonusMilitaryRange1" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                  <Button fx:id="buttonPurchaseAllianceBonusMilitaryRange1" disable="true" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="2" GridPane.rowIndex="3">
                      <styleClass>
                         <String fx:value="alliance" />
                         <String fx:value="purchase" />
                      </styleClass>
                   </Button>
-                  <Button fx:id="buttonPurchaseAllianceBonusPrimaryResources1" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="4" GridPane.rowIndex="3">
+                  <Button fx:id="buttonPurchaseAllianceBonusPrimaryResources1" disable="true" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="4" GridPane.rowIndex="3">
                      <styleClass>
                         <String fx:value="alliance" />
                         <String fx:value="purchase" />
                      </styleClass>
                   </Button>
-                  <Button fx:id="buttonPurchaseAllianceBonusSecundaryResources1" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="6" GridPane.rowIndex="3">
+                  <Button fx:id="buttonPurchaseAllianceBonusSecundaryResources1" disable="true" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="6" GridPane.rowIndex="3">
                      <styleClass>
                         <String fx:value="alliance" />
                         <String fx:value="purchase" />
                      </styleClass>
                   </Button>
-                  <Button fx:id="buttonPurchaseAllianceBonusScientists1" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="8" GridPane.rowIndex="3">
+                  <Button fx:id="buttonPurchaseAllianceBonusScientists1" disable="true" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="8" GridPane.rowIndex="3">
                      <styleClass>
                         <String fx:value="alliance" />
                         <String fx:value="purchase" />
                      </styleClass>
                   </Button>
-                  <Button fx:id="buttonPurchaseAllianceBonusResearchPoints1" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="10" GridPane.rowIndex="3">
+                  <Button fx:id="buttonPurchaseAllianceBonusResearchPoints1" disable="true" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="10" GridPane.rowIndex="3">
                      <styleClass>
                         <String fx:value="alliance" />
                         <String fx:value="purchase" />
                      </styleClass>
                   </Button>
-                  <Button fx:id="buttonPurchaseAllianceBonusPoints1" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="12" GridPane.rowIndex="3">
+                  <Button fx:id="buttonPurchaseAllianceBonusPoints1" disable="true" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="12" GridPane.rowIndex="3">
                      <styleClass>
                         <String fx:value="alliance" />
                         <String fx:value="purchase" />
@@ -204,37 +204,37 @@
                         <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/cross.png" />
                      </image>
                   </ImageView>
-                  <Button fx:id="buttonPurchaseAllianceBonusMilitaryRange2" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="2" GridPane.rowIndex="9">
+                  <Button fx:id="buttonPurchaseAllianceBonusMilitaryRange2" disable="true" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="2" GridPane.rowIndex="9">
                      <styleClass>
                         <String fx:value="alliance" />
                         <String fx:value="purchase" />
                      </styleClass>
                   </Button>
-                  <Button fx:id="buttonPurchaseAllianceBonusPrimaryResources2" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="4" GridPane.rowIndex="9">
+                  <Button fx:id="buttonPurchaseAllianceBonusPrimaryResources2" disable="true" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="4" GridPane.rowIndex="9">
                      <styleClass>
                         <String fx:value="alliance" />
                         <String fx:value="purchase" />
                      </styleClass>
                   </Button>
-                  <Button fx:id="buttonPurchaseAllianceBonusSecundaryResources2" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="6" GridPane.rowIndex="9">
+                  <Button fx:id="buttonPurchaseAllianceBonusSecundaryResources2" disable="true" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="6" GridPane.rowIndex="9">
                      <styleClass>
                         <String fx:value="alliance" />
                         <String fx:value="purchase" />
                      </styleClass>
                   </Button>
-                  <Button fx:id="buttonPurchaseAllianceBonusScientists2" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="8" GridPane.rowIndex="9">
+                  <Button fx:id="buttonPurchaseAllianceBonusScientists2" disable="true" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="8" GridPane.rowIndex="9">
                      <styleClass>
                         <String fx:value="alliance" />
                         <String fx:value="purchase" />
                      </styleClass>
                   </Button>
-                  <Button fx:id="buttonPurchaseAllianceBonusResearchPoints2" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="10" GridPane.rowIndex="9">
+                  <Button fx:id="buttonPurchaseAllianceBonusResearchPoints2" disable="true" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="10" GridPane.rowIndex="9">
                      <styleClass>
                         <String fx:value="alliance" />
                         <String fx:value="purchase" />
                      </styleClass>
                   </Button>
-                  <Button fx:id="buttonPurchaseAllianceBonusPoints2" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="12" GridPane.rowIndex="9">
+                  <Button fx:id="buttonPurchaseAllianceBonusPoints2" disable="true" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="12" GridPane.rowIndex="9">
                      <styleClass>
                         <String fx:value="alliance" />
                         <String fx:value="purchase" />

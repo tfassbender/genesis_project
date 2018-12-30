@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import net.jfabricationgames.genesis_project.manager.AllianceManagerCompositum;
 import net.jfabricationgames.genesis_project.manager.IAllianceManager;
 import net.jfabricationgames.genesis_project.manager.IBuildingManager;
 import net.jfabricationgames.genesis_project.manager.IResearchManager;
@@ -22,6 +23,7 @@ public class Game {
 	
 	private ITurnManager turnManager;
 	private IResearchManager researchManager;
+	private IAllianceManager allianceManager;
 	
 	public Game(List<Player> players, String localPlayerName) {
 		this.players = players;
@@ -29,6 +31,7 @@ public class Game {
 		this.board = new Board();
 		this.turnManager = new TurnManager(this);
 		this.researchManager = new ResearchManagerCompositum(this);
+		this.allianceManager = new AllianceManagerCompositum(this);
 		for (Player player : players) {
 			player.setGame(this);
 		}
@@ -72,9 +75,10 @@ public class Game {
 				List<Field> planets = move.getAlliancePlanets();
 				List<Field> satellites = move.getSatelliteFields();
 				AllianceBonus bonus = move.getAllianceBonus();
+				int bonusIndex = move.getAllianceBonusIndex();
 				
 				IAllianceManager allianceManager = move.getPlayer().getAllianceManager();
-				allianceManager.addAlliance(planets, satellites, bonus);
+				allianceManager.addAlliance(planets, satellites, bonus, bonusIndex);
 				turnManager.getPlayerOrder().nextMove();
 				break;
 			case RESEARCH:
@@ -161,8 +165,9 @@ public class Game {
 				List<Field> planets = move.getAlliancePlanets();
 				List<Field> satellites = move.getSatelliteFields();
 				AllianceBonus bonus = move.getAllianceBonus();
+				int bonusIndex = move.getAllianceBonusIndex();
 				
-				moveExecutable &= allianceManager.isAllianceValid(planets, satellites, bonus);
+				moveExecutable &= allianceManager.isAllianceValid(planets, satellites, bonus, bonusIndex);
 				break;
 			case RESEARCH:
 				//the research step has to be accessible and the player has to have the needed research points
@@ -235,5 +240,8 @@ public class Game {
 	}
 	public IResearchManager getResearchManager() {
 		return researchManager;
+	}
+	public IAllianceManager getAllianceManager() {
+		return allianceManager;
 	}
 }

@@ -28,7 +28,7 @@ public class MoveCreaterUtil {
 		
 		return buildMove;
 	}
-	public static IMove getAllianceMove(Game game, Player player, Field[] planets, Field[] satellites, AllianceBonus bonus) {
+	public static IMove getAllianceMove(Game game, Player player, Field[] planets, Field[] satellites, AllianceBonus bonus, int bonusIndex) {
 		IMove allianceMove;
 		MoveBuilder builder = new MoveBuilder(game);
 		builder.buildMove();
@@ -37,6 +37,7 @@ public class MoveCreaterUtil {
 		builder.setAlliancePlanets(Arrays.asList(planets));
 		builder.setSatelliteFields(Arrays.asList(satellites));
 		builder.setAllianceBonus(bonus);
+		builder.setAllianceBonusIndex(bonusIndex);
 		
 		allianceMove = builder.getMove();
 		return allianceMove;
