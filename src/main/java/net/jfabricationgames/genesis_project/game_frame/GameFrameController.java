@@ -26,8 +26,8 @@ public class GameFrameController implements Initializable {
 	private AnchorPane anchorResearchPane;
 	@FXML
 	private AnchorPane anchorTechnologyPane;
-    @FXML
-    private AnchorPane anchorAlliancePanel;
+	@FXML
+	private AnchorPane anchorAlliancePanel;
 	@FXML
 	private AnchorPane anchorTurnPane;
 	@FXML
@@ -58,9 +58,9 @@ public class GameFrameController implements Initializable {
 		insertPane("ResearchPane.fxml", anchorResearchPane, new ResearchPaneController(game.getResearchManager(), game.getLocalPlayer()), null);
 		insertPane("TechnologyPane.fxml", anchorTechnologyPane, new TechnologyPaneController(game.getLocalPlayer()), null);
 		insertPane("AlliancePane.fxml", anchorAlliancePanel, new AlliancePaneController(game.getLocalPlayer()), null);
-		insertPane("TurnPane.fxml", anchorTurnPane, new TurnPaneController(), null);
+		insertPane("TurnPane.fxml", anchorTurnPane, new TurnPaneController(game.getTurnManager()), null);
 		insertPane("PlanetInfoPane.fxml", anchorPlanetInfoPane, new PlanetInfoPaneController(), null);
-		insertPane("PlaningToolPane.fxml", anchorPlaningToolPane, new PlaningToolPaneController(), null);
+		insertPane("PlaningToolPane.fxml", anchorPlaningToolPane, new PlaningToolPaneController(game.getLocalPlayer()), null);
 		insertPane("AttackPane.fxml", anchorAttackPane, new AttackPaneController(), null);
 		insertPane("GameOverviewPane.fxml", anchorGameOverviewPane, new GameOverviewPaneController(), null);
 		insertPane("CostOverviewPane.fxml", anchorCostOverviewPane, new CostOverviewPaneController(), null);

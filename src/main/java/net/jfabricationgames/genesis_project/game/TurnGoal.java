@@ -5,19 +5,24 @@ import net.jfabricationgames.genesis_project.move.MoveType;
 
 public enum TurnGoal {
 	
-	ALLIANCE(5),//create an alliance
-	COLONY(2),//build any colony
-	GENESIS_PLANET(2),//build anything on a genesis planet
-	GOVERNMENT_CITY(5),//build a government or city
-	LABORATORY_RESEARCH_CENTER(3),//build a laboratory or research center
-	MINE_TRADING_POST(3),//build a mine or trading post
-	NEW_PLANETS(2),//build a colony on a new planet
-	NEIGHBORS(3);//build a colony on a new planet that has neighbors
+	ALLIANCE(5, "cards/turn_goals/turn_goal_alliances.png", "Allianzen"),//create an alliance
+	COLONY(2, "cards/turn_goals/turn_goal_colonie.png", "Kolonien"),//build any colony
+	GENESIS_PLANET(2, "cards/turn_goals/turn_goal_genesis_planets.png", "Genesis Planeten"),//build anything on a genesis planet
+	GOVERNMENT_CITY(5, "cards/turn_goals/turn_goal_goverments_cities.png", "Regierungssitze und Städte"),//build a government or city
+	LABORATORY_RESEARCH_CENTER(3, "cards/turn_goals/turn_goal_laboratories_research_centers.png", "Labore und Forschungsanlagen"),//build a laboratory or research center
+	MINE_TRADING_POST(3, "cards/turn_goals/turn_goal_mines_traiding_posts.png", "Minen und Handelsposten"),//build a mine or trading post
+	NEW_PLANETS(2, "cards/turn_goals/turn_goal_new_planets.png", "Neue Planeten"),//build a colony on a new planet
+	NEIGHBORS(3, "cards/turn_goals/turn_goal_new_planets_neighbour.png", "Nachbarn");//build a colony on a new planet that has neighbors
 	
 	private final int points;
 	
-	private TurnGoal(int points) {
+	private final String imagePath;
+	private final String name;
+	
+	private TurnGoal(int points, String imagePath, String name) {
 		this.points = points;
+		this.imagePath = imagePath;
+		this.name = name;
 	}
 	
 	/**
@@ -81,4 +86,13 @@ public enum TurnGoal {
 	public int getPoints() {
 		return points;
 	}
+	
+	public String getImagePath() {
+		return imagePath;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
 }
