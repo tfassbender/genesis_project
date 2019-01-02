@@ -37,7 +37,7 @@ public class Player {
 	public Player(User user, PlayerClass playerClass) {
 		this.user = user;
 		this.playerClass = playerClass;
-		pointManager = new PointManager();
+		pointManager = new PointManager(this);
 		resourceManager = new ResourceManager(this);
 		buildingManager = new BuildingManager(this);
 		researchManager = new ResearchManager(this);
@@ -61,7 +61,7 @@ public class Player {
 	}
 	@Override
 	public String toString() {
-		return "Player[" + user.toString() + "]";
+		return user.getUsername();
 	}
 	
 	public User getUser() {

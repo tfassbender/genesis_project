@@ -92,6 +92,22 @@ public class Board {
 		return neighbours;
 	}
 	
+	public List<Field> getPlayersPlanets(Player player) {
+		List<Field> playersPlanets = new ArrayList<Field>();
+		for (Field field : fields.values()) {
+			if (field.isPlanetField()) {
+				boolean playerOnPlanet = false;
+				for (PlayerBuilding building : field.getBuildings()) {
+					playerOnPlanet |= building != null && building.getPlayer().equals(player);
+				}
+				if (playerOnPlanet) {
+					playersPlanets.add(field);
+				}
+			}
+		}
+		return playersPlanets;
+	}
+	
 	public Map<Position, Field> getFields() {
 		return fields;
 	}

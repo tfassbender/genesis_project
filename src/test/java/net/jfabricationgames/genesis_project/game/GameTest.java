@@ -21,7 +21,7 @@ class GameTest {
 	
 	private void skipPlayersTurn(Game game) {
 		//two players -> skip the other players turn
-		game.getTurnManager().getPlayerOrder().nextMove();
+		game.getTurnManager().nextMove();
 	}
 	
 	@Test
@@ -61,7 +61,7 @@ class GameTest {
 		assertFalse(game.isMoveExecutable(buildMine));
 		
 		//turn over
-		assertFalse(game.getTurnManager().getPlayerOrder().isPlayersTurn(player));
+		assertFalse(game.getTurnManager().isPlayersTurn(player));
 	}
 	
 	@Test
@@ -116,7 +116,7 @@ class GameTest {
 		assertEquals(2, player.getResourceManager().getResourcesTertiary());
 		
 		//turn over
-		assertFalse(game.getTurnManager().getPlayerOrder().isPlayersTurn(player));
+		assertFalse(game.getTurnManager().isPlayersTurn(player));
 	}
 	
 	@Test
@@ -144,7 +144,7 @@ class GameTest {
 		assertEquals(2, player.getResourceManager().getResearchPoints());
 		
 		//turn over
-		assertFalse(game.getTurnManager().getPlayerOrder().isPlayersTurn(player));
+		assertFalse(game.getTurnManager().isPlayersTurn(player));
 	}
 	
 	@Test
@@ -175,7 +175,7 @@ class GameTest {
 		assertEquals(2, player.getResourceManager().getScientists());
 		
 		//turn NOT over
-		assertTrue(game.getTurnManager().getPlayerOrder().isPlayersTurn(player));
+		assertTrue(game.getTurnManager().isPlayersTurn(player));
 	}
 	
 	@Test
@@ -186,13 +186,13 @@ class GameTest {
 		IMove pass = MoveCreaterUtil.getPassMove(game, player);
 		
 		//check the state before the execution
-		assertTrue(game.getTurnManager().getPlayerOrder().getOrder().contains(player));
+		assertTrue(game.getTurnManager().getPlayerOrder().contains(player));
 		
 		game.executeMove(pass);
 		
-		assertFalse(game.getTurnManager().getPlayerOrder().getOrder().contains(player));
+		assertFalse(game.getTurnManager().getPlayerOrder().contains(player));
 		//turn over
-		assertFalse(game.getTurnManager().getPlayerOrder().isPlayersTurn(player));
+		assertFalse(game.getTurnManager().isPlayersTurn(player));
 	}
 	
 	@Test

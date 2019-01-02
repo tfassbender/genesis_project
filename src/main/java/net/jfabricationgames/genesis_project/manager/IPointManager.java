@@ -7,6 +7,8 @@ public interface IPointManager {
 	public void addPoints(int points);
 	public void setPoints(int points);
 	public int getPoints();
+	public int getPosition();
 	
 	public IntegerProperty getPointsProperty();
+	public IntegerProperty getPositionProperty();
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import net.jfabricationgames.genesis_project.game.Board;
+import net.jfabricationgames.genesis_project.game.Board.Position;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.Field;
 import net.jfabricationgames.genesis_project.game.Game;
@@ -13,8 +14,7 @@ import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.PlayerBuilding;
 import net.jfabricationgames.genesis_project.game.PlayerClass;
 import net.jfabricationgames.genesis_project.game.TurnGoal;
-import net.jfabricationgames.genesis_project.game.Board.Position;
-import net.jfabricationgames.genesis_project.manager.PlayerOrder;
+import net.jfabricationgames.genesis_project.manager.ITurnManager;
 import net.jfabricationgames.genesis_project.manager.TurnManager;
 import net.jfabricationgames.genesis_project.user.User;
 
@@ -37,10 +37,10 @@ public class GameCreationUtil {
 		initializeBoard(game);
 		
 		//player 1 has to be the active player
-		PlayerOrder<Player> playerOrder = game.getTurnManager().getPlayerOrder();
+		ITurnManager turnManager = game.getTurnManager();
 		Player player2 = game.getPlayers().get(1);
-		if (playerOrder.getActivePlayer().equals(player2)) {
-			playerOrder.nextMove();
+		if (turnManager.getActivePlayer().equals(player2)) {
+			turnManager.nextMove();
 		}
 		
 		return game;

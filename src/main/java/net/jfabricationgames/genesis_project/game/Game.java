@@ -3,8 +3,13 @@ package net.jfabricationgames.genesis_project.game;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import net.jfabricationgames.genesis_project.game_frame.PlayerInfo;
 import net.jfabricationgames.genesis_project.manager.AllianceManagerCompositum;
+import net.jfabricationgames.genesis_project.manager.GamePointManager;
 import net.jfabricationgames.genesis_project.manager.IAllianceManager;
 import net.jfabricationgames.genesis_project.manager.IBuildingManager;
 import net.jfabricationgames.genesis_project.manager.IResearchManager;
@@ -24,6 +29,9 @@ public class Game {
 	private ITurnManager turnManager;
 	private IResearchManager researchManager;
 	private IAllianceManager allianceManager;
+	private GamePointManager pointManager;
+	
+	private ObservableList<PlayerInfo> playerInfoList;
 	
 	public Game(List<Player> players, String localPlayerName) {
 		this.players = players;
@@ -32,9 +40,11 @@ public class Game {
 		this.turnManager = new TurnManager(this);
 		this.researchManager = new ResearchManagerCompositum(this);
 		this.allianceManager = new AllianceManagerCompositum(this);
+		this.pointManager = new GamePointManager(this);
 		for (Player player : players) {
 			player.setGame(this);
 		}
+		playerInfoList = FXCollections.observableArrayList(players.stream().map(p -> new PlayerInfo(p)).collect(Collectors.toList()));
 	}
 	
 	public void collectGameStartResources() {
@@ -58,9 +68,9 @@ public class Game {
 		ResearchArea area;
 		IResourceManager resourceManager;
 		
-		if (!turnManager.getPlayerOrder().isPlayersTurn(move.getPlayer())) {
-			throw new IllegalArgumentException("It's not the players turn (move from player: " + move.getPlayer() + "; current player: "
-					+ turnManager.getPlayerOrder().getActivePlayer() + ")");
+		if (!turnManager.isPlayersTurn(move.getPlayer())) {
+			throw new IllegalArgumentException(
+					"It's not the players turn (move from player: " + move.getPlayer() + "; current player: " + turnManager.getActivePlayer() + ")");
 		}
 		
 		switch (move.getType()) {
@@ -69,7 +79,7 @@ public class Game {
 				Field field = move.getField();
 				IBuildingManager buildingManager = move.getPlayer().getBuildingManager();
 				buildingManager.build(building, field);
-				turnManager.getPlayerOrder().nextMove();
+				turnManager.nextMove();
 				break;
 			case ALLIANCE:
 				List<Field> planets = move.getAlliancePlanets();
@@ -79,7 +89,7 @@ public class Game {
 				
 				IAllianceManager allianceManager = move.getPlayer().getAllianceManager();
 				allianceManager.addAlliance(planets, satellites, bonus, bonusIndex);
-				turnManager.getPlayerOrder().nextMove();
+				turnManager.nextMove();
 				break;
 			case RESEARCH:
 				area = move.getResearchArea();
@@ -108,7 +118,7 @@ public class Game {
 					//other ResearchAreas are executed locally on the player's IResearchManager
 					move.getPlayer().getResearchManager().increaseState(area);
 				}
-				turnManager.getPlayerOrder().nextMove();
+				turnManager.nextMove();
 				break;
 			case RESEARCH_RESOURCES:
 				ResearchResources resources = move.getResearchResources();
@@ -124,7 +134,7 @@ public class Game {
 			case PASS:
 				player = move.getPlayer();
 				turnManager.playerPassed(player);
-				turnManager.getPlayerOrder().nextMove();
+				turnManager.nextMove();
 				break;
 			default:
 				throw new IllegalArgumentException("The MoveType " + move.getType() + " is unknown.");
@@ -132,6 +142,8 @@ public class Game {
 		
 		//receive turn points for a move
 		turnManager.receivePointsForMove(move);
+		
+		updatePlayerInfo();
 	}
 	/**
 	 * Check whether a given move would be valid and could be executed.
@@ -142,7 +154,7 @@ public class Game {
 		boolean moveExecutable = true;
 		
 		//it has to be the players turn for every move
-		moveExecutable &= turnManager.getPlayerOrder().isPlayersTurn(move.getPlayer());
+		moveExecutable &= turnManager.isPlayersTurn(move.getPlayer());
 		
 		ResearchArea area;
 		Player player;
@@ -223,12 +235,22 @@ public class Game {
 		return moveExecutable;
 	}
 	
+	private void updatePlayerInfo() {
+		List<PlayerInfo> newPlayerInfo = players.stream().map(p -> new PlayerInfo(p)).collect(Collectors.toList());
+		playerInfoList.clear();
+		playerInfoList.addAll(newPlayerInfo);
+	}
+	
 	public List<Player> getPlayers() {
 		return players;
 	}
 	public Player getLocalPlayer() {
 		Optional<Player> local = players.stream().filter(p -> p.getUser().getUsername().equals(localPlayerName)).findFirst();
 		return local.orElseThrow(() -> new IllegalStateException("No local player found."));
+	}
+	
+	public ObservableList<PlayerInfo> getPlayerInfoList() {
+		return playerInfoList;
 	}
 	
 	public Board getBoard() {
@@ -243,5 +265,8 @@ public class Game {
 	}
 	public IAllianceManager getAllianceManager() {
 		return allianceManager;
+	}
+	public GamePointManager getPointManager() {
+		return pointManager;
 	}
 }
