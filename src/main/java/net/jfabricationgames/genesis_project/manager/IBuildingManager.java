@@ -3,6 +3,7 @@ package net.jfabricationgames.genesis_project.manager;
 import javafx.beans.property.IntegerProperty;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.BuildingResources;
+import net.jfabricationgames.genesis_project.game.CompleteResources;
 import net.jfabricationgames.genesis_project.game.Field;
 
 public interface IBuildingManager {
@@ -31,4 +32,9 @@ public interface IBuildingManager {
 	public BuildingResources getResourcesNeededForBuilding(Building building, Field field);
 	
 	public IntegerProperty getNumBuildingsLeftProperty(Building building);
+	
+	/**
+	 * Calculate all resources a player would get from the buildings at the beginning of the next turn.
+	 */
+	public CompleteResources getNextTurnsStartingResources();
 }

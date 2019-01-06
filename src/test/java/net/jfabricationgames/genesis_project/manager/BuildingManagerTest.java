@@ -13,14 +13,17 @@ import org.junit.jupiter.api.Test;
 
 import net.jfabricationgames.genesis_project.game.Board;
 import net.jfabricationgames.genesis_project.game.Board.Position;
-import net.jfabricationgames.genesis_project.testUtils.ConstantsInitializerUtil;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.BuildingResources;
+import net.jfabricationgames.genesis_project.game.CompleteResources;
 import net.jfabricationgames.genesis_project.game.Field;
+import net.jfabricationgames.genesis_project.game.Game;
 import net.jfabricationgames.genesis_project.game.Planet;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.PlayerBuilding;
 import net.jfabricationgames.genesis_project.game.PlayerClass;
+import net.jfabricationgames.genesis_project.testUtils.ConstantsInitializerUtil;
+import net.jfabricationgames.genesis_project.testUtils.GameCreationUtil;
 
 class BuildingManagerTest {
 	
@@ -256,5 +259,17 @@ class BuildingManagerTest {
 		assertTrue(manager.canBuild(Building.SATELLITE, spaceField));
 		assertTrue(manager.canBuild(Building.DRONE, spaceField));
 		assertFalse(manager.canBuild(Building.SPACE_STATION, spaceField));
+	}
+	
+	@Test
+	public void testGetNextTurnsStartingResources() {
+		ConstantsInitializerUtil.initBuildingEarnings();
+		Game game = GameCreationUtil.createGame();
+		Player player1 = game.getLocalPlayer();
+		IBuildingManager manager = player1.getBuildingManager();
+		
+		CompleteResources earnings = manager.getNextTurnsStartingResources();
+		
+		assertEquals(new CompleteResources(7, 3, 10, 0, 8, 0), earnings);
 	}
 }

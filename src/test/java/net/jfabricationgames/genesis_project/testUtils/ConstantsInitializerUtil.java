@@ -6,6 +6,7 @@ import java.util.Map;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.BuildingResources;
 import net.jfabricationgames.genesis_project.game.Constants;
+import net.jfabricationgames.genesis_project.game.DependentResources;
 import net.jfabricationgames.genesis_project.game.PlayerClass;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
@@ -168,5 +169,35 @@ public class ConstantsInitializerUtil {
 		Constants.ALLIANCE_MIN_PLANETS_OTHER_PLAYERS = 2;
 		Constants.ALLIANCE_MIN_BUILDINGS = 6;//normally its 7 but 6 is better for the tests...
 		Constants.ALLIANCE_MIN_BUILDINGS_OTHER_PLAYERS = 2;
+	}
+	
+	public static void initBuildingEarnings() {
+		Constants.BUILDING_EARNINGS_DEPENDENT = new HashMap<Building, DependentResources>();
+		Constants.BUILDING_EARNINGS_RESEARCH_POINTS = new HashMap<Building, Integer>();
+		Constants.BUILDING_EARNINGS_SCIENTISTS = new HashMap<Building, Integer>();
+		
+		Constants.BUILDING_EARNINGS_DEPENDENT.put(Building.COLONY, new DependentResources(1, 0, 0));
+		Constants.BUILDING_EARNINGS_DEPENDENT.put(Building.MINE, new DependentResources(4, 0, 0));
+		Constants.BUILDING_EARNINGS_DEPENDENT.put(Building.TRADING_POST, new DependentResources(0, 2, 1));
+		Constants.BUILDING_EARNINGS_DEPENDENT.put(Building.LABORATORY, new DependentResources(0, 0, 0));
+		Constants.BUILDING_EARNINGS_DEPENDENT.put(Building.GOVERNMENT, new DependentResources(0, 0, 0));
+		Constants.BUILDING_EARNINGS_DEPENDENT.put(Building.CITY, new DependentResources(2, 1, 1));
+		Constants.BUILDING_EARNINGS_DEPENDENT.put(Building.RESEARCH_CENTER, new DependentResources(0, 0, 0));
+		
+		Constants.BUILDING_EARNINGS_RESEARCH_POINTS.put(Building.COLONY, 0);
+		Constants.BUILDING_EARNINGS_RESEARCH_POINTS.put(Building.MINE, 0);
+		Constants.BUILDING_EARNINGS_RESEARCH_POINTS.put(Building.TRADING_POST, 0);
+		Constants.BUILDING_EARNINGS_RESEARCH_POINTS.put(Building.LABORATORY, 4);
+		Constants.BUILDING_EARNINGS_RESEARCH_POINTS.put(Building.GOVERNMENT, 0);
+		Constants.BUILDING_EARNINGS_RESEARCH_POINTS.put(Building.CITY, 0);
+		Constants.BUILDING_EARNINGS_RESEARCH_POINTS.put(Building.RESEARCH_CENTER, 6);
+		
+		Constants.BUILDING_EARNINGS_SCIENTISTS.put(Building.COLONY, 0);
+		Constants.BUILDING_EARNINGS_SCIENTISTS.put(Building.MINE, 0);
+		Constants.BUILDING_EARNINGS_SCIENTISTS.put(Building.TRADING_POST, 0);
+		Constants.BUILDING_EARNINGS_SCIENTISTS.put(Building.LABORATORY, 0);
+		Constants.BUILDING_EARNINGS_SCIENTISTS.put(Building.GOVERNMENT, 0);
+		Constants.BUILDING_EARNINGS_SCIENTISTS.put(Building.CITY, 0);
+		Constants.BUILDING_EARNINGS_SCIENTISTS.put(Building.RESEARCH_CENTER, 1);
 	}
 }

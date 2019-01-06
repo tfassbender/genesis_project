@@ -128,6 +128,14 @@ public abstract class Constants {
 	}
 	
 	/**
+	 * Building earnings for research points, scientists and dependent resources (primary, secondary and tertiary because they depend on the planet
+	 * the're built on)
+	 */
+	public static Map<Building, Integer> BUILDING_EARNINGS_RESEARCH_POINTS;
+	public static Map<Building, Integer> BUILDING_EARNINGS_SCIENTISTS;
+	public static Map<Building, DependentResources> BUILDING_EARNINGS_DEPENDENT;
+	
+	/**
 	 * The number of buildings per player at game start (on field and class board).
 	 */
 	public static Map<Building, Integer> BUILDING_NUMBERS;
