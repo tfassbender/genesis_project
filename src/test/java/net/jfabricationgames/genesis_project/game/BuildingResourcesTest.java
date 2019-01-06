@@ -27,7 +27,7 @@ class BuildingResourcesTest {
 	}
 	
 	@Test
-	public void testPrimaryTertiary() {
+	public void testTertiaryResources() {
 		PlayerClass clazz = PlayerClass.ENCOR;//Class: Blue, C/Si/Fe
 		BuildingResources resources = new BuildingResources();
 		

@@ -10,12 +10,17 @@ import com.google.common.annotations.VisibleForTesting;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import net.jfabricationgames.genesis_project.game.Board;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.BuildingResources;
+import net.jfabricationgames.genesis_project.game.CompleteResources;
 import net.jfabricationgames.genesis_project.game.Constants;
+import net.jfabricationgames.genesis_project.game.DependentResources;
 import net.jfabricationgames.genesis_project.game.Field;
+import net.jfabricationgames.genesis_project.game.Planet;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.PlayerBuilding;
+import net.jfabricationgames.genesis_project.game.Resource;
 
 public class BuildingManager implements IBuildingManager {
 	
@@ -165,7 +170,54 @@ public class BuildingManager implements IBuildingManager {
 		
 		return resourcesNeeded;
 	}
-
+	
+	@Override
+	public CompleteResources getNextTurnsStartingResources() {
+		CompleteResources earnings = new CompleteResources();
+		
+		Board board = player.getGame().getBoard();
+		List<Field> playersPlanets = board.getPlayersPlanets(player);
+		
+		//iterate over all players buildings and count the resources
+		for (Field field : playersPlanets) {
+			Planet planet = field.getPlanet();
+			
+			//select the resources for primary, secondary and tertiary
+			Resource primary;
+			Resource secondary;
+			Resource tertiary;
+			if (planet.getPrimaryResource() != null) {
+				//on normal planets the planets resources are used
+				primary = planet.getPrimaryResource();
+				secondary = planet.getSecondaryResource();
+				tertiary = planet.getTertiaryResource();
+			}
+			else {
+				//on genesis or center planets the players resources are used
+				primary = player.getPlayerClass().getPrimaryResource();
+				secondary = player.getPlayerClass().getSecundaryResource();
+				tertiary = player.getPlayerClass().getTertiaryResource();
+			}
+			
+			for (PlayerBuilding playerBuilding : field.getBuildings()) {
+				if (playerBuilding != null && playerBuilding.getPlayer().equals(player)) {
+					Building building = playerBuilding.getBuilding();
+					
+					//find the resources the building produces and add them to the total earnings
+					DependentResources resources = Constants.BUILDING_EARNINGS_DEPENDENT.get(building);
+					earnings.addResources(primary, resources.getResourcesPrimary());
+					earnings.addResources(secondary, resources.getResourcesSecondary());
+					earnings.addResources(tertiary, resources.getResourcesTertiary());
+					
+					earnings.addResearchPoints(Constants.BUILDING_EARNINGS_RESEARCH_POINTS.get(building));
+					earnings.addScientists(Constants.BUILDING_EARNINGS_SCIENTISTS.get(building));
+				}
+			}
+		}
+		
+		return earnings;
+	}
+	
 	@Override
 	public boolean canBuild(Building building, Field field) {
 		return findFirstPossibleBuildingPosition(building, field) != -1 && getNumBuildingsLeft(building) > 0 && isResourcesAvailable(building, field);
@@ -175,7 +227,7 @@ public class BuildingManager implements IBuildingManager {
 	protected Player getPlayer() {
 		return player;
 	}
-
+	
 	@Override
 	public IntegerProperty getNumBuildingsLeftProperty(Building building) {
 		return numBuildingsLeft.get(building);

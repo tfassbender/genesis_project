@@ -8,6 +8,8 @@ import net.jfabricationgames.genesis_project.game.Player;
  */
 public class PlayerInfo {
 	
+	private Player player;
+	
 	private String name;
 	private int points;
 	private int planets;
@@ -52,6 +54,10 @@ public class PlayerInfo {
 		drones = player.getBuildingManager().getNumBuildingsOnField(Building.DRONE);
 		spaceStations = player.getBuildingManager().getNumBuildingsOnField(Building.SPACE_STATION);
 		buildings = colonies + mines + tradingPosts + laboratories + governments + cities + researchCenters + drones + spaceStations;
+	}
+	
+	public Player getPlayer() {
+		return player;
 	}
 	
 	public String getName() {

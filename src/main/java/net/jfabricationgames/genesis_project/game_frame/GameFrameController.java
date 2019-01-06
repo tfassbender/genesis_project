@@ -63,7 +63,7 @@ public class GameFrameController implements Initializable {
 		insertPane("PlaningToolPane.fxml", anchorPlaningToolPane, new PlaningToolPaneController(game.getLocalPlayer()), null);
 		insertPane("AttackPane.fxml", anchorAttackPane, new AttackPaneController(), null);
 		insertPane("GameOverviewPane.fxml", anchorGameOverviewPane, new GameOverviewPaneController(game, game.getLocalPlayer()), null);
-		insertPane("CostOverviewPane.fxml", anchorCostOverviewPane, new CostOverviewPaneController(), null);
+		insertPane("CostOverviewPane.fxml", anchorCostOverviewPane, new CostOverviewPaneController(game, game.getLocalPlayer()), null);
 		insertPane("ChatPane.fxml", anchorChatPane, new ChatPaneController(), null);
 	}
 	
