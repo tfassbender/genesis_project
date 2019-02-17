@@ -7,11 +7,15 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import net.jfabricationgames.genesis_project.game.Board.Position;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.Field;
 import net.jfabricationgames.genesis_project.game.Planet;
+import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.PlayerBuilding;
+import net.jfabricationgames.genesis_project.game.PlayerClass;
+import net.jfabricationgames.genesis_project.user.User;
 
 public class PlanetInfoPaneController implements Initializable {
 	
@@ -52,12 +56,22 @@ public class PlanetInfoPaneController implements Initializable {
 	@FXML
 	private Label labelPlanetInfoBuildingNumber5;
 	
+	//@FXML
+	//private ImageView imageViewPlanet;
 	@FXML
-	private ImageView imageViewPlanet;
+	private AnchorPane anchorPaneImage;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		GuiUtils.loadImageToView("planets/planet_center.png", true, imageViewPlanet);
+		//GuiUtils.loadImageToView("planets/planet_center.png", true, imageViewPlanet);
+		
+		//set a field for testing TODO delete after tests
+		Field field = new Field(new Position(1, 1), Planet.GENESIS, 4);
+		Player player = new Player(new User("Player1"), PlayerClass.YGDRACK);
+		field.build(new PlayerBuilding(Building.MINE, player), 0);
+		field.build(new PlayerBuilding(Building.COLONY, player), 1);
+		field.build(new PlayerBuilding(Building.LABORATORY, player), 2);
+		setSelectedField(field);
 	}
 	
 	public void setSelectedField(Field field) {
@@ -66,7 +80,13 @@ public class PlanetInfoPaneController implements Initializable {
 		Planet planet = field.getPlanet();
 		if (planet != null) {
 			labelPlanetInfoType.setText(planet.getTypeName());
-			labelPlanetInfoPrimariResource.setText(planet.getPrimaryResource().getName());
+			if (planet.getPrimaryResource() != null) {
+				//genesis planets have no primary resource
+				labelPlanetInfoPrimariResource.setText(planet.getPrimaryResource().getName());
+			}
+			else {
+				labelPlanetInfoPrimariResource.setText(noInfo);
+			}
 			labelPlanetInfoDefence.setText(Integer.toString(field.calculateDefence()));
 			labelPlanetInfoAlliances.setText(Integer.toString(field.getAlliances().size()));
 			PlayerBuilding[] buildings = field.getBuildings();
@@ -130,5 +150,9 @@ public class PlanetInfoPaneController implements Initializable {
 			labelPlanetInfoBuilding3Player.setText(noInfo);
 			labelPlanetInfoBuilding3Type.setText(noInfo);
 		}
+		
+		//set the image
+		PlanetLayout planetLayout = new PlanetLayout(field);
+		anchorPaneImage.getChildren().add(planetLayout);
 	}
 }

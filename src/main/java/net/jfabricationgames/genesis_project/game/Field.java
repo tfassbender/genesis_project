@@ -88,12 +88,12 @@ public class Field {
 	}
 	
 	public int calculateDefence() {
-		//TODO
+		//TODO Auto-generated method stub
 		return -1;
 	}
 
 	public List<Alliance> getAlliances() {
 		// TODO Auto-generated method stub
-		return null;
+		return new ArrayList<Alliance>();
 	}
 }

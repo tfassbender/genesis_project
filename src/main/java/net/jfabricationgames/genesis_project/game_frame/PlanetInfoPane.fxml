@@ -3,7 +3,6 @@
 <?import java.lang.String?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -179,7 +178,7 @@
                         <String fx:value="data" />
                      </styleClass>
                   </Label>
-                  <ImageView fx:id="imageViewPlanet" fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.columnSpan="9" GridPane.halignment="CENTER" GridPane.rowIndex="9" GridPane.valignment="CENTER" />
+                  <AnchorPane fx:id="anchorPaneImage" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="120.0" prefWidth="120.0" GridPane.columnIndex="1" GridPane.columnSpan="9" GridPane.halignment="CENTER" GridPane.rowIndex="9" GridPane.valignment="CENTER" />
                   <Label fx:id="labelPlanetInfoBuildingNumber4" text="4" GridPane.columnIndex="6" GridPane.rowIndex="6" />
                   <Label fx:id="labelPlanetInfoBuildingNumber5" text="5" GridPane.columnIndex="6" GridPane.rowIndex="7" />
                   <Label fx:id="labelPlanetInfoBuilding4Player" text="Label" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
