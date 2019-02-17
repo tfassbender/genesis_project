@@ -39,4 +39,12 @@ public abstract class GuiUtils {
 	        throw e;
 	    }
 	}
+	
+	public static String toLeadingCapitalLetter(String text) {
+		text = text.toLowerCase();
+		char firstChar = text.charAt(0);
+		firstChar = Character.toUpperCase(firstChar);
+		text = firstChar + text.substring(1);
+		return text;
+	}
 }

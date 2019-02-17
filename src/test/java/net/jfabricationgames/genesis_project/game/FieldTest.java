@@ -33,7 +33,7 @@ class FieldTest {
 	public void testBuild() {
 		initBuildingNumbers();
 		Player player = mock(Player.class);
-		Field field = new Field(new Board.Position(0, 0), Planet.GENESIS);
+		Field field = new Field(new Board.Position(0, 0), Planet.GENESIS, 0);
 		
 		field.build(new PlayerBuilding(Building.CITY, player), 0);
 		field.build(new PlayerBuilding(Building.COLONY, player), 0);//overrides the city
@@ -48,7 +48,7 @@ class FieldTest {
 	public void testBuild_spaceStation_replacesDrone() {
 		initBuildingNumbers();
 		Player player = mock(Player.class);
-		Field field = new Field(new Board.Position(0, 0), null);
+		Field field = new Field(new Board.Position(0, 0), null, 0);
 		
 		field.build(new PlayerBuilding(Building.DRONE, player), 0);
 		
@@ -62,5 +62,15 @@ class FieldTest {
 		
 		assertTrue(droneBeforeSpaceStation.isPresent());
 		assertFalse(droneAfterSpaceStation.isPresent());
+	}
+	
+	@Test
+	public void testNumBuildingSpaces_centerPlanet() {
+		initBuildingNumbers();
+		Field field = new Field(new Board.Position(0, 0), null, 0);
+		Field centerField = new Field(new Board.Position(0, 0), Planet.CENTER, 5);
+		
+		assertEquals(3, field.getBuildings().length);
+		assertEquals(5, centerField.getBuildings().length);
 	}
 }

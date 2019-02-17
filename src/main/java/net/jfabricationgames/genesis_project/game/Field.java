@@ -11,12 +11,20 @@ public class Field {
 	
 	private Board.Position position;
 	private Planet planet;
-	private final PlayerBuilding[] buildings = new PlayerBuilding[Constants.BUILDINGS_PER_PLANET];
+	private final PlayerBuilding[] buildings;
 	private final List<PlayerBuilding> spaceBuildings;
 	
-	public Field(Board.Position position, Planet planet) {
+	public Field(Board.Position position, Planet planet, int players) {
 		this.position = position;
 		this.planet = planet;
+		if (planet == Planet.CENTER) {
+			//the center planet can have up to 5 buildings (one for each player)
+			buildings = new PlayerBuilding[players];
+		}
+		else {
+			//normal planets have a fixed number of buildings
+			buildings = new PlayerBuilding[Constants.BUILDINGS_PER_PLANET];
+		}
 		spaceBuildings = new ArrayList<PlayerBuilding>();
 	}
 	
@@ -66,7 +74,7 @@ public class Field {
 			spaceBuildings.add(building);
 		}
 		else {
-			buildings[position] = building;			
+			buildings[position] = building;
 		}
 	}
 	
@@ -77,5 +85,15 @@ public class Field {
 	@VisibleForTesting
 	public void setPlanet(Planet planet) {
 		this.planet = planet;
+	}
+	
+	public int calculateDefence() {
+		//TODO
+		return -1;
+	}
+
+	public List<Alliance> getAlliances() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -20,7 +20,7 @@ class TurnGoalTest {
 		for (int x = 0; x < 6; x++) {
 			for (int y = 0; y < 6; y++) {
 				Position pos = new Position(x, y);
-				Field field = new Field(pos, null);
+				Field field = new Field(pos, null, 0);
 				board.getFields().put(pos, field);
 			}
 		}

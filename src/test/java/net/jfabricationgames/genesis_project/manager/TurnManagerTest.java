@@ -78,13 +78,13 @@ class TurnManagerTest {
 		builder.setType(MoveType.BUILD);
 		builder.setPlayer(player1);
 		builder.setBuilding(Building.COLONY);
-		builder.setField(new Field(new Position(0, 0), Planet.GRAY));
+		builder.setField(new Field(new Position(0, 0), Planet.GRAY, 0));
 		buildColony = builder.getMove();
 		builder.buildMove();
 		builder.setType(MoveType.BUILD);
 		builder.setPlayer(player1);
 		builder.setBuilding(Building.MINE);
-		builder.setField(new Field(new Position(0, 0), Planet.GRAY));
+		builder.setField(new Field(new Position(0, 0), Planet.GRAY, 0));
 		buildMine = builder.getMove();
 		
 		turnManager.receivePointsForMove(buildColony);

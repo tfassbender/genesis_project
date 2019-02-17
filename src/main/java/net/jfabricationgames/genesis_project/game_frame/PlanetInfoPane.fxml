@@ -35,6 +35,7 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="150.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
@@ -178,7 +179,13 @@
                         <String fx:value="data" />
                      </styleClass>
                   </Label>
-                  <ImageView fx:id="imageViewPlanet" fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.columnSpan="9" GridPane.halignment="CENTER" GridPane.rowIndex="8" GridPane.valignment="CENTER" />
+                  <ImageView fx:id="imageViewPlanet" fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.columnSpan="9" GridPane.halignment="CENTER" GridPane.rowIndex="9" GridPane.valignment="CENTER" />
+                  <Label fx:id="labelPlanetInfoBuildingNumber4" text="4" GridPane.columnIndex="6" GridPane.rowIndex="6" />
+                  <Label fx:id="labelPlanetInfoBuildingNumber5" text="5" GridPane.columnIndex="6" GridPane.rowIndex="7" />
+                  <Label fx:id="labelPlanetInfoBuilding4Player" text="Label" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
+                  <Label fx:id="labelPlanetInfoBuilding4Type" text="Label" GridPane.columnIndex="9" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
+                  <Label fx:id="labelPlanetInfoBuilding5Player" text="Label" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
+                  <Label fx:id="labelPlanetInfoBuilding5Type" text="Label" GridPane.columnIndex="9" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
                </children>
             </GridPane>
          </content>

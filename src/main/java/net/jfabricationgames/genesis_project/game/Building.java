@@ -3,6 +3,8 @@ package net.jfabricationgames.genesis_project.game;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.jfabricationgames.genesis_project.game_frame.GuiUtils;
+
 public enum Building {
 	
 	COLONY(Constants.BUILDING_COSTS_COLONIE, null, "colonies/colonie_"),//
@@ -72,6 +74,19 @@ public enum Building {
 				return true;
 			default:
 				throw new IllegalArgumentException("Unknown building type: " + this.name());
+		}
+	}
+	
+	public String getName() {
+		switch (this) {
+			case RESEARCH_CENTER:
+				return "Research Center";
+			case SPACE_STATION:
+				return "Space Station";
+			case TRADING_POST:
+				return "Trainding Post";
+			default:
+				return GuiUtils.toLeadingCapitalLetter(name());
 		}
 	}
 }

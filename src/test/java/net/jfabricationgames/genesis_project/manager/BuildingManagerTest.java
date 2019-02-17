@@ -42,7 +42,7 @@ class BuildingManagerTest {
 	}
 	
 	private Field getFieldWithBuildings(PlayerBuilding building1, PlayerBuilding building2, PlayerBuilding building3) {
-		Field field = new Field(new Board.Position(0, 0), Planet.GENESIS);
+		Field field = new Field(new Board.Position(0, 0), Planet.GENESIS, 0);
 		if (building1 != null) {
 			field.build(building1, 0);
 		}
@@ -115,7 +115,7 @@ class BuildingManagerTest {
 		Player player2 = mock(Player.class);
 		BuildingManager manager1 = getBuildingManager(player1);
 		BuildingManager manager2 = getBuildingManager(player2);
-		Field field = new Field(new Board.Position(0, 0), null);
+		Field field = new Field(new Board.Position(0, 0), null, 0);
 		
 		assertEquals(0, manager1.findFirstPossibleBuildingPosition(Building.DRONE, field));
 		assertEquals(0, manager2.findFirstPossibleBuildingPosition(Building.DRONE, field));
@@ -137,7 +137,7 @@ class BuildingManagerTest {
 		Player player2 = mock(Player.class);
 		BuildingManager manager1 = getBuildingManager(player1);
 		BuildingManager manager2 = getBuildingManager(player2);
-		Field field = new Field(new Board.Position(0, 0), null);
+		Field field = new Field(new Board.Position(0, 0), null, 0);
 		
 		field.build(new PlayerBuilding(Building.DRONE, player1), 0);
 		field.build(new PlayerBuilding(Building.SATELLITE, player2), 0);
@@ -202,8 +202,8 @@ class BuildingManagerTest {
 	public void testBuildOnInvalidFields() {
 		Player player1 = mock(Player.class);
 		BuildingManager manager = getBuildingManager(player1);
-		Field planetField = new Field(new Position(0, 0), Planet.BLACK);
-		Field spaceField = new Field(new Position(3, 3), null);
+		Field planetField = new Field(new Position(0, 0), Planet.BLACK, 0);
+		Field spaceField = new Field(new Position(3, 3), null, 0);
 		
 		assertThrows(IllegalArgumentException.class, () -> manager.build(Building.COLONY, spaceField));
 		assertThrows(IllegalArgumentException.class, () -> manager.build(Building.SATELLITE, planetField));
@@ -222,14 +222,14 @@ class BuildingManagerTest {
 		
 		BuildingManager manager = new BuildingManager(player);
 		
-		Field fieldBlue = new Field(new Position(0, 0), Planet.BLUE);
-		Field fieldGenesis = new Field(new Position(0, 0), Planet.GENESIS);
-		Field fieldCenter = new Field(new Position(0, 0), Planet.CENTER);
-		Field fieldGreen = new Field(new Position(0, 0), Planet.GREEN);
-		Field fieldGray = new Field(new Position(0, 0), Planet.GRAY);
-		Field fieldBlack = new Field(new Position(0, 0), Planet.BLACK);
-		Field fieldYellow = new Field(new Position(0, 0), Planet.YELLOW);
-		Field fieldRed = new Field(new Position(0, 0), Planet.RED);
+		Field fieldBlue = new Field(new Position(0, 0), Planet.BLUE, 0);
+		Field fieldGenesis = new Field(new Position(0, 0), Planet.GENESIS, 0);
+		Field fieldCenter = new Field(new Position(0, 0), Planet.CENTER, 5);
+		Field fieldGreen = new Field(new Position(0, 0), Planet.GREEN, 0);
+		Field fieldGray = new Field(new Position(0, 0), Planet.GRAY, 0);
+		Field fieldBlack = new Field(new Position(0, 0), Planet.BLACK, 0);
+		Field fieldYellow = new Field(new Position(0, 0), Planet.YELLOW, 0);
+		Field fieldRed = new Field(new Position(0, 0), Planet.RED, 0);
 		
 		assertTrue(manager.canBuild(Building.COLONY, fieldBlue));
 		assertTrue(manager.canBuild(Building.COLONY, fieldGenesis));
@@ -254,7 +254,7 @@ class BuildingManagerTest {
 		
 		BuildingManager manager = new BuildingManager(player);
 		
-		Field spaceField = new Field(new Position(0, 0), null);
+		Field spaceField = new Field(new Position(0, 0), null, 0);
 		
 		assertTrue(manager.canBuild(Building.SATELLITE, spaceField));
 		assertTrue(manager.canBuild(Building.DRONE, spaceField));

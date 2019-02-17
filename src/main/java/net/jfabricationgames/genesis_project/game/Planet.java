@@ -1,5 +1,7 @@
 package net.jfabricationgames.genesis_project.game;
 
+import net.jfabricationgames.genesis_project.game_frame.GuiUtils;
+
 public enum Planet {
 	
 	CENTER("planet_center.png", null, null, null, null),//
@@ -46,5 +48,12 @@ public enum Planet {
 	}
 	public Resource getTertiaryResource() {
 		return tertiaryResource;
+	}
+	
+	/**
+	 * Get the name of the enumeration field with a leading upper case letter.
+	 */
+	public String getTypeName() {
+		return GuiUtils.toLeadingCapitalLetter(name());
 	}
 }

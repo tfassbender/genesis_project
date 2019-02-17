@@ -164,7 +164,7 @@ public class AllianceManager implements IAllianceManager {
 		IBuildingManager manager = getPlayer().getBuildingManager();
 		
 		//use a dummy field here because the implementation only needs to know what type of planet is on the field
-		Field field = new Field(new Position(0, 0), null);
+		Field field = new Field(new Position(0, 0), null, 0);
 		BuildingResources satelliteResources = manager.getResourcesNeededForBuilding(Building.SATELLITE, field);
 		
 		BuildingResources allSatelliteResources = new BuildingResources();

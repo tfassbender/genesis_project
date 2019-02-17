@@ -43,6 +43,10 @@ public class Board {
 			return "Board.Position[" + x + "; " + y + "]";
 		}
 		
+		public String asCoordinateString() {
+			return x + " | " + y;
+		}
+		
 		public int getX() {
 			return x;
 		}
