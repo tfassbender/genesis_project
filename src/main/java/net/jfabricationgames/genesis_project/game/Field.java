@@ -82,6 +82,15 @@ public class Field {
 		return planet != null;
 	}
 	
+	/**
+	 * Indicates whether this field needs to be displayed.
+	 * 
+	 * @return Returns true if the field has any content that is to be displayed.
+	 */
+	public boolean isDisplayed() {
+		return isPlanetField() || !getSpaceBuildings().isEmpty();
+	}
+	
 	@VisibleForTesting
 	public void setPlanet(Planet planet) {
 		this.planet = planet;
@@ -91,7 +100,7 @@ public class Field {
 		//TODO Auto-generated method stub
 		return -1;
 	}
-
+	
 	public List<Alliance> getAlliances() {
 		// TODO Auto-generated method stub
 		return new ArrayList<Alliance>();

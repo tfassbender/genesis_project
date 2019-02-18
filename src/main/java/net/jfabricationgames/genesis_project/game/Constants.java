@@ -2,6 +2,8 @@ package net.jfabricationgames.genesis_project.game;
 
 import java.util.Map;
 
+import net.jfabricationgames.genesis_project.game.Board.Position;
+
 /**
  * This class is used to keep all game constants as public static fields.</br>
  * No final fields are used because the constants are loaded from the database at game start
@@ -139,4 +141,9 @@ public abstract class Constants {
 	 * The number of buildings per player at game start (on field and class board).
 	 */
 	public static Map<Building, Integer> BUILDING_NUMBERS;
+	
+	/**
+	 * The positions of the cells on the board.
+	 */
+	public static Map<Position, int[]> CELL_COORDINATES; 
 }

@@ -39,7 +39,6 @@ public class PlanetLayout extends Region {
 	private static final int centerOffsetX = (int) (planetImageWidth / 3.5);
 	private static final int centerOffsetY = (int) (planetImageHeight / 3.5);
 	
-	
 	public PlanetLayout(Field field) {
 		this.field = field;
 		//add all content from the field as child nodes

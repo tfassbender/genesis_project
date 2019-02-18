@@ -25,6 +25,7 @@ public class GameCreationUtil {
 		ConstantsInitializerUtil.initStartingResearchStates();
 		ConstantsInitializerUtil.initResearchResources();
 		ConstantsInitializerUtil.initBuildingCosts();
+		ConstantsInitializerUtil.initCellPositions();
 		List<Player> players = new ArrayList<Player>(4);
 		for (int i = 0; i < 2; i++) {
 			Player player = new Player(new User("Player" + (i + 1)), PlayerClass.ENCOR);

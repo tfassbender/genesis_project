@@ -17,6 +17,7 @@
                         <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/basic/background.png" />
                      </image>
                   </ImageView>
+                  <AnchorPane fx:id="anchorPaneFields" prefHeight="1150.0" prefWidth="2000.0" />
                </children>
             </StackPane>
          </content>

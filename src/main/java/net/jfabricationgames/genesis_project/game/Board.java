@@ -54,6 +54,10 @@ public class Board {
 		public int getY() {
 			return y;
 		}
+		
+		public int[] getBoardLocation() {
+			return Constants.CELL_COORDINATES.get(this);
+		}
 	}
 	
 	private final int[][] neighboursEvenX = new int[][] {{0, -1}, {0, 1}, {-1, -1}, {-1, 0}, {1, -1}, {1, 0}};

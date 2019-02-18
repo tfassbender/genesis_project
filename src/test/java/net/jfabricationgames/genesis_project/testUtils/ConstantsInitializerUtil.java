@@ -11,6 +11,7 @@ import net.jfabricationgames.genesis_project.game.PlayerClass;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
 import net.jfabricationgames.genesis_project.game.Resource;
+import net.jfabricationgames.genesis_project.game.Board.Position;
 
 public class ConstantsInitializerUtil {
 	
@@ -154,11 +155,11 @@ public class ConstantsInitializerUtil {
 		Constants.BUILDING_COSTS_SATELLITE[0][0] = 1;
 		Constants.BUILDING_COSTS_SATELLITE[0][1] = 1;
 		Constants.BUILDING_COSTS_SATELLITE[0][2] = 0;
-
+		
 		Constants.BUILDING_COSTS_DRONE[0][0] = 2;
 		Constants.BUILDING_COSTS_DRONE[0][1] = 2;
 		Constants.BUILDING_COSTS_DRONE[0][2] = 1;
-
+		
 		Constants.BUILDING_COSTS_SPACE_STATION[0][0] = 4;
 		Constants.BUILDING_COSTS_SPACE_STATION[0][1] = 4;
 		Constants.BUILDING_COSTS_SPACE_STATION[0][2] = 2;
@@ -199,5 +200,19 @@ public class ConstantsInitializerUtil {
 		Constants.BUILDING_EARNINGS_SCIENTISTS.put(Building.GOVERNMENT, 0);
 		Constants.BUILDING_EARNINGS_SCIENTISTS.put(Building.CITY, 0);
 		Constants.BUILDING_EARNINGS_SCIENTISTS.put(Building.RESEARCH_CENTER, 1);
+	}
+	
+	/**
+	 * Initialize with some default cell positions (proportional to the coordinates; these are not the right positions).
+	 */
+	public static void initCellPositions() {
+		Constants.CELL_COORDINATES = new HashMap<Position, int[]>((int) (170 * 1.3));//about 170 cells * default load factor
+		for (int i = 0; i < 17; i++) {
+			for (int j = 0; j < 9; j++) {
+				Position pos = new Position(i, j);
+				int[] boardPosition = new int[] {i * 120 + 30, j * 60 + 10};
+				Constants.CELL_COORDINATES.put(pos, boardPosition);
+			}
+		}
 	}
 }

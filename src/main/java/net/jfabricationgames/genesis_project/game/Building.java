@@ -9,7 +9,7 @@ public enum Building {
 	
 	COLONY(Constants.BUILDING_COSTS_COLONIE, null, "colonies/colonie_"),//
 	MINE(Constants.BUILDING_COSTS_MINE, COLONY, "mines/mine_"),//
-	TRADING_POST(Constants.BUILDING_COSTS_TRAIDING_POST, COLONY, "traiding_posts/traiding_post_"),//
+	TRADING_POST(Constants.BUILDING_COSTS_TRAIDING_POST, COLONY, "trading_posts/trading_post_"),//
 	LABORATORY(Constants.BUILDING_COSTS_LABORATORY, COLONY, "laboratories/laboratory_"),//
 	GOVERNMENT(Constants.BUILDING_COSTS_GOVERNMENT, TRADING_POST, "goverments/goverment_"),//
 	CITY(Constants.BUILDING_COSTS_CITY, TRADING_POST, "cities/city_"),//
