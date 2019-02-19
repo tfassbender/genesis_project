@@ -27,8 +27,9 @@ public class GameCreationUtil {
 		ConstantsInitializerUtil.initBuildingCosts();
 		ConstantsInitializerUtil.initCellPositions();
 		List<Player> players = new ArrayList<Player>(4);
+		PlayerClass[] classes = new PlayerClass[] {PlayerClass.ENCOR, PlayerClass.YGDRACK};
 		for (int i = 0; i < 2; i++) {
-			Player player = new Player(new User("Player" + (i + 1)), PlayerClass.ENCOR);
+			Player player = new Player(new User("Player" + (i + 1)), classes[i]);
 			players.add(player);
 		}
 		Game game = new Game(players, players.get(0).getUser().getUsername());
@@ -50,8 +51,8 @@ public class GameCreationUtil {
 	private static void initializeBoard(Game game) {
 		Board board = game.getBoard();
 		//initialize the board with some fields
-		for (int x = 0; x < 6; x++) {
-			for (int y = 0; y < 6; y++) {
+		for (int x = 0; x < 10; x++) {
+			for (int y = 0; y < 10; y++) {
 				Position pos = new Position(x, y);
 				Field field = new Field(pos, null, 0);
 				board.getFields().put(pos, field);
@@ -103,5 +104,13 @@ public class GameCreationUtil {
 		board.getFields().get(new Position(5, 0)).setPlanet(Planet.CENTER);
 		board.getFields().get(new Position(5, 0)).build(new PlayerBuilding(Building.COLONY, player), 0);
 		board.getFields().get(new Position(5, 0)).build(new PlayerBuilding(Building.COLONY, player2), 1);
+		
+		//add some satellites and space buildings
+		board.getFields().get(new Position(7, 0)).build(new PlayerBuilding(Building.DRONE, player), 0);
+		board.getFields().get(new Position(7, 0)).build(new PlayerBuilding(Building.SATELLITE, player), 0);
+		board.getFields().get(new Position(7, 0)).build(new PlayerBuilding(Building.SATELLITE, player2), 0);
+		board.getFields().get(new Position(8, 0)).build(new PlayerBuilding(Building.SATELLITE, player), 0);
+		board.getFields().get(new Position(8, 0)).build(new PlayerBuilding(Building.SATELLITE, player2), 0);
+		board.getFields().get(new Position(6, 0)).build(new PlayerBuilding(Building.SPACE_STATION, player2), 0);
 	}
 }

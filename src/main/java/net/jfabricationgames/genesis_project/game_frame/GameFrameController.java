@@ -53,13 +53,13 @@ public class GameFrameController implements Initializable {
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		insertPane("BoardPane.fxml", anchorBoardPane, new BoardPaneController(game.getBoard()), null);
+		insertPane("BoardPane.fxml", anchorBoardPane, new BoardPaneController(game, game.getBoard()), null);
 		insertPane("ClassPane.fxml", anchorClassPane, new ClassPaneController(game.getLocalPlayer()), null);
 		insertPane("ResearchPane.fxml", anchorResearchPane, new ResearchPaneController(game.getResearchManager(), game.getLocalPlayer()), null);
 		insertPane("TechnologyPane.fxml", anchorTechnologyPane, new TechnologyPaneController(game.getLocalPlayer()), null);
 		insertPane("AlliancePane.fxml", anchorAlliancePanel, new AlliancePaneController(game.getLocalPlayer()), null);
 		insertPane("TurnPane.fxml", anchorTurnPane, new TurnPaneController(game.getTurnManager()), null);
-		insertPane("PlanetInfoPane.fxml", anchorPlanetInfoPane, new PlanetInfoPaneController(), null);
+		insertPane("PlanetInfoPane.fxml", anchorPlanetInfoPane, new PlanetInfoPaneController(game), null);
 		insertPane("PlaningToolPane.fxml", anchorPlaningToolPane, new PlaningToolPaneController(game.getLocalPlayer()), null);
 		insertPane("AttackPane.fxml", anchorAttackPane, new AttackPaneController(), null);
 		insertPane("GameOverviewPane.fxml", anchorGameOverviewPane, new GameOverviewPaneController(game, game.getLocalPlayer()), null);

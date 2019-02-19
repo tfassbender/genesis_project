@@ -19,8 +19,6 @@ public class MoveBuilder {
 	
 	private Game game;
 	
-	private boolean buildingMove = false;
-	
 	private MoveType type;
 	private Player player;
 	private Field field;
@@ -40,61 +38,30 @@ public class MoveBuilder {
 	}
 	
 	/**
-	 * Start building a new move.</br>
-	 * Removes all old field values to construct a completely new move.<br>
-	 * 
-	 * @throws IllegalStateException
-	 *         An {@link IllegalStateException} is thrown when this method is called while the last move is still being constructed.
+	 * Build and return the move that was constructed.
 	 */
-	public void buildMove() throws IllegalStateException {
-		if (buildingMove) {
-			throw new IllegalStateException("Can't build a new move while there is already a move builded.");
-		}
-		else {
-			buildingMove = true;
-			type = null;
-			player = null;
-			field = null;
-			building = null;
-			researchArea = null;
-			researchResources = null;
-			technology = null;
-			alliancePlanets = null;
-			satelliteFields = null;
-			allianceBonus = null;
-			allianceBonusIndex = -1;
-			pass = false;
-		}
+	public IMove build() throws IllegalStateException {
+		IMove move = new Move(game, type, player, field, building, researchArea, researchResources, technology, alliancePlanets, satelliteFields,
+				allianceBonus, allianceBonusIndex, pass);
+		return move;
 	}
 	
 	/**
-	 * Build and return the move that was constructed
-	 * 
-	 * @throws IllegalStateException
-	 *         An {@link IllegalStateException} is thrown when a move this method is called while there is no move under construction.
+	 * Reset all old field values to construct a completely new move.
 	 */
-	public IMove getMove() throws IllegalStateException {
-		if (buildingMove) {
-			IMove move = new Move(game, type, player, field, building, researchArea, researchResources, technology, alliancePlanets, satelliteFields,
-					allianceBonus, allianceBonusIndex, pass);
-			buildingMove = false;
-			return move;
-		}
-		else {
-			throw new IllegalStateException("Can't build a move because there is currently no move under construction.");
-		}
-	}
-	
-	/**
-	 * Abort the building of a move without constructing the move (no matter if there is really a move that is built at the time this method is
-	 * called).
-	 */
-	public void abortBuild() {
-		buildingMove = false;
-	}
-	
-	public boolean isBuildingMove() {
-		return buildingMove;
+	public void reset() {
+		type = null;
+		player = null;
+		field = null;
+		building = null;
+		researchArea = null;
+		researchResources = null;
+		technology = null;
+		alliancePlanets = null;
+		satelliteFields = null;
+		allianceBonus = null;
+		allianceBonusIndex = -1;
+		pass = false;
 	}
 	
 	public MoveType getType() {

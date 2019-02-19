@@ -19,19 +19,17 @@ public class MoveCreaterUtil {
 	public static IMove getBuildingMove(Game game, Player player, Building building, int x, int y) {
 		IMove buildMove;
 		MoveBuilder builder = new MoveBuilder(game);
-		builder.buildMove();
 		builder.setType(MoveType.BUILD);
 		builder.setPlayer(player);
 		builder.setBuilding(building);
 		builder.setField(game.getBoard().getFields().get(new Position(x, y)));
-		buildMove = builder.getMove();
+		buildMove = builder.build();
 		
 		return buildMove;
 	}
 	public static IMove getAllianceMove(Game game, Player player, Field[] planets, Field[] satellites, AllianceBonus bonus, int bonusIndex) {
 		IMove allianceMove;
 		MoveBuilder builder = new MoveBuilder(game);
-		builder.buildMove();
 		builder.setType(MoveType.ALLIANCE);
 		builder.setPlayer(player);
 		builder.setAlliancePlanets(Arrays.asList(planets));
@@ -39,41 +37,38 @@ public class MoveCreaterUtil {
 		builder.setAllianceBonus(bonus);
 		builder.setAllianceBonusIndex(bonusIndex);
 		
-		allianceMove = builder.getMove();
+		allianceMove = builder.build();
 		return allianceMove;
 	}
 	public static IMove getResearchMove(Game game, Player player, ResearchArea area) {
 		IMove researchMove;
 		MoveBuilder builder = new MoveBuilder(game);
-		builder.buildMove();
 		builder.setType(MoveType.RESEARCH);
 		builder.setPlayer(player);
 		builder.setResearchArea(area);
 		
-		researchMove = builder.getMove();
+		researchMove = builder.build();
 		return researchMove;
 	}
 	public static IMove getResearchResourcesMove(Game game, Player player, ResearchArea area, ResearchResources resources) {
 		IMove researchMove;
 		MoveBuilder builder = new MoveBuilder(game);
-		builder.buildMove();
 		builder.setType(MoveType.RESEARCH_RESOURCES);
 		builder.setPlayer(player);
 		builder.setResearchArea(area);
 		builder.setResearchResources(resources);
 		
-		researchMove = builder.getMove();
+		researchMove = builder.build();
 		return researchMove;
 	}
 	public static IMove getPassMove(Game game, Player player) {
 		IMove researchMove;
 		MoveBuilder builder = new MoveBuilder(game);
-		builder.buildMove();
 		builder.setType(MoveType.PASS);
 		builder.setPlayer(player);
 		builder.setPass(true);
 		
-		researchMove = builder.getMove();
+		researchMove = builder.build();
 		return researchMove;
 	}
 }

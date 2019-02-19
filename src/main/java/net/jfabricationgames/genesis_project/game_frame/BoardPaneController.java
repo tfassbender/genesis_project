@@ -6,11 +6,17 @@ import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
+import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import net.jfabricationgames.genesis_project.game.Board;
 import net.jfabricationgames.genesis_project.game.Board.Position;
 import net.jfabricationgames.genesis_project.game.Field;
+import net.jfabricationgames.genesis_project.game.Game;
 
 public class BoardPaneController implements Initializable {
 	
@@ -19,16 +25,18 @@ public class BoardPaneController implements Initializable {
 	@FXML
 	private AnchorPane anchorPaneFields;
 	
+	private Game game;
 	private Board board;
 	
-	public BoardPaneController(Board board) {
+	public BoardPaneController(Game game, Board board) {
+		this.game = game;
 		this.board = board;
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		GuiUtils.loadImageToView("basic/background.png", true, imageViewBoardBackground);
-		//addPositionContextMenu(imageViewBoardBackground);
+		//addPositionContextMenu(anchorPaneFields);
 		buildField();
 	}
 	
@@ -43,7 +51,7 @@ public class BoardPaneController implements Initializable {
 			Position position = fieldPosition.getKey();
 			Field field = fieldPosition.getValue();
 			if (field.isDisplayed()) {
-				PlanetLayout fieldLayout = new PlanetLayout(field);
+				PlanetLayout fieldLayout = new PlanetLayout(game, field);
 				//add the field to the board
 				anchorPaneFields.getChildren().add(fieldLayout);
 				//relocate the field to it's position
@@ -56,21 +64,25 @@ public class BoardPaneController implements Initializable {
 	/**
 	 * Used to define the positions of the field's cells. Not used in game.
 	 */
-	/*private void addPositionContextMenu(ImageView background) {
+	@SuppressWarnings("unused")
+	private void addPositionContextMenu(Node node) {
 		ContextMenu contextMenu = new ContextMenu();
 		MenuItem printPosition = new MenuItem("Print Position");
 		printPosition.setOnAction((e2) -> {
-			Bounds boundsInScreen = background.localToScreen(background.getBoundsInLocal());
+			Bounds boundsInScreen = node.localToScreen(node.getBoundsInLocal());
 			double backgroundXOnScreen = boundsInScreen.getMinX();
 			double backgroundYOnScreen = boundsInScreen.getMinY();
 			System.out.println(String.format("Position: %4.0f, %4.0f", contextMenu.getAnchorX() - backgroundXOnScreen,
 					contextMenu.getAnchorY() - backgroundYOnScreen));
 		});
 		contextMenu.getItems().add(printPosition);
-		background.setOnMouseClicked((e) -> {
+		node.setOnMouseClicked((e) -> {
 			if (e.getButton() == MouseButton.SECONDARY) {
-				contextMenu.show(background, e.getScreenX(), e.getScreenY());
+				contextMenu.show(node, e.getScreenX(), e.getScreenY());
+			}
+			else {
+				contextMenu.hide();
 			}
 		});
-	}*/
+	}
 }

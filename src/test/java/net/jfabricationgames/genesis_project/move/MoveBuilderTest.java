@@ -4,7 +4,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import org.junit.jupiter.api.Test;
@@ -32,9 +31,7 @@ class MoveBuilderTest {
 	public void testBuildMove() {
 		MoveBuilder builder = getMoveBuilder();
 		
-		//start building a move
-		builder.buildMove();
-		//all fields are to default values (null or false)
+		//all fields are set to default values (null or false)
 		assertNull(builder.getType());
 		assertNull(builder.getPlayer());
 		assertNull(builder.getField());
@@ -46,18 +43,6 @@ class MoveBuilderTest {
 		assertNull(builder.getSatelliteFields());
 		assertNull(builder.getAllianceBonus());
 		assertFalse(builder.isPass());
-		//a move is being constructed
-		assertTrue(builder.isBuildingMove());
-	}
-
-	@Test
-	public void testBuildMove_multipleMoves() {
-		MoveBuilder builder = getMoveBuilder();
-		
-		//start building a move
-		builder.buildMove();
-		//building another move while the last move is not ready results in an invalid state
-		assertThrows(IllegalStateException.class, () -> builder.buildMove());
 	}
 	
 	@Test
@@ -65,8 +50,7 @@ class MoveBuilderTest {
 		MoveBuilder builder = getMoveBuilder();
 		
 		//start building a move
-		builder.buildMove();
-		IMove emptyMove = builder.getMove();
+		IMove emptyMove = builder.build();
 		//all fields are to default values (null or false)
 		assertNull(emptyMove.getType());
 		assertNull(emptyMove.getPlayer());
@@ -79,8 +63,6 @@ class MoveBuilderTest {
 		assertNull(emptyMove.getSatelliteFields());
 		assertNull(emptyMove.getAllianceBonus());
 		assertFalse(emptyMove.isPassing());
-		//a move is being constructed
-		assertFalse(builder.isBuildingMove());
 	}
 	
 	@Test
@@ -93,12 +75,11 @@ class MoveBuilderTest {
 		Field field = mock(Field.class);
 		Building building = Building.LABORATORY;
 		
-		builder.buildMove();
 		builder.setType(type);
 		builder.setPlayer(player);
 		builder.setField(field);
 		builder.setBuilding(building);
-		IMove buildMove = builder.getMove();
+		IMove buildMove = builder.build();
 		
 		assertEquals(type, buildMove.getType());
 		assertEquals(player, buildMove.getPlayer());
@@ -111,31 +92,5 @@ class MoveBuilderTest {
 		assertNull(buildMove.getSatelliteFields());
 		assertNull(buildMove.getAllianceBonus());
 		assertFalse(buildMove.isPassing());
-		
-		//a move is no longer being constructed
-		assertFalse(builder.isBuildingMove());
-	}
-	
-	@Test
-	public void testGetMove_noMoveBuilt() {
-		MoveBuilder builder = getMoveBuilder();
-		
-		//requesting a move while no move is built results in an illegal state
-		assertFalse(builder.isBuildingMove());
-		assertThrows(IllegalStateException.class, () -> builder.getMove());
-	}
-	
-	@Test
-	public void testAbortMove() {
-		MoveBuilder builder = getMoveBuilder();
-		
-		//start building a move
-		builder.buildMove();
-		//abort the build
-		builder.abortBuild();
-		
-		assertFalse(builder.isBuildingMove());
-		//builds can be aborted although there is currently no move built
-		builder.abortBuild();
 	}
 }

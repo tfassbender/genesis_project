@@ -18,9 +18,8 @@ class MoveTest {
 		Game game = mock(Game.class);
 		when(game.isMoveExecutable(any(IMove.class))).thenReturn(true);
 		MoveBuilder builder = new MoveBuilder(game);
-		builder.buildMove();
 		//constructs an empty move
-		IMove move = builder.getMove();
+		IMove move = builder.build();
 		
 		move.execute();
 		
@@ -32,9 +31,8 @@ class MoveTest {
 		Game game = mock(Game.class);
 		when(game.isMoveExecutable(any(IMove.class))).thenReturn(true);
 		MoveBuilder builder = new MoveBuilder(game);
-		builder.buildMove();
 		//constructs an empty move
-		IMove move = builder.getMove();
+		IMove move = builder.build();
 		
 		//as specified in the mock to move is executable
 		assertTrue(move.isExecutable());

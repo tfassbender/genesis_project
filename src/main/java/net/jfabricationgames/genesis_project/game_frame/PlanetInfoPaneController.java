@@ -11,6 +11,7 @@ import javafx.scene.layout.AnchorPane;
 import net.jfabricationgames.genesis_project.game.Board.Position;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.Field;
+import net.jfabricationgames.genesis_project.game.Game;
 import net.jfabricationgames.genesis_project.game.Planet;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.PlayerBuilding;
@@ -56,10 +57,14 @@ public class PlanetInfoPaneController implements Initializable {
 	@FXML
 	private Label labelPlanetInfoBuildingNumber5;
 	
-	//@FXML
-	//private ImageView imageViewPlanet;
 	@FXML
 	private AnchorPane anchorPaneImage;
+	
+	private Game game;
+	
+	public PlanetInfoPaneController(Game game) {
+		this.game = game;
+	}
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -152,7 +157,7 @@ public class PlanetInfoPaneController implements Initializable {
 		}
 		
 		//set the image
-		PlanetLayout planetLayout = new PlanetLayout(field);
+		PlanetLayout planetLayout = new PlanetLayout(game, field);
 		anchorPaneImage.getChildren().add(planetLayout);
 	}
 }

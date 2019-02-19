@@ -74,18 +74,18 @@ class TurnManagerTest {
 		IMove buildColony;
 		IMove buildMine;
 		MoveBuilder builder = new MoveBuilder(game);
-		builder.buildMove();
 		builder.setType(MoveType.BUILD);
 		builder.setPlayer(player1);
 		builder.setBuilding(Building.COLONY);
 		builder.setField(new Field(new Position(0, 0), Planet.GRAY, 0));
-		buildColony = builder.getMove();
-		builder.buildMove();
+		buildColony = builder.build();
+		
+		builder = new MoveBuilder(game);
 		builder.setType(MoveType.BUILD);
 		builder.setPlayer(player1);
 		builder.setBuilding(Building.MINE);
 		builder.setField(new Field(new Position(0, 0), Planet.GRAY, 0));
-		buildMine = builder.getMove();
+		buildMine = builder.build();
 		
 		turnManager.receivePointsForMove(buildColony);
 		assertEquals(0, pointManager.getPoints());//no points for colonies
