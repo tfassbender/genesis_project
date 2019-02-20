@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import net.jfabricationgames.genesis_project.game_frame.GameFrameController;
 import net.jfabricationgames.genesis_project.game_frame.PlayerInfo;
 import net.jfabricationgames.genesis_project.manager.AllianceManagerCompositum;
 import net.jfabricationgames.genesis_project.manager.GamePointManager;
@@ -32,6 +33,8 @@ public class Game {
 	private GamePointManager pointManager;
 	
 	private ObservableList<PlayerInfo> playerInfoList;
+	
+	private GameFrameController gameFrameController;
 	
 	public Game(List<Player> players, String localPlayerName) {
 		this.players = players;
@@ -143,8 +146,10 @@ public class Game {
 		//receive turn points for a move
 		turnManager.receivePointsForMove(move);
 		
+		updateBoard();
 		updatePlayerInfo();
 	}
+	
 	/**
 	 * Check whether a given move would be valid and could be executed.
 	 */
@@ -241,6 +246,16 @@ public class Game {
 		playerInfoList.addAll(newPlayerInfo);
 	}
 	
+	/**
+	 * Update the displayed board to show new buildings, alliances, ...
+	 */
+	private void updateBoard() {
+		if (gameFrameController != null) {
+			//only if the controller is already set (will not be set in tests)
+			gameFrameController.getBoardPaneController().buildField();			
+		}
+	}
+	
 	public List<Player> getPlayers() {
 		return players;
 	}
@@ -268,5 +283,12 @@ public class Game {
 	}
 	public GamePointManager getPointManager() {
 		return pointManager;
+	}
+	
+	public GameFrameController getGameFrameController() {
+		return gameFrameController;
+	}
+	public void setGameFrameController(GameFrameController gameFrameController) {
+		this.gameFrameController = gameFrameController;
 	}
 }

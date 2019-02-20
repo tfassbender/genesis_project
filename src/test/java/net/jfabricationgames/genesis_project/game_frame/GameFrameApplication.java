@@ -32,6 +32,7 @@ public class GameFrameApplication extends Application {
 	public void start(Stage primaryStage) {
 		game = GameCreationUtil.createGame();
 		controller = new GameFrameController(game);
+		game.setGameFrameController(controller);
 		try {
 			URL fxmlUrl = getClass().getResource("/net/jfabricationgames/genesis_project/game_frame/GameFrame.fxml");
 			FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl);
