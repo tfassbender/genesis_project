@@ -3,6 +3,7 @@ package net.jfabricationgames.genesis_project.manager;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import net.jfabricationgames.genesis_project.game.BuildingResources;
+import net.jfabricationgames.genesis_project.game.CompleteResources;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
 import net.jfabricationgames.genesis_project.game.Resource;
@@ -120,6 +121,16 @@ public class ResourceManager implements IResourceManager {
 		boolean resourcesAvailable = true;
 		
 		for (Resource resource : ResearchResources.RESEARCH_RESOURCES) {
+			resourcesAvailable &= isResourceAvailable(resource, resources.getResources(resource));
+		}
+		
+		return resourcesAvailable;
+	}
+	@Override
+	public boolean isResourcesAvailable(CompleteResources resources) {
+		boolean resourcesAvailable = true;
+		
+		for (Resource resource : CompleteResources.COMPLETE_RESOURCES) {
 			resourcesAvailable &= isResourceAvailable(resource, resources.getResources(resource));
 		}
 		
@@ -244,6 +255,23 @@ public class ResourceManager implements IResourceManager {
 	}
 	
 	@Override
+	public void addResources(CompleteResources resources) {
+		for (Resource resource : CompleteResources.COMPLETE_RESOURCES) {
+			addResources(resource, resources.getResources(resource));
+		}
+	}
+	@Override
+	public void reduceResources(CompleteResources resources) {
+		if (!isResourcesAvailable(resources)) {
+			throw new IllegalArgumentException(
+					"Trying to take more resources than present (current: " + getCompleteResources() + "; to be taken: " + resources + ")");
+		}
+		for (Resource resource : CompleteResources.COMPLETE_RESOURCES) {
+			reduceResources(resource, resources.getResources(resource));
+		}
+	}
+	
+	@Override
 	public void addResources(ResearchResources resources) {
 		for (Resource resource : ResearchResources.RESEARCH_RESOURCES) {
 			addResources(resource, resources.getResources(resource));
@@ -311,11 +339,17 @@ public class ResourceManager implements IResourceManager {
 		addResources(player.getPlayerClass().getTertiaryResource(), resources);
 	}
 	
-	private BuildingResources getBuildingResources() {
+	@Override
+	public BuildingResources getBuildingResources() {
 		return new BuildingResources(getResourcesC(), getResourcesSi(), getResourcesFe());
 	}
-	private ResearchResources getResearchResources() {
+	@Override
+	public ResearchResources getResearchResources() {
 		return new ResearchResources(getResourcesC(), getResourcesSi(), getResourcesFe(), getScientists());
+	}
+	@Override
+	public CompleteResources getCompleteResources() {
+		return new CompleteResources(getResourcesC(), getResourcesSi(), getResourcesFe(), getScientists(), getResearchPoints(), getFTL());
 	}
 	
 	@Override

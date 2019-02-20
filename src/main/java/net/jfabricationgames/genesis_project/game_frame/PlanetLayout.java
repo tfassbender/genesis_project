@@ -107,6 +107,14 @@ public class PlanetLayout extends Region {
 				satelliteImageView.setFitHeight(satelliteImageHeight);
 				getChildren().add(satelliteImageView);
 			}
+			
+			//add an empty image view if nothing is on the field
+			if (!defenseBuilding.isPresent() && satellites.isEmpty()) {
+				ImageView emptyImageView = new ImageView();
+				emptyImageView.setFitWidth(100);
+				emptyImageView.setFitHeight(100);
+				getChildren().add(emptyImageView);
+			}
 		}
 	}
 	

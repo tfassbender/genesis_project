@@ -32,7 +32,7 @@ public class BoardPaneController implements Initializable {
 		this.game = game;
 		this.board = board;
 	}
-
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		GuiUtils.loadImageToView("basic/background.png", true, imageViewBoardBackground);
@@ -47,17 +47,22 @@ public class BoardPaneController implements Initializable {
 		//remove all old images first
 		anchorPaneFields.getChildren().clear();
 		//check every field on the board
-		for (Entry<Position, Field> fieldPosition : board.getFields().entrySet()) {
-			Position position = fieldPosition.getKey();
-			Field field = fieldPosition.getValue();
-			if (field.isDisplayed()) {
-				PlanetLayout fieldLayout = new PlanetLayout(game, field);
-				//add the field to the board
-				anchorPaneFields.getChildren().add(fieldLayout);
-				//relocate the field to it's position
-				int[] boardPosition = position.getBoardLocation();
-				fieldLayout.relocate(boardPosition[0], boardPosition[1]);
-			}
+		boolean[] addBackground = new boolean[] {true, false};//first add all background image views (the ones that are empty space fields)
+		for (boolean background : addBackground) {
+			for (Entry<Position, Field> fieldPosition : board.getFields().entrySet()) {
+				Position position = fieldPosition.getKey();
+				Field field = fieldPosition.getValue();
+				if (field.isDisplayed() != background) {//keep the empty space fields in the background
+					PlanetLayout fieldLayout = new PlanetLayout(game, field);
+					//add the field to the board
+					anchorPaneFields.getChildren().add(fieldLayout);
+					//relocate the field to it's position
+					int[] boardPosition = position.getBoardLocation();
+					if (boardPosition != null) {//TODO maybe remove if-condition after testing (?)
+						fieldLayout.relocate(boardPosition[0], boardPosition[1]);					
+					}
+				}
+			}			
 		}
 	}
 	

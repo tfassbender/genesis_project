@@ -152,6 +152,8 @@ class GameTest {
 		Game game = GameCreationUtil.createGame();
 		Player player = game.getPlayers().get(0);
 		IResourceManager resourceManager = player.getResourceManager();
+		//clear all resources; then add specific resources for this test
+		resourceManager.reduceResources(resourceManager.getCompleteResources());
 		resourceManager.addResources(new ResearchResources(9, 7, 6, 2));
 		
 		//valid moves

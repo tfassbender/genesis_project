@@ -94,11 +94,26 @@ public class ConstantsInitializerUtil {
 	}
 	
 	public static void initBuildingCosts() {
+		initBuildingCostsWithDefault();//not the correct values; just anything different from 0
 		initBuildingCostsForColonies();
 		initBuildingCostsForMines();
 		initBuildingCostsForResearchCenters();
 		initializeBuildingCostsForSpaceBuildings();
 	}
+	
+	public static void initBuildingCostsWithDefault() {
+		int[][][] allCosts = new int[][][] {Constants.BUILDING_COSTS_COLONIE, Constants.BUILDING_COSTS_MINE, Constants.BUILDING_COSTS_TRAIDING_POST,
+				Constants.BUILDING_COSTS_LABORATORY, Constants.BUILDING_COSTS_GOVERNMENT, Constants.BUILDING_COSTS_CITY,
+				Constants.BUILDING_COSTS_RESEARCH_CENTER};
+		for (int[][] costs : allCosts) {
+			for (int i = 0; i < 4; i++) {
+				for (int j = 0; j < 3; j++) {
+					costs[i][j] = (2-j) + i;
+				}
+			}
+		}
+	}
+	
 	public static void initBuildingCostsForColonies() {
 		Constants.BUILDING_COSTS_COLONIE[0][0] = 2;
 		Constants.BUILDING_COSTS_COLONIE[0][1] = 1;

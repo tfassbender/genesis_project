@@ -50,7 +50,8 @@ public class GameFrameApplication extends Application {
 		//increaseResourcesAfter5Seconds_testsBindings();
 	}
 	
-	protected void increaseResourcesAfter5Seconds_testsBindings() {
+	@SuppressWarnings("unused")
+	private void increaseResourcesAfter5Seconds_testsBindings() {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
