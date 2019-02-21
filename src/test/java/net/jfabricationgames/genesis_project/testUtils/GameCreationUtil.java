@@ -2,6 +2,7 @@ package net.jfabricationgames.genesis_project.testUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import net.jfabricationgames.genesis_project.game.Board;
@@ -116,5 +117,22 @@ public class GameCreationUtil {
 		board.getFields().get(new Position(8, 0)).build(new PlayerBuilding(Building.SATELLITE, player), 0);
 		board.getFields().get(new Position(8, 0)).build(new PlayerBuilding(Building.SATELLITE, player2), 0);
 		board.getFields().get(new Position(6, 0)).build(new PlayerBuilding(Building.SPACE_STATION, player2), 0);
+	}
+	
+	public static Board getBoardWithFields(int fieldsX, int fieldsY) {
+		Board board = new Board();
+		
+		//initialize the board with some (empty) fields
+		Map<Board.Position, Field> fields = board.getFields();
+		
+		for (int i = 0; i < fieldsX; i++) {
+			for (int j = 0; j < fieldsY; j++) {
+				Board.Position pos = new Board.Position(i, j);
+				Field field = new Field(pos, null, 0);
+				fields.put(pos, field);
+			}
+		}
+		
+		return board;
 	}
 }

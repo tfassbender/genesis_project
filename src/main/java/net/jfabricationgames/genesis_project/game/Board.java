@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.OptionalInt;
 
 public class Board {
 	
@@ -114,6 +115,12 @@ public class Board {
 			}
 		}
 		return playersPlanets;
+	}
+	
+	public int getDistanceToNextPlayerField(Field field, Player player) {
+		List<Field> playersFields = getPlayersPlanets(player);
+		OptionalInt minDistance = playersFields.stream().mapToInt(field2 -> field.distanceTo(field2)).min();
+		return minDistance.orElse(-1);
 	}
 	
 	public Map<Position, Field> getFields() {

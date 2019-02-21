@@ -28,6 +28,8 @@ public interface IBuildingManager {
 	 */
 	public boolean canBuild(Building building, Field field);
 	
+	public boolean isFieldReachable(Field field);
+	
 	public boolean isResourcesAvailable(Building building, Field field);
 	public BuildingResources getResourcesNeededForBuilding(Building building, Field field);
 	

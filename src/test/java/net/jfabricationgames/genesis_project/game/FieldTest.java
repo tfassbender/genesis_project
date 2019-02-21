@@ -73,4 +73,46 @@ class FieldTest {
 		assertEquals(3, field.getBuildings().length);
 		assertEquals(5, centerField.getBuildings().length);
 	}
+	
+	@Test
+	public void testDistance() {
+		Field origin = new Field(new Board.Position(0, 0), null, 0);
+		Field originOdd = new Field(new Board.Position(1, 0), null, 0);
+		Field field10 = new Field(new Board.Position(1, 0), null, 0);
+		Field field31 = new Field(new Board.Position(3, 1), null, 0);
+		Field field11 = new Field(new Board.Position(1, 1), null, 0);
+		Field field22 = new Field(new Board.Position(2, 2), null, 0);
+		Field field32 = new Field(new Board.Position(3, 2), null, 0);
+		Field field03 = new Field(new Board.Position(0, 3), null, 0);
+		
+		//distance to the field itself
+		assertEquals(0, origin.distanceTo(origin));
+		assertEquals(0, originOdd.distanceTo(originOdd));
+		
+		//distance from an even start
+		assertEquals(1, origin.distanceTo(field10));
+		assertEquals(3, origin.distanceTo(field31));
+		assertEquals(2, origin.distanceTo(field11));
+		assertEquals(3, origin.distanceTo(field22));
+		assertEquals(4, origin.distanceTo(field32));
+		assertEquals(3, origin.distanceTo(field03));
+		
+		//distances from an odd start
+		assertEquals(0, originOdd.distanceTo(field10));
+		assertEquals(2, originOdd.distanceTo(field31));
+		assertEquals(1, originOdd.distanceTo(field11));
+		assertEquals(2, originOdd.distanceTo(field22));
+		assertEquals(3, originOdd.distanceTo(field32));
+		assertEquals(3, originOdd.distanceTo(field03));
+		
+		//some commutative tests
+		assertEquals(field11.distanceTo(origin), origin.distanceTo(field11));
+		assertEquals(field22.distanceTo(origin), origin.distanceTo(field22));
+		assertEquals(field32.distanceTo(origin), origin.distanceTo(field32));
+		assertEquals(field03.distanceTo(origin), origin.distanceTo(field03));
+		assertEquals(field11.distanceTo(originOdd), originOdd.distanceTo(field11));
+		assertEquals(field22.distanceTo(originOdd), originOdd.distanceTo(field22));
+		assertEquals(field32.distanceTo(originOdd), originOdd.distanceTo(field32));
+		assertEquals(field03.distanceTo(originOdd), originOdd.distanceTo(field03));
+	}
 }

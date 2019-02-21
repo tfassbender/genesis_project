@@ -41,6 +41,7 @@ public class GameFrameApplication extends Application {
 			Scene scene = new Scene(root, 1500, 900);
 			primaryStage.setTitle(APPLCIATION_NAME);
 			primaryStage.setScene(scene);
+			controller.setStage(primaryStage);
 			primaryStage.show();
 		}
 		catch (Exception e) {

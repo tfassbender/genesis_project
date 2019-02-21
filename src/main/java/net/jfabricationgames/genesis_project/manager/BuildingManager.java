@@ -17,6 +17,7 @@ import net.jfabricationgames.genesis_project.game.CompleteResources;
 import net.jfabricationgames.genesis_project.game.Constants;
 import net.jfabricationgames.genesis_project.game.DependentResources;
 import net.jfabricationgames.genesis_project.game.Field;
+import net.jfabricationgames.genesis_project.game.Game;
 import net.jfabricationgames.genesis_project.game.Planet;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.PlayerBuilding;
@@ -171,6 +172,18 @@ public class BuildingManager implements IBuildingManager {
 		return resourcesNeeded;
 	}
 	
+	/**
+	 * Check whether the field can be reached from the nearest planet of the player.
+	 */
+	@Override
+	public boolean isFieldReachable(Field field) {
+		Game game = player.getGame();
+		Board board = game.getBoard();
+		int distanceToField = board.getDistanceToNextPlayerField(field, player);
+		int ftl = player.getResourceManager().getFTL();
+		return ftl >= distanceToField;
+	}
+	
 	@Override
 	public CompleteResources getNextTurnsStartingResources() {
 		CompleteResources earnings = new CompleteResources();
@@ -220,9 +233,10 @@ public class BuildingManager implements IBuildingManager {
 	
 	@Override
 	public boolean canBuild(Building building, Field field) {
-		return findFirstPossibleBuildingPosition(building, field) != -1 && getNumBuildingsLeft(building) > 0 && isResourcesAvailable(building, field);
+		return findFirstPossibleBuildingPosition(building, field) != -1 && getNumBuildingsLeft(building) > 0 && isResourcesAvailable(building, field)
+				&& isFieldReachable(field);
 	}
-	
+
 	@VisibleForTesting
 	protected Player getPlayer() {
 		return player;

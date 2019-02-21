@@ -34,6 +34,10 @@ class BuildingManagerTest {
 		IResourceManager resourceManager = mock(ResourceManager.class);
 		when(resourceManager.isResourcesAvailable(any(BuildingResources.class))).thenReturn(true);
 		when(player.getResourceManager()).thenReturn(resourceManager);
+		Game game = mock(Game.class);
+		Board board = new Board();
+		when(game.getBoard()).thenReturn(board);
+		when(player.getGame()).thenReturn(game);
 		return getBuildingManager(player);
 	}
 	private BuildingManager getBuildingManager(Player player) {
@@ -219,6 +223,11 @@ class BuildingManagerTest {
 		IResourceManager resourceManager = new ResourceManager(player);
 		when(player.getResourceManager()).thenReturn(resourceManager);
 		resourceManager.addResources(new BuildingResources(3, 3, 1));//enough for colonies on 0, 1, and 2 distance planets, but not 3 distance
+		//create a board that is needed (use mocks to get it)
+		Game game = mock(Game.class);
+		Board board = new Board();
+		when(game.getBoard()).thenReturn(board);
+		when(player.getGame()).thenReturn(game);
 		
 		BuildingManager manager = new BuildingManager(player);
 		
@@ -251,6 +260,11 @@ class BuildingManagerTest {
 		IResourceManager resourceManager = new ResourceManager(player);
 		when(player.getResourceManager()).thenReturn(resourceManager);
 		resourceManager.addResources(new BuildingResources(3, 3, 1));//enough for satellites and drones but not for space stations
+		//create a board that is needed (use mocks to get it)
+		Game game = mock(Game.class);
+		Board board = new Board();
+		when(game.getBoard()).thenReturn(board);
+		when(player.getGame()).thenReturn(game);
 		
 		BuildingManager manager = new BuildingManager(player);
 		
@@ -271,5 +285,38 @@ class BuildingManagerTest {
 		CompleteResources earnings = manager.getNextTurnsStartingResources();
 		
 		assertEquals(new CompleteResources(7, 3, 10, 0, 8, 0), earnings);
+	}
+	
+	@Test
+	public void testIsFieldReachable() {
+		Player player = mock(Player.class);
+		//create a board that is needed (use mocks to get it)
+		Game game = mock(Game.class);
+		Board board = GameCreationUtil.getBoardWithFields(10, 10);
+		when(game.getBoard()).thenReturn(board);
+		when(player.getGame()).thenReturn(game);
+		ResourceManager resourceManager = mock(ResourceManager.class);
+		when(resourceManager.getFTL()).thenReturn(2);//FTL level 2
+		when(player.getResourceManager()).thenReturn(resourceManager);
+		
+		//add some planets and buildings to the board
+		Field field00 = new Field(new Position(0, 0), Planet.GENESIS, 0);
+		field00.build(new PlayerBuilding(Building.COLONY, player), 0);
+		board.getFields().put(new Position(0, 0), field00);
+		
+		BuildingManager manager = new BuildingManager(player);
+		
+		assertTrue(manager.isFieldReachable(field00));
+		assertTrue(manager.isFieldReachable(new Field(new Position(1, 0), null, 0)));
+		assertTrue(manager.isFieldReachable(new Field(new Position(2, 0), null, 0)));
+		assertTrue(manager.isFieldReachable(new Field(new Position(0, 1), null, 0)));
+		assertTrue(manager.isFieldReachable(new Field(new Position(1, 1), null, 0)));
+		assertTrue(manager.isFieldReachable(new Field(new Position(2, 1), null, 0)));
+		assertTrue(manager.isFieldReachable(new Field(new Position(0, 2), null, 0)));
+		
+		assertFalse(manager.isFieldReachable(new Field(new Position(1, 2), null, 0)));
+		assertFalse(manager.isFieldReachable(new Field(new Position(0, 3), null, 0)));
+		assertFalse(manager.isFieldReachable(new Field(new Position(3, 0), null, 0)));
+		assertFalse(manager.isFieldReachable(new Field(new Position(2, 2), null, 0)));
 	}
 }

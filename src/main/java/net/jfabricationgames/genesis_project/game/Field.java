@@ -57,6 +57,45 @@ public class Field {
 	}
 	
 	/**
+	 * Get the distance between the hexa-grid fields.
+	 * 
+	 * Algorithm from:<br>
+	 * https://www.redblobgames.com/grids/hexagons/#conversions-offset (select odd-q or even-q)<br>
+	 * https://www.redblobgames.com/grids/hexagons/#distances-cube
+	 */
+	public int distanceTo(Field field) {
+		//convert both to cube coordinates
+		int[] cubeThis = getAsCubeCoordinates();
+		int[] cubeField = field.getAsCubeCoordinates();
+		
+		//distance in cube coordinates
+		int distance = ((Math.abs(cubeThis[0] - cubeField[0]) + Math.abs(cubeThis[1] - cubeField[1]) + Math.abs(cubeThis[2] - cubeField[2])) / 2);
+		
+		return distance;
+	}
+	
+	/**
+	 * Get the position as cube coordinate.
+	 * 
+	 * Formula from:<br>
+	 * https://www.redblobgames.com/grids/hexagons/#conversions-offset (select odd-q or even-q)
+	 */
+	public int[] getAsCubeCoordinates() {
+		int x = position.getX();
+		int z;
+		if (position.getX() % 2 == 0) {
+			//even-q
+			z = position.getY() - (position.getX() + (position.getX() & 1)) / 2;
+		}
+		else {
+			//odd-q
+			z = position.getY() - (position.getX() - (position.getX() & 1)) / 2;
+		}
+		int y = -x - z;
+		return new int[] {x, y, z};
+	}
+	
+	/**
 	 * Set a building without checking for any building conditions.
 	 */
 	public void build(PlayerBuilding building, int position) {

@@ -11,7 +11,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import net.jfabricationgames.genesis_project.game.Game;
 
 public class GameFrameController implements Initializable {
@@ -44,6 +46,8 @@ public class GameFrameController implements Initializable {
 	private AnchorPane anchorCostOverviewPane;
 	@FXML
 	private AnchorPane anchorChatPane;
+	
+	private Stage stage;
 	
 	private BoardPaneController boardPaneController;
 	private ClassPaneController classPaneController;
@@ -90,6 +94,11 @@ public class GameFrameController implements Initializable {
 		insertPane("CostOverviewPane.fxml", anchorCostOverviewPane, costOverviewPaneController, null);
 		chatPaneController = new ChatPaneController();
 		insertPane("ChatPane.fxml", anchorChatPane, chatPaneController, null);
+	}
+	
+	private void addIcon() {
+		String iconPath = "net/jfabricationgames/genesis_project/images/basic/icon.png";
+		stage.getIcons().add(new Image(iconPath));
 	}
 	
 	private void insertPane(String fxmlFileName, AnchorPane parent, Initializable controller, String cssFileName) {
@@ -148,5 +157,15 @@ public class GameFrameController implements Initializable {
 	}
 	public ChatPaneController getChatPaneController() {
 		return chatPaneController;
+	}
+	
+	public Stage getStage() {
+		return stage;
+	}
+	public void setStage(Stage stage) {
+		this.stage = stage;
+		if (stage != null) {
+			addIcon();
+		}
 	}
 }
