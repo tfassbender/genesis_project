@@ -18,6 +18,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.VBox;
+import net.jfabricationgames.genesis_project.game.Player;
+import net.jfabricationgames.genesis_project.manager.IPointManager;
+import net.jfabricationgames.genesis_project.manager.IResourceManager;
 
 public class PlaningToolPaneController implements Initializable {
 	
@@ -63,6 +66,12 @@ public class PlaningToolPaneController implements Initializable {
 	
 	private List<PlaningToolStep> planingSteps;
 	
+	private Player player;
+	
+	public PlaningToolPaneController(Player player) {
+		this.player = player;
+	}
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		planingSteps = new ArrayList<PlaningToolStep>();
@@ -75,7 +84,17 @@ public class PlaningToolPaneController implements Initializable {
 	}
 	
 	private void resetStartResourcesToCurrentResources() {
-		//TODO reset to current resources (as soon as there are any resources)
+		IResourceManager resourceManager = player.getResourceManager();
+		IPointManager pointManager = player.getPointManager();
+		
+		planingToolStartResourcesPrimary.getValueFactory().setValue(Integer.valueOf(resourceManager.getResourcesPrimary()));
+		planingToolStartResourcesSecundary.getValueFactory().setValue(Integer.valueOf(resourceManager.getResourcesSecundary()));
+		planingToolStartResourcesTertiary.getValueFactory().setValue(Integer.valueOf(resourceManager.getResourcesTertiary()));
+		planingToolStartResourcesResearch.getValueFactory().setValue(Integer.valueOf(resourceManager.getResearchPoints()));
+		planingToolStartResourcesScientists.getValueFactory().setValue(Integer.valueOf(resourceManager.getScientists()));
+		planingToolStartResourcesFTL.getValueFactory().setValue(Integer.valueOf(resourceManager.getFTL()));
+		
+		planingToolStartResourcesPoints.getValueFactory().setValue(Integer.valueOf(pointManager.getPoints()));
 	}
 	
 	private void resetPlaningSteps() {

@@ -2,7 +2,15 @@ package net.jfabricationgames.genesis_project.game;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import net.jfabricationgames.genesis_project.game_frame.GameFrameController;
+import net.jfabricationgames.genesis_project.game_frame.PlayerInfo;
+import net.jfabricationgames.genesis_project.manager.AllianceManagerCompositum;
+import net.jfabricationgames.genesis_project.manager.GamePointManager;
 import net.jfabricationgames.genesis_project.manager.IAllianceManager;
 import net.jfabricationgames.genesis_project.manager.IBuildingManager;
 import net.jfabricationgames.genesis_project.manager.IResearchManager;
@@ -15,19 +23,31 @@ import net.jfabricationgames.genesis_project.move.IMove;
 public class Game {
 	
 	private List<Player> players;
+	private transient String localPlayerName;
+	
 	private Board board;
 	
 	private ITurnManager turnManager;
 	private IResearchManager researchManager;
+	private IAllianceManager allianceManager;
+	private GamePointManager pointManager;
 	
-	public Game(List<Player> players) {
+	private ObservableList<PlayerInfo> playerInfoList;
+	
+	private GameFrameController gameFrameController;
+	
+	public Game(List<Player> players, String localPlayerName) {
 		this.players = players;
+		this.localPlayerName = localPlayerName;
 		this.board = new Board();
 		this.turnManager = new TurnManager(this);
 		this.researchManager = new ResearchManagerCompositum(this);
+		this.allianceManager = new AllianceManagerCompositum(this);
+		this.pointManager = new GamePointManager(this);
 		for (Player player : players) {
 			player.setGame(this);
 		}
+		playerInfoList = FXCollections.observableArrayList(players.stream().map(p -> new PlayerInfo(p)).collect(Collectors.toList()));
 	}
 	
 	public void collectGameStartResources() {
@@ -51,9 +71,9 @@ public class Game {
 		ResearchArea area;
 		IResourceManager resourceManager;
 		
-		if (!turnManager.getPlayerOrder().isPlayersTurn(move.getPlayer())) {
-			throw new IllegalArgumentException("It's not the players turn (move from player: " + move.getPlayer() + "; current player: "
-					+ turnManager.getPlayerOrder().getActivePlayer() + ")");
+		if (!turnManager.isPlayersTurn(move.getPlayer())) {
+			throw new IllegalArgumentException(
+					"It's not the players turn (move from player: " + move.getPlayer() + "; current player: " + turnManager.getActivePlayer() + ")");
 		}
 		
 		switch (move.getType()) {
@@ -62,16 +82,17 @@ public class Game {
 				Field field = move.getField();
 				IBuildingManager buildingManager = move.getPlayer().getBuildingManager();
 				buildingManager.build(building, field);
-				turnManager.getPlayerOrder().nextMove();
+				turnManager.nextMove();
 				break;
 			case ALLIANCE:
 				List<Field> planets = move.getAlliancePlanets();
 				List<Field> satellites = move.getSatelliteFields();
 				AllianceBonus bonus = move.getAllianceBonus();
+				int bonusIndex = move.getAllianceBonusIndex();
 				
 				IAllianceManager allianceManager = move.getPlayer().getAllianceManager();
-				allianceManager.addAlliance(planets, satellites, bonus);
-				turnManager.getPlayerOrder().nextMove();
+				allianceManager.addAlliance(planets, satellites, bonus, bonusIndex);
+				turnManager.nextMove();
 				break;
 			case RESEARCH:
 				area = move.getResearchArea();
@@ -100,7 +121,7 @@ public class Game {
 					//other ResearchAreas are executed locally on the player's IResearchManager
 					move.getPlayer().getResearchManager().increaseState(area);
 				}
-				turnManager.getPlayerOrder().nextMove();
+				turnManager.nextMove();
 				break;
 			case RESEARCH_RESOURCES:
 				ResearchResources resources = move.getResearchResources();
@@ -116,7 +137,7 @@ public class Game {
 			case PASS:
 				player = move.getPlayer();
 				turnManager.playerPassed(player);
-				turnManager.getPlayerOrder().nextMove();
+				turnManager.nextMove();
 				break;
 			default:
 				throw new IllegalArgumentException("The MoveType " + move.getType() + " is unknown.");
@@ -124,7 +145,11 @@ public class Game {
 		
 		//receive turn points for a move
 		turnManager.receivePointsForMove(move);
+		
+		updateBoard();
+		updatePlayerInfo();
 	}
+	
 	/**
 	 * Check whether a given move would be valid and could be executed.
 	 */
@@ -134,7 +159,7 @@ public class Game {
 		boolean moveExecutable = true;
 		
 		//it has to be the players turn for every move
-		moveExecutable &= turnManager.getPlayerOrder().isPlayersTurn(move.getPlayer());
+		moveExecutable &= turnManager.isPlayersTurn(move.getPlayer());
 		
 		ResearchArea area;
 		Player player;
@@ -157,8 +182,9 @@ public class Game {
 				List<Field> planets = move.getAlliancePlanets();
 				List<Field> satellites = move.getSatelliteFields();
 				AllianceBonus bonus = move.getAllianceBonus();
+				int bonusIndex = move.getAllianceBonusIndex();
 				
-				moveExecutable &= allianceManager.isAllianceValid(planets, satellites, bonus);
+				moveExecutable &= allianceManager.isAllianceValid(planets, satellites, bonus, bonusIndex);
 				break;
 			case RESEARCH:
 				//the research step has to be accessible and the player has to have the needed research points
@@ -214,8 +240,32 @@ public class Game {
 		return moveExecutable;
 	}
 	
+	private void updatePlayerInfo() {
+		List<PlayerInfo> newPlayerInfo = players.stream().map(p -> new PlayerInfo(p)).collect(Collectors.toList());
+		playerInfoList.clear();
+		playerInfoList.addAll(newPlayerInfo);
+	}
+	
+	/**
+	 * Update the displayed board to show new buildings, alliances, ...
+	 */
+	private void updateBoard() {
+		if (gameFrameController != null) {
+			//only if the controller is already set (will not be set in tests)
+			gameFrameController.getBoardPaneController().buildField();			
+		}
+	}
+	
 	public List<Player> getPlayers() {
 		return players;
+	}
+	public Player getLocalPlayer() {
+		Optional<Player> local = players.stream().filter(p -> p.getUser().getUsername().equals(localPlayerName)).findFirst();
+		return local.orElseThrow(() -> new IllegalStateException("No local player found."));
+	}
+	
+	public ObservableList<PlayerInfo> getPlayerInfoList() {
+		return playerInfoList;
 	}
 	
 	public Board getBoard() {
@@ -227,5 +277,18 @@ public class Game {
 	}
 	public IResearchManager getResearchManager() {
 		return researchManager;
+	}
+	public IAllianceManager getAllianceManager() {
+		return allianceManager;
+	}
+	public GamePointManager getPointManager() {
+		return pointManager;
+	}
+	
+	public GameFrameController getGameFrameController() {
+		return gameFrameController;
+	}
+	public void setGameFrameController(GameFrameController gameFrameController) {
+		this.gameFrameController = gameFrameController;
 	}
 }

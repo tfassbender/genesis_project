@@ -1,5 +1,7 @@
 package net.jfabricationgames.genesis_project.game;
 
+import net.jfabricationgames.genesis_project.game_frame.GuiUtils;
+
 public enum Resource {
 	
 	CARBON,
@@ -8,4 +10,15 @@ public enum Resource {
 	RESEARCH_POINTS,
 	SCIENTISTS,
 	FTL;
+	
+	public String getName() {
+		switch (this) {
+			case FTL:
+				return "FTL";
+			case RESEARCH_POINTS:
+				return "Research Points";
+			default:
+				return GuiUtils.toLeadingCapitalLetter(name());
+		}
+	}
 }

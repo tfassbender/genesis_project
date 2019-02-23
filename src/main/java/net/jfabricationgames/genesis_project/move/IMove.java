@@ -26,5 +26,6 @@ public interface IMove {
 	public List<Field> getAlliancePlanets();
 	public List<Field> getSatelliteFields();
 	public AllianceBonus getAllianceBonus();
+	public int getAllianceBonusIndex();
 	public boolean isPassing();
 }

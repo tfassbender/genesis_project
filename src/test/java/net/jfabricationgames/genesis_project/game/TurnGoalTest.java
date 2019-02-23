@@ -20,7 +20,7 @@ class TurnGoalTest {
 		for (int x = 0; x < 6; x++) {
 			for (int y = 0; y < 6; y++) {
 				Position pos = new Position(x, y);
-				Field field = new Field(pos, null);
+				Field field = new Field(pos, null, 0);
 				board.getFields().put(pos, field);
 			}
 		}
@@ -40,7 +40,7 @@ class TurnGoalTest {
 	public void testAllianceTurnGoal() {
 		Player player = mock(Player.class);
 		Game game = getInitializedGame(player);
-		IMove move = MoveCreaterUtil.getAllianceMove(game, player, new Field[0], new Field[0], null);
+		IMove move = MoveCreaterUtil.getAllianceMove(game, player, new Field[0], new Field[0], null, 0);
 		
 		assertEquals(5, TurnGoal.ALLIANCE.getPointsForMove(move));
 	}

@@ -8,8 +8,6 @@ import java.util.Random;
 
 import com.google.common.annotations.VisibleForTesting;
 
-import net.jfabricationgames.genesis_project.game.Player;
-
 /**
  * The order in which the players execute their moves (for the current and the next turn).
  */
@@ -120,7 +118,7 @@ public class PlayerOrder<T> {
 		return user;
 	}
 	
-	public boolean isPlayersTurn(Player player) {
+	public boolean isPlayersTurn(T player) {
 		return player.equals(getActivePlayer());
 	}
 	
@@ -165,7 +163,7 @@ public class PlayerOrder<T> {
 	/**
 	 * Start the next turn and set the active player to the first player of this turn.
 	 */
-	protected void nextTurn() {
+	public void nextTurn() {
 		order = nextOrder;
 		nextOrder = new HashMap<Integer, T>();
 		move = 0;

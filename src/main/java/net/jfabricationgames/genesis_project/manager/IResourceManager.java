@@ -1,6 +1,8 @@
 package net.jfabricationgames.genesis_project.manager;
 
+import javafx.beans.property.IntegerProperty;
 import net.jfabricationgames.genesis_project.game.BuildingResources;
+import net.jfabricationgames.genesis_project.game.CompleteResources;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
 import net.jfabricationgames.genesis_project.game.Resource;
 
@@ -45,6 +47,7 @@ public interface IResourceManager {
 	public boolean isResourceAvailable(Resource resource, int amount);
 	public boolean isResourcesAvailable(BuildingResources resources);
 	public boolean isResourcesAvailable(ResearchResources resources);
+	public boolean isResourcesAvailable(CompleteResources resources);
 	
 	public int getResources(Resource resource);
 	public void setResources(Resource resource, int amount);
@@ -57,6 +60,13 @@ public interface IResourceManager {
 	public void addResources(ResearchResources resources);
 	public void reduceResources(ResearchResources resources);
 	
+	public void addResources(CompleteResources resources);
+	public void reduceResources(CompleteResources resources);
+	
+	public BuildingResources getBuildingResources();
+	public ResearchResources getResearchResources();
+	public CompleteResources getCompleteResources();
+	
 	/**
 	 * Collect all resources a player gets at the start of the game.
 	 */
@@ -65,4 +75,11 @@ public interface IResourceManager {
 	 * Collect all resources a player gets at the start of the turn.
 	 */
 	public void collectTurnStartResources();
+	
+	public IntegerProperty getResourcesCProperty();
+	public IntegerProperty getResourcesSiProperty();
+	public IntegerProperty getResourcesFeProperty();
+	public IntegerProperty getResearchPointsProperty();
+	public IntegerProperty getScientistsProperty();
+	public IntegerProperty getFTLProperty();
 }

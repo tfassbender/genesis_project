@@ -24,6 +24,8 @@
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="50.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="60.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="200.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="50.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="250.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="20.0" />
                </columnConstraints>
@@ -110,9 +112,9 @@
                         <String fx:value="player_name" />
                      </styleClass>
                   </Label>
-                  <TableView fx:id="tableGameOverview" styleClass="game_overview" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.rowIndex="6">
+                  <TableView fx:id="tableGameOverview" styleClass="game_overview" GridPane.columnIndex="1" GridPane.columnSpan="8" GridPane.rowIndex="6">
                      <columns>
-                        <TableColumn fx:id="tableColumnGameOverviewPlayerName" prefWidth="150.0" styleClass="game_overview" text="Spieler" />
+                        <TableColumn fx:id="tableColumnGameOverviewPlayerName" prefWidth="75.0" styleClass="game_overview" text="Spieler" />
                         <TableColumn fx:id="tableColumnGameOverviewPoints" prefWidth="75.0" styleClass="game_overview" text="Punkte" />
                         <TableColumn fx:id="tableColumnGameOverviewPlanets" prefWidth="75.0" styleClass="game_overview" text="Planeten" />
                         <TableColumn fx:id="tableColumnGameOverviewAlliances" prefWidth="75.0" styleClass="game_overview" text="Allianzen" />
@@ -133,6 +135,12 @@
                         <TableColumn fx:id="tableColumnGameOverviewSpaceStations" prefWidth="75.0" styleClass="game_overview" text="Raumstationen" />
                      </columns>
                   </TableView>
+                  <Label text="Reihenfolge (nächste Runde)" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+                     <styleClass>
+                        <String fx:value="game_overview" />
+                        <String fx:value="header" />
+                     </styleClass></Label>
+                  <ListView fx:id="listGameOverviewNextTurnPlayerOrder" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="7" GridPane.rowIndex="2" GridPane.rowSpan="2" />
                </children>
             </GridPane>
          </content>

@@ -1,7 +1,10 @@
 package net.jfabricationgames.genesis_project.manager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -23,11 +26,21 @@ public class AllianceManager implements IAllianceManager {
 	
 	private List<Alliance> alliances;
 	
+	private Map<AllianceBonus, boolean[]> bonusesTaken;
+	
 	private Player player;
 	
 	public AllianceManager(Player player) {
 		this.player = player;
 		alliances = new ArrayList<Alliance>(3);
+		initializeBonusesTaken();
+	}
+	
+	private void initializeBonusesTaken() {
+		bonusesTaken = new HashMap<AllianceBonus, boolean[]>();
+		for (AllianceBonus bonus : AllianceBonus.values()) {
+			bonusesTaken.put(bonus, new boolean[Constants.ALLIANCE_BONUS_COPIES]);//initialize with false
+		}
 	}
 	
 	@Override
@@ -41,24 +54,21 @@ public class AllianceManager implements IAllianceManager {
 	}
 	
 	@Override
-	public void addAlliance(Alliance alliance) {
-		alliances.add(alliance);
-	}
-	@Override
-	public void addAlliance(List<Field> planets, List<Field> satelliteFields, AllianceBonus bonus) {
+	public void addAlliance(List<Field> planets, List<Field> satelliteFields, AllianceBonus bonus, int bonusIndex) {
 		//build the satellites
-		IBuildingManager buildingManager = player.getBuildingManager();
+		IBuildingManager buildingManager = getPlayer().getBuildingManager();
 		for (Field satelliteField : satelliteFields) {
 			buildingManager.build(Building.SATELLITE, satelliteField);
 		}
 		
 		Alliance alliance = new Alliance(planets, satelliteFields, bonus);
+		setAllianceBonusTaken(bonus, bonusIndex, true);
 		alliances.add(alliance);
-		player.getPointManager().addPoints(bonus.getPoints());
+		getPlayer().getPointManager().addPoints(bonus.getPoints());
 	}
 	
 	@Override
-	public boolean isAllianceValid(List<Field> planets, List<Field> satelliteFields, AllianceBonus bonus) {
+	public boolean isAllianceValid(List<Field> planets, List<Field> satelliteFields, AllianceBonus bonus, int bonusIndex) {
 		int numPlanets = planets.size();//planets included in the alliance
 		int numOpponentPlanets = 0;//planets with at least one opponent building
 		int numPlayerBuildings = 0;//buildings of the player that creates the alliance
@@ -68,6 +78,7 @@ public class AllianceManager implements IAllianceManager {
 		boolean satelliteFieldsValid = true;//the satellite fields connect the planets and can be built on the given fields
 		boolean centerPlanetIncluded = false;//the center planet can not be used for an alliance
 		boolean satelliteResourcesAvailable = false;//the player has to have enough resources to build the satellites
+		boolean bonusAvialable = false;//the chosen alliance bonus has to be available
 		
 		for (Field field : planets) {
 			boolean planetValid = true;
@@ -98,6 +109,7 @@ public class AllianceManager implements IAllianceManager {
 		
 		satelliteFieldsValid = isSatelliteConnectionValid(planets, satelliteFields);
 		satelliteResourcesAvailable = isSatelliteResourcesAvailable(satelliteFields.size());
+		bonusAvialable = !isAllianceBonusTaken(bonus, bonusIndex);
 		
 		boolean allianceValid = true;
 		
@@ -111,8 +123,53 @@ public class AllianceManager implements IAllianceManager {
 		allianceValid &= !centerPlanetIncluded;
 		allianceValid &= satelliteResourcesAvailable;
 		allianceValid &= bonus != null;
+		allianceValid &= bonusAvialable;
 		
 		return allianceValid;
+	}
+	
+	@Override
+	public boolean isAllianceBonusTaken(AllianceBonus bonus, int bonusIndex) {
+		Objects.requireNonNull(bonus, "The bonus mussn't be null.");
+		if (bonusIndex < 0 || bonusIndex > Constants.ALLIANCE_BONUS_COPIES - 1) {
+			throw new IllegalArgumentException(
+					"The bonus index must be between 0 and " + (Constants.ALLIANCE_BONUS_COPIES - 1) + " (inclusive); not " + bonusIndex);
+		}
+		//bonuses taken are managed in the global alliance manager (composite implementation)
+		if (getPlayer() == null) {
+			return bonusesTaken.get(bonus)[bonusIndex];
+		}
+		else {
+			return getPlayer().getGame().getAllianceManager().isAllianceBonusTaken(bonus, bonusIndex);
+		}
+	}
+	@Override
+	public void setAllianceBonusTaken(AllianceBonus bonus, int bonusIndex, boolean taken) {
+		Objects.requireNonNull(bonus, "The bonus mussn't be null.");
+		if (bonusIndex < 0 || bonusIndex > Constants.ALLIANCE_BONUS_COPIES - 1) {
+			throw new IllegalArgumentException(
+					"The bonus index must be between 0 and " + (Constants.ALLIANCE_BONUS_COPIES - 1) + " (inclusive); not " + bonusIndex);
+		}
+		//bonuses taken are managed in the global alliance manager (composite implementation)
+		if (getPlayer() == null) {
+			bonusesTaken.get(bonus)[bonusIndex] = taken;			
+		}
+		else {
+			getPlayer().getGame().getAllianceManager().setAllianceBonusTaken(bonus, bonusIndex, taken);
+		}
+	}
+	
+	@Override
+	public int getDefenseBuildingAdditionalRange() {
+		int additionalRange = 0;
+		List<AllianceBonus> bonuses = getAllianceBonuses();
+		//search all bonuses for additional range
+		for (AllianceBonus bonus : bonuses) {
+			if (bonus == AllianceBonus.MILITARY_RANGE) {
+				additionalRange += 1;
+			}
+		}
+		return additionalRange;
 	}
 	
 	@VisibleForTesting
@@ -120,7 +177,7 @@ public class AllianceManager implements IAllianceManager {
 		IBuildingManager manager = getPlayer().getBuildingManager();
 		
 		//use a dummy field here because the implementation only needs to know what type of planet is on the field
-		Field field = new Field(new Position(0, 0), null);
+		Field field = new Field(new Position(0, 0), null, 0);
 		BuildingResources satelliteResources = manager.getResourcesNeededForBuilding(Building.SATELLITE, field);
 		
 		BuildingResources allSatelliteResources = new BuildingResources();

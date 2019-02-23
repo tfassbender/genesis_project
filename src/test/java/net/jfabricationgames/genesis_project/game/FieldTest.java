@@ -1,15 +1,22 @@
 package net.jfabricationgames.genesis_project.game;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+
+import net.jfabricationgames.genesis_project.game.Board.Position;
+import net.jfabricationgames.genesis_project.manager.IAllianceManager;
+import net.jfabricationgames.genesis_project.testUtils.GameCreationUtil;
 
 class FieldTest {
 	
@@ -33,7 +40,7 @@ class FieldTest {
 	public void testBuild() {
 		initBuildingNumbers();
 		Player player = mock(Player.class);
-		Field field = new Field(new Board.Position(0, 0), Planet.GENESIS);
+		Field field = new Field(new Board.Position(0, 0), Planet.GENESIS, 0);
 		
 		field.build(new PlayerBuilding(Building.CITY, player), 0);
 		field.build(new PlayerBuilding(Building.COLONY, player), 0);//overrides the city
@@ -48,7 +55,7 @@ class FieldTest {
 	public void testBuild_spaceStation_replacesDrone() {
 		initBuildingNumbers();
 		Player player = mock(Player.class);
-		Field field = new Field(new Board.Position(0, 0), null);
+		Field field = new Field(new Board.Position(0, 0), null, 0);
 		
 		field.build(new PlayerBuilding(Building.DRONE, player), 0);
 		
@@ -62,5 +69,129 @@ class FieldTest {
 		
 		assertTrue(droneBeforeSpaceStation.isPresent());
 		assertFalse(droneAfterSpaceStation.isPresent());
+	}
+	
+	@Test
+	public void testNumBuildingSpaces_centerPlanet() {
+		initBuildingNumbers();
+		Field field = new Field(new Board.Position(0, 0), null, 0);
+		Field centerField = new Field(new Board.Position(0, 0), Planet.CENTER, 5);
+		
+		assertEquals(3, field.getBuildings().length);
+		assertEquals(5, centerField.getBuildings().length);
+	}
+	
+	@Test
+	public void testDistance() {
+		Field origin = new Field(new Board.Position(0, 0), null, 0);
+		Field originOdd = new Field(new Board.Position(1, 0), null, 0);
+		Field field10 = new Field(new Board.Position(1, 0), null, 0);
+		Field field31 = new Field(new Board.Position(3, 1), null, 0);
+		Field field11 = new Field(new Board.Position(1, 1), null, 0);
+		Field field22 = new Field(new Board.Position(2, 2), null, 0);
+		Field field32 = new Field(new Board.Position(3, 2), null, 0);
+		Field field03 = new Field(new Board.Position(0, 3), null, 0);
+		
+		//distance to the field itself
+		assertEquals(0, origin.distanceTo(origin));
+		assertEquals(0, originOdd.distanceTo(originOdd));
+		
+		//distance from an even start
+		assertEquals(1, origin.distanceTo(field10));
+		assertEquals(3, origin.distanceTo(field31));
+		assertEquals(2, origin.distanceTo(field11));
+		assertEquals(3, origin.distanceTo(field22));
+		assertEquals(4, origin.distanceTo(field32));
+		assertEquals(3, origin.distanceTo(field03));
+		
+		//distances from an odd start
+		assertEquals(0, originOdd.distanceTo(field10));
+		assertEquals(2, originOdd.distanceTo(field31));
+		assertEquals(1, originOdd.distanceTo(field11));
+		assertEquals(2, originOdd.distanceTo(field22));
+		assertEquals(3, originOdd.distanceTo(field32));
+		assertEquals(3, originOdd.distanceTo(field03));
+		
+		//some commutative tests
+		assertEquals(field11.distanceTo(origin), origin.distanceTo(field11));
+		assertEquals(field22.distanceTo(origin), origin.distanceTo(field22));
+		assertEquals(field32.distanceTo(origin), origin.distanceTo(field32));
+		assertEquals(field03.distanceTo(origin), origin.distanceTo(field03));
+		assertEquals(field11.distanceTo(originOdd), originOdd.distanceTo(field11));
+		assertEquals(field22.distanceTo(originOdd), originOdd.distanceTo(field22));
+		assertEquals(field32.distanceTo(originOdd), originOdd.distanceTo(field32));
+		assertEquals(field03.distanceTo(originOdd), originOdd.distanceTo(field03));
+	}
+	
+	@Test
+	public void testHasDefenseBuilding() {
+		Field fieldDrone = new Field(new Board.Position(0, 0), Planet.GENESIS, 0);
+		Field fieldSpaceStation = new Field(new Board.Position(1, 0), Planet.GENESIS, 0);
+		Field fieldColony = new Field(new Board.Position(2, 0), Planet.GENESIS, 0);
+		Field fieldSatellites = new Field(new Board.Position(1, 0), Planet.GENESIS, 0);
+		Field fieldEmpty = new Field(new Board.Position(2, 0), Planet.GENESIS, 0);
+		Player player1 = mock(Player.class);
+		Player player2 = mock(Player.class);
+		fieldDrone.build(new PlayerBuilding(Building.DRONE, player1), 0);
+		fieldSpaceStation.build(new PlayerBuilding(Building.SPACE_STATION, player2), 0);
+		fieldColony.build(new PlayerBuilding(Building.COLONY, player1), 0);
+		fieldSatellites.build(new PlayerBuilding(Building.SATELLITE, player1), 0);
+		fieldSatellites.build(new PlayerBuilding(Building.SATELLITE, player2), 1);
+		
+		assertTrue(fieldDrone.hasDefenseBuilding());
+		assertTrue(fieldSpaceStation.hasDefenseBuilding());
+		assertFalse(fieldColony.hasDefenseBuilding());
+		assertFalse(fieldSatellites.hasDefenseBuilding());
+		assertFalse(fieldEmpty.hasDefenseBuilding());
+	}
+	
+	@Test
+	public void testGetDefense() {
+		//create an initialized game with planets, buildings, ... (drone on 7|0, space station on 6|0)
+		Game game = GameCreationUtil.createGame();
+		
+		//add some additional buildings (player1 buildings have default range of 2; player2 buildings have range of 0)
+		Player player1 = game.getLocalPlayer();
+		Board board = game.getBoard();
+		board.getFields().get(new Position(1, 1)).build(new PlayerBuilding(Building.DRONE, player1), 0);
+		board.getFields().get(new Position(3, 3)).build(new PlayerBuilding(Building.SPACE_STATION, player1), 0);
+		board.getFields().get(new Position(0, 3)).build(new PlayerBuilding(Building.SPACE_STATION, player1), 0);
+		
+		assertEquals(2, game.getBoard().getFields().get(new Position(0, 0)).calculateDefence(game));
+		assertEquals(12, game.getBoard().getFields().get(new Position(2, 3)).calculateDefence(game));
+		assertEquals(10, game.getBoard().getFields().get(new Position(2, 4)).calculateDefence(game));
+		assertEquals(5, game.getBoard().getFields().get(new Position(3, 3)).calculateDefence(game));
+	}
+	
+	@Test
+	public void testGetAlliances() {
+		Game game = GameCreationUtil.createGame();
+		
+		//add two alliances
+		Player player = game.getLocalPlayer();
+		IAllianceManager allianceManager = player.getAllianceManager();
+		Map<Position, Field> fields = game.getBoard().getFields();
+		Field planet1 = fields.get(new Position(0, 0));
+		Field planet2 = fields.get(new Position(1, 1));
+		Field planet3 = fields.get(new Position(0, 3));
+		Field spaceField1 = fields.get(new Position(1, 0));
+		Field spaceField2 = fields.get(new Position(0, 1));
+		Field spaceField3 = fields.get(new Position(0, 2));
+		allianceManager.addAlliance(Arrays.asList(planet1, planet2, planet3), Arrays.asList(spaceField2, spaceField3), AllianceBonus.POINTS, 0);
+		allianceManager.addAlliance(Arrays.asList(planet1, planet2), Arrays.asList(spaceField1), AllianceBonus.SCIENTISTS, 0);
+		
+		List<Alliance> alliancesPlanet1 = planet1.getAlliances(game);
+		List<Alliance> alliancesPlanet3 = planet3.getAlliances(game);
+		List<Alliance> alliancesSpaceField1 = spaceField1.getAlliances(game);
+		List<Alliance> alliancesSpaceField2 = spaceField2.getAlliances(game);
+		List<Alliance> alliancesPlanet4 = fields.get(new Position(2, 0)).getAlliances(game);
+		List<Alliance> alliancesSpaceField4 = fields.get(new Position(2, 2)).getAlliances(game);
+		
+		assertEquals(2, alliancesPlanet1.size());
+		assertEquals(1, alliancesPlanet3.size());
+		assertEquals(1, alliancesSpaceField1.size());
+		assertEquals(1, alliancesSpaceField2.size());
+		assertEquals(0, alliancesPlanet4.size());
+		assertEquals(0, alliancesSpaceField4.size());
 	}
 }

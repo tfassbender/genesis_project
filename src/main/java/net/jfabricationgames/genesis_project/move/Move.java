@@ -25,11 +25,12 @@ public class Move implements IMove {
 	private List<Field> alliancePlanets;
 	private List<Field> satelliteFields;
 	private AllianceBonus allianceBonus;
+	private int allianceBonusIndex;
 	private boolean pass;
 	
 	protected Move(Game game, MoveType type, Player player, Field field, Building building, ResearchArea researchArea,
 			ResearchResources researchResources, Technology technology, List<Field> alliancePlanets, List<Field> satelliteFields,
-			AllianceBonus allianceBonus, boolean pass) {
+			AllianceBonus allianceBonus, int allianceBonusIndex, boolean pass) {
 		this.game = game;
 		this.type = type;
 		this.player = player;
@@ -41,6 +42,7 @@ public class Move implements IMove {
 		this.alliancePlanets = alliancePlanets;
 		this.satelliteFields = satelliteFields;
 		this.allianceBonus = allianceBonus;
+		this.allianceBonusIndex = allianceBonusIndex;
 		this.pass = pass;
 	}
 	
@@ -102,6 +104,11 @@ public class Move implements IMove {
 	@Override
 	public AllianceBonus getAllianceBonus() {
 		return allianceBonus;
+	}
+	
+	@Override
+	public int getAllianceBonusIndex() {
+		return allianceBonusIndex;
 	}
 	
 	@Override

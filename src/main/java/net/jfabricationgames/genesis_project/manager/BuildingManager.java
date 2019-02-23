@@ -8,12 +8,20 @@ import java.util.stream.Collectors;
 
 import com.google.common.annotations.VisibleForTesting;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import net.jfabricationgames.genesis_project.game.Board;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.BuildingResources;
+import net.jfabricationgames.genesis_project.game.CompleteResources;
 import net.jfabricationgames.genesis_project.game.Constants;
+import net.jfabricationgames.genesis_project.game.DependentResources;
 import net.jfabricationgames.genesis_project.game.Field;
+import net.jfabricationgames.genesis_project.game.Game;
+import net.jfabricationgames.genesis_project.game.Planet;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.PlayerBuilding;
+import net.jfabricationgames.genesis_project.game.Resource;
 
 public class BuildingManager implements IBuildingManager {
 	
@@ -21,12 +29,17 @@ public class BuildingManager implements IBuildingManager {
 	
 	//the buildings left on the class board
 	@VisibleForTesting
-	protected Map<Building, Integer> numBuildingsLeft;
+	protected Map<Building, IntegerProperty> numBuildingsLeft;
 	
 	public BuildingManager(Player player) {
 		this.player = player;
 		if (Constants.BUILDING_NUMBERS != null) {
-			numBuildingsLeft = new HashMap<Building, Integer>(Constants.BUILDING_NUMBERS);
+			numBuildingsLeft = new HashMap<Building, IntegerProperty>();
+			for (Map.Entry<Building, Integer> buildings : Constants.BUILDING_NUMBERS.entrySet()) {
+				IntegerProperty property = new SimpleIntegerProperty(this, "buildingsLeft_" + buildings.getKey().name());
+				property.set(buildings.getValue().intValue());
+				numBuildingsLeft.put(buildings.getKey(), property);
+			}
 		}
 		else {
 			throw new IllegalStateException(
@@ -36,11 +49,12 @@ public class BuildingManager implements IBuildingManager {
 	
 	@Override
 	public int getNumBuildingsLeft(Building building) {
-		return numBuildingsLeft.get(building).intValue();
+		return numBuildingsLeft.get(building).get();
 	}
 	@VisibleForTesting
 	public void setNumBuildingsLeft(Building building, int left) {
-		numBuildingsLeft.put(building, left);
+		IntegerProperty buildingsLeft = numBuildingsLeft.get(building);
+		buildingsLeft.set(left);
 	}
 	
 	@Override
@@ -157,14 +171,133 @@ public class BuildingManager implements IBuildingManager {
 		
 		return resourcesNeeded;
 	}
-
+	
+	/**
+	 * Check whether the field can be reached from the nearest planet of the player.
+	 */
+	@Override
+	public boolean isFieldReachable(Field field) {
+		Game game = player.getGame();
+		Board board = game.getBoard();
+		int distanceToField = board.getDistanceToNextPlayerField(field, player);
+		int ftl = player.getResourceManager().getFTL();
+		return ftl >= distanceToField;
+	}
+	
+	@Override
+	public CompleteResources getNextTurnsStartingResources() {
+		CompleteResources earnings = new CompleteResources();
+		
+		Board board = player.getGame().getBoard();
+		List<Field> playersPlanets = board.getPlayersPlanets(player);
+		
+		//iterate over all players buildings and count the resources
+		for (Field field : playersPlanets) {
+			Planet planet = field.getPlanet();
+			
+			//select the resources for primary, secondary and tertiary
+			Resource primary;
+			Resource secondary;
+			Resource tertiary;
+			if (planet.getPrimaryResource() != null) {
+				//on normal planets the planets resources are used
+				primary = planet.getPrimaryResource();
+				secondary = planet.getSecondaryResource();
+				tertiary = planet.getTertiaryResource();
+			}
+			else {
+				//on genesis or center planets the players resources are used
+				primary = player.getPlayerClass().getPrimaryResource();
+				secondary = player.getPlayerClass().getSecundaryResource();
+				tertiary = player.getPlayerClass().getTertiaryResource();
+			}
+			
+			for (PlayerBuilding playerBuilding : field.getBuildings()) {
+				if (playerBuilding != null && playerBuilding.getPlayer().equals(player)) {
+					Building building = playerBuilding.getBuilding();
+					
+					//find the resources the building produces and add them to the total earnings
+					DependentResources resources = Constants.BUILDING_EARNINGS_DEPENDENT.get(building);
+					earnings.addResources(primary, resources.getResourcesPrimary());
+					earnings.addResources(secondary, resources.getResourcesSecondary());
+					earnings.addResources(tertiary, resources.getResourcesTertiary());
+					
+					earnings.addResearchPoints(Constants.BUILDING_EARNINGS_RESEARCH_POINTS.get(building));
+					earnings.addScientists(Constants.BUILDING_EARNINGS_SCIENTISTS.get(building));
+				}
+			}
+		}
+		
+		return earnings;
+	}
+	
 	@Override
 	public boolean canBuild(Building building, Field field) {
-		return findFirstPossibleBuildingPosition(building, field) != -1 && getNumBuildingsLeft(building) > 0 && isResourcesAvailable(building, field);
+		return findFirstPossibleBuildingPosition(building, field) != -1 && getNumBuildingsLeft(building) > 0 && isResourcesAvailable(building, field)
+				&& isFieldReachable(field);
+	}
+	
+	/**
+	 * Calculate the power of drones (depending on the the research state)
+	 */
+	@Override
+	public int getDroneDefense() {
+		int defense = 0;
+		
+		defense += Constants.BUILDING_EARNINGS_DEFENSE.get(Building.DRONE);
+		defense += player.getResearchManager().getDroneAdditionalDefense();
+		
+		return defense;
+	}
+	/**
+	 * Calculate the power of space stations (depending on the the research state)
+	 */
+	@Override
+	public int getSpaceStationDefense() {
+		int defense = 0;
+		
+		defense += Constants.BUILDING_EARNINGS_DEFENSE.get(Building.SPACE_STATION);
+		defense += player.getResearchManager().getSpaceStationAdditionalDefense();
+		
+		return defense;
+	}
+	/**
+	 * Calculate the range of drones (depending on the default FTL, alliance bonuses, technology bonuses and the research state)
+	 */
+	@Override
+	public int getDroneFtl() {
+		int range = 0;
+		
+		range += player.getResourceManager().getFTL();
+		range += player.getResearchManager().getDroneAdditionalRange();
+		range += player.getAllianceManager().getDefenseBuildingAdditionalRange();
+		range += player.getTechnologyManager().getDefenseBuildingAdditionalRange();
+		
+		return range;
+		
+	}
+	/**
+	 * Calculate the range of space stations (depending on the default FTL, alliance bonuses, technology bonuses and the research state)
+	 */
+	@Override
+	public int getSpaceStationFtl() {
+		int range = 0;
+		
+		range += player.getResourceManager().getFTL();
+		range += player.getResearchManager().getSpaceStationAdditionalRange();
+		range += player.getAllianceManager().getDefenseBuildingAdditionalRange();
+		range += player.getTechnologyManager().getDefenseBuildingAdditionalRange();
+		
+		return range;
 	}
 	
 	@VisibleForTesting
 	protected Player getPlayer() {
 		return player;
+	}
+	
+	@Override
+	public IntegerProperty getNumBuildingsLeftProperty(Building building) {
+		return numBuildingsLeft.get(building);
 	}
 }

@@ -58,7 +58,7 @@ class AllianceManagerTest {
 		for (int x = 0; x < 6; x++) {
 			for (int y = 0; y < 6; y++) {
 				Position pos = new Position(x, y);
-				Field field = new Field(pos, null);
+				Field field = new Field(pos, null, 0);
 				board.getFields().put(pos, field);
 			}
 		}
@@ -163,7 +163,7 @@ class AllianceManagerTest {
 		AllianceManager manager = mock(AllianceManager.class);
 		//satellite connections are tested separately
 		when(manager.isSatelliteConnectionValid(Matchers.<List<Field>> any(), Matchers.<List<Field>> any())).thenReturn(true);
-		when(manager.isAllianceValid(Matchers.<List<Field>> any(), Matchers.<List<Field>> any(), any(AllianceBonus.class))).thenCallRealMethod();
+		when(manager.isAllianceValid(Matchers.<List<Field>> any(), Matchers.<List<Field>> any(), any(AllianceBonus.class), anyInt())).thenCallRealMethod();
 		when(manager.isSatelliteResourcesAvailable(anyInt())).thenReturn(true);
 		Player player = mock(Player.class);
 		when(manager.getPlayer()).thenReturn(player);
@@ -177,17 +177,17 @@ class AllianceManagerTest {
 		List<Field> satellites = new ArrayList<Field>();//no satellites are included in this test
 		AllianceBonus bonus = AllianceBonus.MILITARY_RANGE;
 		
-		assertTrue(manager.isAllianceValid(alliance1, satellites, bonus));
-		assertTrue(manager.isAllianceValid(alliance2, satellites, bonus));
-		assertTrue(manager.isAllianceValid(alliance3, satellites, bonus));
-		assertTrue(manager.isAllianceValid(alliance4, satellites, bonus));
-		assertTrue(manager.isAllianceValid(alliance5, satellites, bonus));
+		assertTrue(manager.isAllianceValid(alliance1, satellites, bonus, 0));
+		assertTrue(manager.isAllianceValid(alliance2, satellites, bonus, 0));
+		assertTrue(manager.isAllianceValid(alliance3, satellites, bonus, 0));
+		assertTrue(manager.isAllianceValid(alliance4, satellites, bonus, 0));
+		assertTrue(manager.isAllianceValid(alliance5, satellites, bonus, 0));
 		
-		assertFalse(manager.isAllianceValid(alliance6, satellites, bonus));
-		assertFalse(manager.isAllianceValid(alliance7, satellites, bonus));
-		assertFalse(manager.isAllianceValid(alliance8, satellites, bonus));
-		assertFalse(manager.isAllianceValid(alliance9, satellites, bonus));
-		assertFalse(manager.isAllianceValid(alliance10, satellites, bonus));
+		assertFalse(manager.isAllianceValid(alliance6, satellites, bonus, 0));
+		assertFalse(manager.isAllianceValid(alliance7, satellites, bonus, 0));
+		assertFalse(manager.isAllianceValid(alliance8, satellites, bonus, 0));
+		assertFalse(manager.isAllianceValid(alliance9, satellites, bonus, 0));
+		assertFalse(manager.isAllianceValid(alliance10, satellites, bonus, 0));
 	}
 	
 	@Test
@@ -225,7 +225,7 @@ class AllianceManagerTest {
 		ConstantsInitializerUtil.initAllianceValues();
 		AllianceManager manager = mock(AllianceManager.class);
 		when(manager.isSatelliteConnectionValid(Matchers.<List<Field>> any(), Matchers.<List<Field>> any())).thenCallRealMethod();
-		when(manager.isAllianceValid(Matchers.<List<Field>> any(), Matchers.<List<Field>> any(), any(AllianceBonus.class))).thenCallRealMethod();
+		when(manager.isAllianceValid(Matchers.<List<Field>> any(), Matchers.<List<Field>> any(), any(AllianceBonus.class), anyInt())).thenCallRealMethod();
 		when(manager.isAllFieldsConnected(Matchers.<List<Field>> any())).thenCallRealMethod();
 		when(manager.isSatelliteResourcesAvailable(anyInt())).thenReturn(true);
 		Player player = mock(Player.class);
@@ -240,16 +240,16 @@ class AllianceManagerTest {
 		
 		AllianceBonus bonus = AllianceBonus.MILITARY_RANGE;
 		
-		assertTrue(manager.isAllianceValid(alliance1, satellites1, bonus));
-		assertTrue(manager.isAllianceValid(alliance2, satellites2, bonus));
-		assertFalse(manager.isAllianceValid(alliance3, satellites3, bonus));
-		assertFalse(manager.isAllianceValid(alliance4, satellites4, bonus));
-		assertTrue(manager.isAllianceValid(alliance5, satellites5, bonus));
-		assertFalse(manager.isAllianceValid(alliance6, satellites6, bonus));
-		assertFalse(manager.isAllianceValid(alliance7, satellites7, bonus));
-		assertFalse(manager.isAllianceValid(alliance8, satellites8, bonus));
-		assertFalse(manager.isAllianceValid(alliance9, satellites9, bonus));
-		assertFalse(manager.isAllianceValid(alliance10, satellites10, bonus));
+		assertTrue(manager.isAllianceValid(alliance1, satellites1, bonus, 0));
+		assertTrue(manager.isAllianceValid(alliance2, satellites2, bonus, 0));
+		assertFalse(manager.isAllianceValid(alliance3, satellites3, bonus, 0));
+		assertFalse(manager.isAllianceValid(alliance4, satellites4, bonus, 0));
+		assertTrue(manager.isAllianceValid(alliance5, satellites5, bonus, 0));
+		assertFalse(manager.isAllianceValid(alliance6, satellites6, bonus, 0));
+		assertFalse(manager.isAllianceValid(alliance7, satellites7, bonus, 0));
+		assertFalse(manager.isAllianceValid(alliance8, satellites8, bonus, 0));
+		assertFalse(manager.isAllianceValid(alliance9, satellites9, bonus, 0));
+		assertFalse(manager.isAllianceValid(alliance10, satellites10, bonus, 0));
 	}
 	
 	@Test
