@@ -33,4 +33,13 @@ public class TechnologyManager implements ITechnologyManager {
 	public void exploreTechnology(Technology technology) {
 		exploredTechnologies.put(technology, Boolean.valueOf(true));
 	}
+	
+	@Override
+	public int getDefenseBuildingAdditionalRange() {
+		int additionalRange = 0;
+		if (exploredTechnologies.get(Technology.MILITARY_FTL)) {
+			additionalRange = 1;
+		}
+		return additionalRange;
+	}
 }

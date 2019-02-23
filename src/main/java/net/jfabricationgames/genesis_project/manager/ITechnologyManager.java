@@ -6,4 +6,6 @@ public interface ITechnologyManager {
 	
 	public boolean isTechnologyExplored(Technology technology);
 	public void exploreTechnology(Technology technology);
+	
+	public int getDefenseBuildingAdditionalRange();
 }

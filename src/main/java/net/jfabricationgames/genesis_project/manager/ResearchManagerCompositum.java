@@ -92,10 +92,34 @@ public class ResearchManagerCompositum implements IResearchManager {
 	}
 	
 	@Override
+	public int getDroneAdditionalDefense() {
+		throw new UnsupportedOperationException("The compositum implementation has no user bound functions");
+	}
+	@Override
+	public int getSpaceStationAdditionalDefense() {
+		throw new UnsupportedOperationException("The compositum implementation has no user bound functions");
+	}
+	@Override
+	public int getDroneAdditionalRange() {
+		throw new UnsupportedOperationException("The compositum implementation has no user bound functions");
+	}
+	@Override
+	public int getSpaceStationAdditionalRange() {
+		throw new UnsupportedOperationException("The compositum implementation has no user bound functions");
+	}
+	/**
+	 * Get the additional defense by the WEAPON research area (for all fields)
+	 */
+	@Override
+	public int getAdditionalWeaponDefense() {
+		return globalManager.getAdditionalWeaponDefense();
+	}
+	
+	@Override
 	public IntegerProperty getMaxReachableStateProperty(ResearchArea area) {
 		return globalManager.getMaxReachableStateProperty(area);
 	}
-
+	
 	@Override
 	public ObjectProperty<ResearchResources> getResearchResourcesNeededLeftProperties(ResearchArea area) {
 		return globalManager.getResearchResourcesNeededLeftProperties(area);

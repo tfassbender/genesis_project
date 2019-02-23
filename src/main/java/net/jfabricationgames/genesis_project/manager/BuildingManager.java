@@ -236,7 +236,61 @@ public class BuildingManager implements IBuildingManager {
 		return findFirstPossibleBuildingPosition(building, field) != -1 && getNumBuildingsLeft(building) > 0 && isResourcesAvailable(building, field)
 				&& isFieldReachable(field);
 	}
-
+	
+	/**
+	 * Calculate the power of drones (depending on the the research state)
+	 */
+	@Override
+	public int getDroneDefense() {
+		int defense = 0;
+		
+		defense += Constants.BUILDING_EARNINGS_DEFENSE.get(Building.DRONE);
+		defense += player.getResearchManager().getDroneAdditionalDefense();
+		
+		return defense;
+	}
+	/**
+	 * Calculate the power of space stations (depending on the the research state)
+	 */
+	@Override
+	public int getSpaceStationDefense() {
+		int defense = 0;
+		
+		defense += Constants.BUILDING_EARNINGS_DEFENSE.get(Building.SPACE_STATION);
+		defense += player.getResearchManager().getSpaceStationAdditionalDefense();
+		
+		return defense;
+	}
+	/**
+	 * Calculate the range of drones (depending on the default FTL, alliance bonuses, technology bonuses and the research state)
+	 */
+	@Override
+	public int getDroneFtl() {
+		int range = 0;
+		
+		range += player.getResourceManager().getFTL();
+		range += player.getResearchManager().getDroneAdditionalRange();
+		range += player.getAllianceManager().getDefenseBuildingAdditionalRange();
+		range += player.getTechnologyManager().getDefenseBuildingAdditionalRange();
+		
+		return range;
+		
+	}
+	/**
+	 * Calculate the range of space stations (depending on the default FTL, alliance bonuses, technology bonuses and the research state)
+	 */
+	@Override
+	public int getSpaceStationFtl() {
+		int range = 0;
+		
+		range += player.getResourceManager().getFTL();
+		range += player.getResearchManager().getSpaceStationAdditionalRange();
+		range += player.getAllianceManager().getDefenseBuildingAdditionalRange();
+		range += player.getTechnologyManager().getDefenseBuildingAdditionalRange();
+		
+		return range;
+	}
+	
 	@VisibleForTesting
 	protected Player getPlayer() {
 		return player;

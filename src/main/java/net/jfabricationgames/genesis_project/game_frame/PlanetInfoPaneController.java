@@ -92,8 +92,8 @@ public class PlanetInfoPaneController implements Initializable {
 			else {
 				labelPlanetInfoPrimariResource.setText(noInfo);
 			}
-			labelPlanetInfoDefence.setText(Integer.toString(field.calculateDefence()));
-			labelPlanetInfoAlliances.setText(Integer.toString(field.getAlliances().size()));
+			labelPlanetInfoDefence.setText(Integer.toString(field.calculateDefence(game)));
+			labelPlanetInfoAlliances.setText(Integer.toString(field.getAlliances(game).size()));
 			PlayerBuilding[] buildings = field.getBuildings();
 			if (buildings.length > 3) {
 				//it's the center planet that can have up to 5 buildings (one for each player) set all building labels visible
@@ -136,7 +136,7 @@ public class PlanetInfoPaneController implements Initializable {
 			//space field
 			labelPlanetInfoType.setText(noInfo);
 			labelPlanetInfoPrimariResource.setText(noInfo);
-			labelPlanetInfoDefence.setText(Integer.toString(field.calculateDefence()));
+			labelPlanetInfoDefence.setText(Integer.toString(field.calculateDefence(game)));
 			labelPlanetInfoAlliances.setText(noInfo);
 			//search for a space building except a satellite (satellites are not listed here)
 			Optional<PlayerBuilding> spaceBuilding = field.getSpaceBuildings().stream()

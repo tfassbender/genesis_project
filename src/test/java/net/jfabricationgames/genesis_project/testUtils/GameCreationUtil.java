@@ -27,6 +27,7 @@ public class GameCreationUtil {
 		ConstantsInitializerUtil.initStartingResearchStates();
 		ConstantsInitializerUtil.initResearchResources();
 		ConstantsInitializerUtil.initBuildingCosts();
+		ConstantsInitializerUtil.initBuildingDefense();
 		ConstantsInitializerUtil.initCellPositions();
 		List<Player> players = new ArrayList<Player>(4);
 		PlayerClass[] classes = new PlayerClass[] {PlayerClass.ENCOR, PlayerClass.YGDRACK};

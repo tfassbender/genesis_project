@@ -159,6 +159,19 @@ public class AllianceManager implements IAllianceManager {
 		}
 	}
 	
+	@Override
+	public int getDefenseBuildingAdditionalRange() {
+		int additionalRange = 0;
+		List<AllianceBonus> bonuses = getAllianceBonuses();
+		//search all bonuses for additional range
+		for (AllianceBonus bonus : bonuses) {
+			if (bonus == AllianceBonus.MILITARY_RANGE) {
+				additionalRange += 1;
+			}
+		}
+		return additionalRange;
+	}
+	
 	@VisibleForTesting
 	protected boolean isSatelliteResourcesAvailable(int satellites) {
 		IBuildingManager manager = getPlayer().getBuildingManager();

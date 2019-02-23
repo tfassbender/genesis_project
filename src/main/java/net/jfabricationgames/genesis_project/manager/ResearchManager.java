@@ -275,6 +275,99 @@ public class ResearchManager implements IResearchManager {
 		}
 		return playersInGame;
 	}
+
+	@Override
+	public int getDroneAdditionalDefense() {
+		int additionalDefense = 0;
+		
+		int militaryState = getState(ResearchArea.MILITARY);
+		if (militaryState >= 3) {
+			additionalDefense = 1;
+		}
+		
+		return additionalDefense;
+	}
+	@Override
+	public int getSpaceStationAdditionalDefense() {
+		int additionalDefense = 0;
+		
+		int militaryState = getState(ResearchArea.MILITARY);
+		if (militaryState >= 5) {
+			additionalDefense = 2;
+		}
+		else if (militaryState >= 4) {
+			additionalDefense = 1;
+		}
+		return additionalDefense;
+	}
+	@Override
+	public int getDroneAdditionalRange() {
+		int additionalRange = 0;
+		
+		int militaryState = getState(ResearchArea.MILITARY);
+		if (militaryState >= 4) {
+			additionalRange += 2;
+		}
+		else if (militaryState >= 1) {
+			additionalRange += 1;
+		}
+		
+		int ftlState = getState(ResearchArea.FTL);
+		if (ftlState >= 5) {
+			additionalRange += 2;
+		}
+		else if (ftlState >= 3) {
+			additionalRange += 1;
+		}
+		
+		return additionalRange;
+	}
+	@Override
+	public int getSpaceStationAdditionalRange() {
+		int additionalRange = 0;
+		
+		int militaryState = getState(ResearchArea.MILITARY);
+		if (militaryState >= 5) {
+			additionalRange += 2;
+		}
+		else if (militaryState >= 4) {
+			additionalRange += 1;
+		}
+		
+		int ftlState = getState(ResearchArea.FTL);
+		if (ftlState >= 5) {
+			additionalRange += 2;
+		}
+		else if (ftlState >= 3) {
+			additionalRange += 1;
+		}
+		
+		return additionalRange;
+	}
+	
+	/**
+	 * Get the additional defense by the WEAPON research area (for all fields)
+	 */
+	@Override
+	public int getAdditionalWeaponDefense() {
+		int additionalDefense = 0;
+		
+		int weaponState = getState(ResearchArea.WEAPON);
+		if (weaponState >= 10) {
+			additionalDefense = 999;
+		}
+		else if (weaponState >= 8) {
+			additionalDefense = 15;
+		}
+		else if (weaponState >= 6) {
+			additionalDefense = 10;
+		}
+		else if (weaponState >= 4) {
+			additionalDefense = 5;
+		}
+		
+		return additionalDefense;
+	}
 	
 	@Override
 	public IntegerProperty getStateProperty(ResearchArea area) {

@@ -34,6 +34,15 @@ public interface IResearchManager {
 	public ResearchResources getResearchResourcesNeededLeft(ResearchArea area, int state);
 	public ResearchResources getResearchResourcesAdded(ResearchArea area, int state);
 	
+	public int getDroneAdditionalDefense();
+	public int getSpaceStationAdditionalDefense();
+	public int getDroneAdditionalRange();
+	public int getSpaceStationAdditionalRange();
+	/**
+	 * Get the additional defense by the WEAPON research area (for all fields).
+	 */
+	public int getAdditionalWeaponDefense();
+	
 	/**
 	 * Add resources to the next state of the given area that needs resources to be made accessible.
 	 * 

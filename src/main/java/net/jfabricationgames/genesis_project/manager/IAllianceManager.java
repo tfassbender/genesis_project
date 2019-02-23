@@ -40,4 +40,6 @@ public interface IAllianceManager {
 	 */
 	public boolean isAllianceBonusTaken(AllianceBonus bonus, int bonusIndex);
 	public void setAllianceBonusTaken(AllianceBonus bonus, int bonusIndex, boolean taken);
+	
+	public int getDefenseBuildingAdditionalRange();
 }

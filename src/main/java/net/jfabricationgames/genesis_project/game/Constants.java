@@ -136,6 +136,7 @@ public abstract class Constants {
 	public static Map<Building, Integer> BUILDING_EARNINGS_RESEARCH_POINTS;
 	public static Map<Building, Integer> BUILDING_EARNINGS_SCIENTISTS;
 	public static Map<Building, DependentResources> BUILDING_EARNINGS_DEPENDENT;
+	public static Map<Building, Integer> BUILDING_EARNINGS_DEFENSE;
 	
 	/**
 	 * The number of buildings per player at game start (on field and class board).
@@ -145,5 +146,5 @@ public abstract class Constants {
 	/**
 	 * The positions of the cells on the board.
 	 */
-	public static Map<Position, int[]> CELL_COORDINATES; 
+	public static Map<Position, int[]> CELL_COORDINATES;
 }

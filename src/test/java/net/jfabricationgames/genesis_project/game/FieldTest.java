@@ -1,15 +1,22 @@
 package net.jfabricationgames.genesis_project.game;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+
+import net.jfabricationgames.genesis_project.game.Board.Position;
+import net.jfabricationgames.genesis_project.manager.IAllianceManager;
+import net.jfabricationgames.genesis_project.testUtils.GameCreationUtil;
 
 class FieldTest {
 	
@@ -114,5 +121,77 @@ class FieldTest {
 		assertEquals(field22.distanceTo(originOdd), originOdd.distanceTo(field22));
 		assertEquals(field32.distanceTo(originOdd), originOdd.distanceTo(field32));
 		assertEquals(field03.distanceTo(originOdd), originOdd.distanceTo(field03));
+	}
+	
+	@Test
+	public void testHasDefenseBuilding() {
+		Field fieldDrone = new Field(new Board.Position(0, 0), Planet.GENESIS, 0);
+		Field fieldSpaceStation = new Field(new Board.Position(1, 0), Planet.GENESIS, 0);
+		Field fieldColony = new Field(new Board.Position(2, 0), Planet.GENESIS, 0);
+		Field fieldSatellites = new Field(new Board.Position(1, 0), Planet.GENESIS, 0);
+		Field fieldEmpty = new Field(new Board.Position(2, 0), Planet.GENESIS, 0);
+		Player player1 = mock(Player.class);
+		Player player2 = mock(Player.class);
+		fieldDrone.build(new PlayerBuilding(Building.DRONE, player1), 0);
+		fieldSpaceStation.build(new PlayerBuilding(Building.SPACE_STATION, player2), 0);
+		fieldColony.build(new PlayerBuilding(Building.COLONY, player1), 0);
+		fieldSatellites.build(new PlayerBuilding(Building.SATELLITE, player1), 0);
+		fieldSatellites.build(new PlayerBuilding(Building.SATELLITE, player2), 1);
+		
+		assertTrue(fieldDrone.hasDefenseBuilding());
+		assertTrue(fieldSpaceStation.hasDefenseBuilding());
+		assertFalse(fieldColony.hasDefenseBuilding());
+		assertFalse(fieldSatellites.hasDefenseBuilding());
+		assertFalse(fieldEmpty.hasDefenseBuilding());
+	}
+	
+	@Test
+	public void testGetDefense() {
+		//create an initialized game with planets, buildings, ... (drone on 7|0, space station on 6|0)
+		Game game = GameCreationUtil.createGame();
+		
+		//add some additional buildings (player1 buildings have default range of 2; player2 buildings have range of 0)
+		Player player1 = game.getLocalPlayer();
+		Board board = game.getBoard();
+		board.getFields().get(new Position(1, 1)).build(new PlayerBuilding(Building.DRONE, player1), 0);
+		board.getFields().get(new Position(3, 3)).build(new PlayerBuilding(Building.SPACE_STATION, player1), 0);
+		board.getFields().get(new Position(0, 3)).build(new PlayerBuilding(Building.SPACE_STATION, player1), 0);
+		
+		assertEquals(2, game.getBoard().getFields().get(new Position(0, 0)).calculateDefence(game));
+		assertEquals(12, game.getBoard().getFields().get(new Position(2, 3)).calculateDefence(game));
+		assertEquals(10, game.getBoard().getFields().get(new Position(2, 4)).calculateDefence(game));
+		assertEquals(5, game.getBoard().getFields().get(new Position(3, 3)).calculateDefence(game));
+	}
+	
+	@Test
+	public void testGetAlliances() {
+		Game game = GameCreationUtil.createGame();
+		
+		//add two alliances
+		Player player = game.getLocalPlayer();
+		IAllianceManager allianceManager = player.getAllianceManager();
+		Map<Position, Field> fields = game.getBoard().getFields();
+		Field planet1 = fields.get(new Position(0, 0));
+		Field planet2 = fields.get(new Position(1, 1));
+		Field planet3 = fields.get(new Position(0, 3));
+		Field spaceField1 = fields.get(new Position(1, 0));
+		Field spaceField2 = fields.get(new Position(0, 1));
+		Field spaceField3 = fields.get(new Position(0, 2));
+		allianceManager.addAlliance(Arrays.asList(planet1, planet2, planet3), Arrays.asList(spaceField2, spaceField3), AllianceBonus.POINTS, 0);
+		allianceManager.addAlliance(Arrays.asList(planet1, planet2), Arrays.asList(spaceField1), AllianceBonus.SCIENTISTS, 0);
+		
+		List<Alliance> alliancesPlanet1 = planet1.getAlliances(game);
+		List<Alliance> alliancesPlanet3 = planet3.getAlliances(game);
+		List<Alliance> alliancesSpaceField1 = spaceField1.getAlliances(game);
+		List<Alliance> alliancesSpaceField2 = spaceField2.getAlliances(game);
+		List<Alliance> alliancesPlanet4 = fields.get(new Position(2, 0)).getAlliances(game);
+		List<Alliance> alliancesSpaceField4 = fields.get(new Position(2, 2)).getAlliances(game);
+		
+		assertEquals(2, alliancesPlanet1.size());
+		assertEquals(1, alliancesPlanet3.size());
+		assertEquals(1, alliancesSpaceField1.size());
+		assertEquals(1, alliancesSpaceField2.size());
+		assertEquals(0, alliancesPlanet4.size());
+		assertEquals(0, alliancesSpaceField4.size());
 	}
 }

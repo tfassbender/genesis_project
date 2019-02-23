@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -135,13 +137,80 @@ public class Field {
 		this.planet = planet;
 	}
 	
-	public int calculateDefence() {
-		//TODO Auto-generated method stub
-		return -1;
+	public boolean hasDefenseBuilding() {
+		boolean hasDefenseBuildings = getSpaceBuildings().stream()
+				.anyMatch(building -> building.getBuilding() == Building.DRONE || building.getBuilding() == Building.SPACE_STATION);
+		return hasDefenseBuildings;
 	}
 	
-	public List<Alliance> getAlliances() {
-		// TODO Auto-generated method stub
-		return new ArrayList<Alliance>();
+	/**
+	 * Calculate the total defense of this field (consists of WEAPON defense and defense buildings)
+	 */
+	public int calculateDefence(Game game) {
+		if (planet == Planet.CENTER) {
+			return 99;//the center planet can't be attacked (till the end of the game)
+		}
+		Board board = game.getBoard();
+		List<Field> defenseFields = board.getFields().values().stream().filter(field -> field.hasDefenseBuilding()).collect(Collectors.toList());
+		int defense = 0;
+		//check every defense field if it's in range
+		for (Field field : defenseFields) {
+			//find a defense building (any because it can only be one)
+			Optional<PlayerBuilding> defenseBuilding = field.getSpaceBuildings().stream()
+					.filter(building -> building.getBuilding() == Building.DRONE || building.getBuilding() == Building.SPACE_STATION).findAny();
+			
+			if (defenseBuilding.isPresent()) {//should always be the case because we just iterate these fields...
+				PlayerBuilding building = defenseBuilding.get();
+				//get the range and defense of the building
+				int range = 0;
+				int defensePower = 0;
+				if (building.getBuilding() == Building.DRONE) {
+					range = building.getPlayer().getBuildingManager().getDroneFtl();
+					defensePower = building.getPlayer().getBuildingManager().getDroneDefense();
+				}
+				else if (building.getBuilding() == Building.SPACE_STATION) {
+					range = building.getPlayer().getBuildingManager().getSpaceStationFtl();
+					defensePower = building.getPlayer().getBuildingManager().getSpaceStationDefense();
+				}
+				//check whether the field is in range
+				if (range >= field.distanceTo(this)) {
+					defense += defensePower;
+				}
+			}
+		}
+		
+		//add the global additional defense by the WEAPON research area
+		defense += game.getResearchManager().getAdditionalWeaponDefense();
+		
+		return defense;
+	}
+	
+	/**
+	 * Get a list of all alliances in which this field is included.
+	 */
+	public List<Alliance> getAlliances(Game game) {
+		List<Alliance> alliancesOnField = new ArrayList<Alliance>();
+		List<Alliance> allAlliances = game.getAllianceManager().getAlliances();
+		
+		for (Alliance alliance : allAlliances) {
+			boolean allianceIncludesField = false;
+			List<Field> allianceFields;
+			if (isPlanetField()) {
+				allianceFields = alliance.getPlanets();
+			}
+			else {
+				allianceFields = alliance.getConnectingSatellites();
+			}
+			
+			for (Field field : allianceFields) {
+				allianceIncludesField |= field.equals(this);
+			}
+			
+			if (allianceIncludesField) {
+				alliancesOnField.add(alliance);
+			}
+		}
+		
+		return alliancesOnField;
 	}
 }

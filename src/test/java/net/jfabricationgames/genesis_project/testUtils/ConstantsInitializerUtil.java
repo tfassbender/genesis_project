@@ -230,4 +230,10 @@ public class ConstantsInitializerUtil {
 			}
 		}
 	}
+	
+	public static void initBuildingDefense() {
+		Constants.BUILDING_EARNINGS_DEFENSE = new HashMap<Building, Integer>();
+		Constants.BUILDING_EARNINGS_DEFENSE.put(Building.DRONE, 2);
+		Constants.BUILDING_EARNINGS_DEFENSE.put(Building.SPACE_STATION, 5);
+	}
 }

@@ -52,4 +52,9 @@ public class AllianceManagerCompositum implements IAllianceManager {
 	public void setAllianceBonusTaken(AllianceBonus bonus, int bonusIndex, boolean taken) {
 		globalAllianceManager.setAllianceBonusTaken(bonus, bonusIndex, taken);
 	}
+	
+	@Override
+	public int getDefenseBuildingAdditionalRange() {
+		throw new UnsupportedOperationException("Calculating the additional defense is not possible in the composite implementation.");
+	}
 }
