@@ -122,9 +122,11 @@ public class PlanetLayout extends Region {
 		ContextMenu contextMenu = new ContextMenu();
 		//building menu
 		Menu buildMenu = createBuildMenu();
+		Menu allianceMenu = createAllianceMenu();
 		
 		//add menus to context menu
 		contextMenu.getItems().add(buildMenu);
+		contextMenu.getItems().add(allianceMenu);
 		
 		//show or hide the context menu
 		node.setOnMouseClicked((e) -> {
@@ -136,7 +138,7 @@ public class PlanetLayout extends Region {
 			}
 		});
 	}
-	
+
 	private Menu createBuildMenu() {
 		Menu buildMenu = new Menu("Bauen");
 		for (Building building : Building.values()) {
@@ -155,9 +157,29 @@ public class PlanetLayout extends Region {
 		return buildMenu;
 	}
 	
+	private Menu createAllianceMenu() {
+		Menu allianceMenu = new Menu("Allianz");
+		MenuItem addToSelection = new MenuItem("Zur Auswahl hinzufügen");
+		MenuItem removeFromSelection = new MenuItem("Von der Auswahl entfernen");
+		//TODO disable an item when the field is already added or not
+		addToSelection.setOnAction(e -> addFieldToAllianceSelection());
+		removeFromSelection.setOnAction(e -> removeFieldFromAllianceSelection());
+		allianceMenu.getItems().add(addToSelection);
+		allianceMenu.getItems().add(removeFromSelection);
+		return allianceMenu;
+	}
+
 	private void executeBuildMove(Building building) {
 		IMove move = buildMove(building);
 		game.executeMove(move);
+	}
+	
+	private void addFieldToAllianceSelection() {
+		// TODO Auto-generated method stub
+	}
+
+	private void removeFieldFromAllianceSelection() {
+		// TODO Auto-generated method stub
 	}
 	
 	private boolean isBuildable(Building building) {

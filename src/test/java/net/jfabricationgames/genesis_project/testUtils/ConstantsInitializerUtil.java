@@ -225,7 +225,10 @@ public class ConstantsInitializerUtil {
 		for (int i = 0; i < 17; i++) {
 			for (int j = 0; j < 9; j++) {
 				Position pos = new Position(i, j);
-				int[] boardPosition = new int[] {i * 120 + 30, j * 60 + 10};
+				int[] boardPosition = new int[] {i * 115 + 30, j * 115 + 5};
+				if (j % 2 == 1) {
+					boardPosition[1] += 65;
+				}
 				Constants.CELL_COORDINATES.put(pos, boardPosition);
 			}
 		}

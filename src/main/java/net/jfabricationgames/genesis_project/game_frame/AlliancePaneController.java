@@ -8,6 +8,9 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import net.jfabricationgames.genesis_project.game.AllianceBonus;
@@ -94,6 +97,38 @@ public class AlliancePaneController implements Initializable {
 	private Button buttonPurchaseAllianceBonusResearchPoints2;
 	@FXML
 	private Button buttonPurchaseAllianceBonusPoints2;
+	
+	@FXML
+	private ListView<?> listAlliancePlanetFields;
+	@FXML
+	private ListView<?> listAllianceSpaceFields;
+	@FXML
+	private CheckBox checkboxAllianceMarkPlanets;
+	@FXML
+	private CheckBox checkboxAllianceMarkSpaceFields;
+	@FXML
+	private Button buttonAllianceDeletePlanet;
+	@FXML
+	private Button buttonAllianceDeleteAllPlanets;
+	@FXML
+	private Button buttonAllianceDeleteSpaceField;
+	@FXML
+	private Button buttonAllianceDeleteAllSpaceFields;
+	
+	@FXML
+	private Label labelAllianceNumPlanets;
+	@FXML
+	private Label labelAllianceBuildings;
+	@FXML
+	private Label labelAllianceNumNeighbourPlanets;
+	@FXML
+	private Label labelAllianceValid;
+	@FXML
+	private Label labelAllianceNeighbourBuildings;
+	@FXML
+	private Label labelAllianceMainBuilding;
+	@FXML
+	private Button buttonAllianceCreate;
 	
 	private final String crossImagePath = "basic/cross.png";
 	private final String hookImagePath = "basic/hook.png";
