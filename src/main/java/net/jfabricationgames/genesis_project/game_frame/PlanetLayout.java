@@ -16,11 +16,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Region;
+import net.jfabricationgames.genesis_project.game.AllianceBuilder;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.Field;
 import net.jfabricationgames.genesis_project.game.Game;
+import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.PlayerBuilding;
 import net.jfabricationgames.genesis_project.game.PlayerColor;
+import net.jfabricationgames.genesis_project.manager.IAllianceManager;
 import net.jfabricationgames.genesis_project.move.IMove;
 import net.jfabricationgames.genesis_project.move.MoveBuilder;
 import net.jfabricationgames.genesis_project.move.MoveType;
@@ -161,7 +164,18 @@ public class PlanetLayout extends Region {
 		Menu allianceMenu = new Menu("Allianz");
 		MenuItem addToSelection = new MenuItem("Zur Auswahl hinzufügen");
 		MenuItem removeFromSelection = new MenuItem("Von der Auswahl entfernen");
-		//TODO disable an item when the field is already added or not
+		
+		//disable an item when the field is already added or not
+		Player player = game.getLocalPlayer();
+		IAllianceManager allianceManager = player.getAllianceManager();
+		AllianceBuilder builder = allianceManager.getAllianceBuilder();
+		if (builder.containsField(field)) {
+			addToSelection.setDisable(true);
+		}
+		else {
+			removeFromSelection.setDisable(true);
+		}
+		
 		addToSelection.setOnAction(e -> addFieldToAllianceSelection());
 		removeFromSelection.setOnAction(e -> removeFieldFromAllianceSelection());
 		allianceMenu.getItems().add(addToSelection);
@@ -175,11 +189,29 @@ public class PlanetLayout extends Region {
 	}
 	
 	private void addFieldToAllianceSelection() {
-		// TODO Auto-generated method stub
+		Player player = game.getLocalPlayer();
+		IAllianceManager allianceManager = player.getAllianceManager();
+		AllianceBuilder builder = allianceManager.getAllianceBuilder();
+		
+		if (field.isPlanetField()) {
+			builder.addPlanetField(field);
+		}
+		else {
+			builder.addConnectingField(field);
+		}
 	}
 
 	private void removeFieldFromAllianceSelection() {
-		// TODO Auto-generated method stub
+		Player player = game.getLocalPlayer();
+		IAllianceManager allianceManager = player.getAllianceManager();
+		AllianceBuilder builder = allianceManager.getAllianceBuilder();
+		
+		if (field.isPlanetField()) {
+			builder.removePlanetField(field);
+		}
+		else {
+			builder.removeConnectingField(field);
+		}
 	}
 	
 	private boolean isBuildable(Building building) {

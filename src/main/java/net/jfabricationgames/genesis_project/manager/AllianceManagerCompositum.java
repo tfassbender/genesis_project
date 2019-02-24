@@ -3,8 +3,10 @@ package net.jfabricationgames.genesis_project.manager;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javafx.beans.property.BooleanProperty;
 import net.jfabricationgames.genesis_project.game.Alliance;
 import net.jfabricationgames.genesis_project.game.AllianceBonus;
+import net.jfabricationgames.genesis_project.game.AllianceBuilder;
 import net.jfabricationgames.genesis_project.game.Field;
 import net.jfabricationgames.genesis_project.game.Game;
 
@@ -54,7 +56,17 @@ public class AllianceManagerCompositum implements IAllianceManager {
 	}
 	
 	@Override
+	public BooleanProperty getAllianceBonusTakenProperty(AllianceBonus bonus, int bonusIndex) {
+		return globalAllianceManager.getAllianceBonusTakenProperty(bonus, bonusIndex);
+	}
+	
+	@Override
 	public int getDefenseBuildingAdditionalRange() {
 		throw new UnsupportedOperationException("Calculating the additional defense is not possible in the composite implementation.");
+	}
+
+	@Override
+	public AllianceBuilder getAllianceBuilder() {
+		throw new UnsupportedOperationException("The composite implementation does not contain an alliance builder.");
 	}
 }

@@ -2,9 +2,14 @@ package net.jfabricationgames.genesis_project.game_frame;
 
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.ResourceBundle;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -13,10 +18,17 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import net.jfabricationgames.genesis_project.game.Alliance;
 import net.jfabricationgames.genesis_project.game.AllianceBonus;
+import net.jfabricationgames.genesis_project.game.AllianceBuilder;
 import net.jfabricationgames.genesis_project.game.Constants;
+import net.jfabricationgames.genesis_project.game.Field;
+import net.jfabricationgames.genesis_project.game.Game;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.manager.IAllianceManager;
+import net.jfabricationgames.genesis_project.move.IMove;
+import net.jfabricationgames.genesis_project.move.MoveBuilder;
+import net.jfabricationgames.genesis_project.move.MoveType;
 
 public class AlliancePaneController implements Initializable {
 	
@@ -99,9 +111,14 @@ public class AlliancePaneController implements Initializable {
 	private Button buttonPurchaseAllianceBonusPoints2;
 	
 	@FXML
-	private ListView<?> listAlliancePlanetFields;
+	private ImageView imageAllianceBonusAny;
 	@FXML
-	private ListView<?> listAllianceSpaceFields;
+	private Button buttonPurchaseAllianceBonusAny;
+	
+	@FXML
+	private ListView<Field> listAlliancePlanetFields;
+	@FXML
+	private ListView<Field> listAllianceSpaceFields;
 	@FXML
 	private CheckBox checkboxAllianceMarkPlanets;
 	@FXML
@@ -127,8 +144,6 @@ public class AlliancePaneController implements Initializable {
 	private Label labelAllianceNeighbourBuildings;
 	@FXML
 	private Label labelAllianceMainBuilding;
-	@FXML
-	private Button buttonAllianceCreate;
 	
 	private final String crossImagePath = "basic/cross.png";
 	private final String hookImagePath = "basic/hook.png";
@@ -147,6 +162,9 @@ public class AlliancePaneController implements Initializable {
 		addAllianceCardImages();
 		initializeExploredMap();
 		updateExploredImages();
+		bindAllianceBuilderProperties();
+		addPurchaseButtonFunctions();
+		addDeleteButtonFunctions();
 	}
 	
 	private void addAllianceCardImages() {
@@ -162,6 +180,7 @@ public class AlliancePaneController implements Initializable {
 		GuiUtils.loadImageToView("cards/alliance_markers/alliance_marker_research_points.png", true, imageAllianceBonusResearchPoints2);
 		GuiUtils.loadImageToView("cards/alliance_markers/alliance_marker_points.png", true, imageAllianceBonusPoints1);
 		GuiUtils.loadImageToView("cards/alliance_markers/alliance_marker_points.png", true, imageAllianceBonusPoints2);
+		GuiUtils.loadImageToView("cards/alliance_markers/alliance_marker_any.png", true, imageAllianceBonusAny);
 	}
 	
 	private void initializeExploredMap() {
@@ -196,46 +215,142 @@ public class AlliancePaneController implements Initializable {
 		IAllianceManager allianceManager = player.getAllianceManager();
 		
 		for (AllianceBonus bonus : AllianceBonus.values()) {
-			ImageView[] imageView = exploredImageMap.get(bonus);
-			for (int i = 0; i < imageView.length; i++) {
-				Image image;
-				if (allianceManager.isAllianceBonusTaken(bonus, i)) {
-					image = hookImage;
+			if (bonus != AllianceBonus.ANY) {
+				ImageView[] imageView = exploredImageMap.get(bonus);
+				for (int i = 0; i < imageView.length; i++) {
+					Image image;
+					if (allianceManager.isAllianceBonusTaken(bonus, i)) {
+						image = hookImage;
+					}
+					else {
+						image = crossImage;
+					}
+					imageView[i].setImage(image);
+					imageView[i].setCache(true);
+				}
+			}
+		}
+	}
+	
+	private void bindAllianceBuilderProperties() {
+		IAllianceManager allianceManager = player.getAllianceManager();
+		AllianceBuilder allianceBuilder = allianceManager.getAllianceBuilder();
+		
+		//set list items
+		listAlliancePlanetFields.setItems(allianceBuilder.getPlanets());
+		listAllianceSpaceFields.setItems(allianceBuilder.getConnectingSatellites());
+		//bind checkboxes bidirectional
+		checkboxAllianceMarkPlanets.selectedProperty().bindBidirectional(allianceBuilder.getMarkPlanetFieldsProperty());
+		checkboxAllianceMarkSpaceFields.selectedProperty().bindBidirectional(allianceBuilder.getMarkSatelliteFieldsProperty());
+		
+		//bind the text labels using StringBindings from IntegerProperties
+		labelAllianceNumPlanets.textProperty()
+				.bind(Bindings.concat(allianceBuilder.getNumPlanetsProperty().asString(), " / " + Constants.ALLIANCE_MIN_PLANETS));
+		labelAllianceNumNeighbourPlanets.textProperty().bind(
+				Bindings.concat(allianceBuilder.getNumNeighbourPlanetsProperty().asString(), " / " + Constants.ALLIANCE_MIN_PLANETS_OTHER_PLAYERS));
+		labelAllianceBuildings.textProperty()
+				.bind(Bindings.concat(allianceBuilder.getNumBuildingsProperty(), " / " + Constants.ALLIANCE_MIN_BUILDINGS));
+		labelAllianceNeighbourBuildings.textProperty().bind(Bindings.concat(allianceBuilder.getNumNeighbourBuildingsProperty().asString(),
+				" / " + Constants.ALLIANCE_MIN_BUILDINGS_OTHER_PLAYERS));
+		labelAllianceMainBuilding.textProperty().bind(Bindings.concat(allianceBuilder.getNumMainBuildingsProperty().asString(), " / 1"));
+		
+		//use a listener because the translation would be difficult
+		allianceBuilder.getAllianceValidProperty().addListener((observer, oldVal, newVal) -> {
+			if (newVal.booleanValue()) {
+				labelAllianceValid.setText("Ja");
+			}
+			else {
+				labelAllianceValid.setText("Nein");
+			}
+		});
+		//initialize with default
+		labelAllianceValid.setText("Nein");
+	}
+	
+	private void addPurchaseButtonFunctions() {
+		//get the AllianceBuilder of this player to manage creating the alliances and enabling/disabling the buttons
+		IAllianceManager allianceManager = player.getAllianceManager();
+		AllianceBuilder allianceBuilder = allianceManager.getAllianceBuilder();
+		
+		for (Entry<AllianceBonus, Button[]> entry : exploreButtons.entrySet()) {
+			AllianceBonus bonus = entry.getKey();
+			Button[] buttons = entry.getValue();
+			for (int i = 0; i < buttons.length; i++) {
+				//bind the disabled properties (enable when alliance is valid and the bonus is not taken)
+				buttons[i].disableProperty()
+						.bind(allianceBuilder.getAllianceValidProperty().and(allianceManager.getAllianceBonusTakenProperty(bonus, i)).not());
+				//set the button actions (execute the move and create the alliance)
+				final int index = i;
+				buttons[i].setOnAction(e -> createAlliance(bonus, index));
+			}
+		}
+		
+		//set the ANY AllianceBonus actions and property
+		BooleanBinding allBonusesTaken = null;
+		for (AllianceBonus bonus : AllianceBonus.values()) {
+			for (int i = 0; i < 2; i++) {
+				if (allBonusesTaken == null) {
+					//first has to be initiated (could probably be done better...)
+					allBonusesTaken = new SimpleBooleanProperty(true).and(allianceManager.getAllianceBonusTakenProperty(bonus, i));
 				}
 				else {
-					image = crossImage;
+					//bind all other bonuses
+					allBonusesTaken = allBonusesTaken.and(allianceManager.getAllianceBonusTakenProperty(bonus, i));
 				}
-				imageView[i].setImage(image);
-				imageView[i].setCache(true);
 			}
 		}
+		//enable the last bonus only when all others are taken
+		buttonPurchaseAllianceBonusAny.disableProperty().bind(allianceBuilder.getAllianceValidProperty().and(allBonusesTaken).not());
+		//set the button action
+		buttonPurchaseAllianceBonusAny.setOnAction(e -> createAlliance(AllianceBonus.ANY, 0));
 	}
 	
-	/**
-	 * Enables all exploration buttons of bonuses that are not yet taken.
-	 */
-	public void enableExploreButtons() {
-		IAllianceManager allianceManager = player.getAllianceManager();
+	private void createAlliance(AllianceBonus bonus, int bonusIndex) {
+		Game game = player.getGame();
 		
-		for (AllianceBonus bonus : AllianceBonus.values()) {
-			for (int i = 0; i < Constants.ALLIANCE_BONUS_COPIES; i++) {
-				if (!allianceManager.isAllianceBonusTaken(bonus, i)) {
-					Button button = exploreButtons.get(bonus)[i];
-					button.setDisable(false);
-				}
-			}
+		IAllianceManager allianceManager = player.getAllianceManager();
+		AllianceBuilder allianceBuilder = allianceManager.getAllianceBuilder();
+		
+		allianceBuilder.setBonus(bonus);
+		allianceBuilder.setBonusIndex(bonusIndex);
+		Alliance alliance = allianceBuilder.build();
+		
+		MoveBuilder builder = new MoveBuilder(game);
+		builder.setPlayer(player);
+		builder.setType(MoveType.ALLIANCE);
+		builder.setAllianceBonus(bonus);
+		builder.setAllianceBonusIndex(bonusIndex);
+		builder.setAlliancePlanets(alliance.getPlanets());
+		builder.setSatelliteFields(alliance.getConnectingSatellites());
+		
+		IMove move = builder.build();
+		if (game.isMoveExecutable(move)) {
+			game.executeMove(move);
+			updateExploredImages();
+			allianceBuilder.clear();
+		}
+		else {
+			throw new IllegalStateException("The move can't be executed");
 		}
 	}
 	
-	/**
-	 * Disable all explore buttons.
-	 */
-	public void disableExploreButtons() {
-		for (AllianceBonus bonus : AllianceBonus.values()) {
-			for (int i = 0; i < Constants.ALLIANCE_BONUS_COPIES; i++) {
-				Button button = exploreButtons.get(bonus)[i];
-				button.setDisable(true);
+	private void addDeleteButtonFunctions() {
+		IAllianceManager allianceManager = player.getAllianceManager();
+		AllianceBuilder allianceBuilder = allianceManager.getAllianceBuilder();
+		
+		buttonAllianceDeletePlanet.setOnAction(e -> {
+			List<Field> selected = listAlliancePlanetFields.getSelectionModel().getSelectedItems();
+			for (Field field : selected) {
+				allianceBuilder.removePlanetField(field);
 			}
-		}
+		});
+		buttonAllianceDeleteSpaceField.setOnAction(e -> {
+			List<Field> selected = listAllianceSpaceFields.getSelectionModel().getSelectedItems();
+			for (Field field : selected) {
+				allianceBuilder.removeConnectingField(field);
+			}
+		});
+		buttonAllianceDeleteAllPlanets.setOnAction(e -> allianceBuilder.removeAllPlanetFields());
+		buttonAllianceDeleteAllSpaceFields.setOnAction(e -> allianceBuilder.removeAllConnectingFields());
 	}
 }

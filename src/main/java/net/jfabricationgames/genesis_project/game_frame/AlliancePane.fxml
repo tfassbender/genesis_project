@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="1200.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ScrollPane prefHeight="722.0" prefWidth="1212.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
@@ -50,6 +50,10 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
@@ -319,7 +323,6 @@
                               <String fx:value="field_selection" />
                            </styleClass>
                         </ListView>
-                        <Button fx:id="buttonAllianceCreate" disable="true" mnemonicParsing="false" styleClass="alliance" text="Allianz Gründen" GridPane.columnIndex="6" GridPane.columnSpan="7" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
                         <Label text="Planeten:" GridPane.columnIndex="6" GridPane.rowIndex="2">
                            <styleClass>
                               <String fx:value="alliance" />
@@ -426,6 +429,21 @@
                         </Button>
                      </children>
                   </GridPane>
+                  <Label text="Allianzbonus:" GridPane.columnIndex="1" GridPane.rowIndex="15">
+                     <styleClass>
+                        <String fx:value="alliance" />
+                        <String fx:value="header" />
+                     </styleClass></Label>
+                  <ImageView fx:id="imageAllianceBonusAny" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="15">
+                     <image>
+                        <Image url="@../../../../../resources/net/jfabricationgames/genesis_project/images/cards/alliance_markers/alliance_marker_any.png" />
+                     </image>
+                  </ImageView>
+                  <Button fx:id="buttonPurchaseAllianceBonusAny" disable="true" mnemonicParsing="false" text="Auswählen" GridPane.columnIndex="2" GridPane.rowIndex="17">
+                     <styleClass>
+                        <String fx:value="alliance" />
+                        <String fx:value="purchase" />
+                     </styleClass></Button>
                </children>
             </GridPane>
          </content>

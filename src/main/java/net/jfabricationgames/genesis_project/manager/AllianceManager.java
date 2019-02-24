@@ -9,8 +9,11 @@ import java.util.stream.Collectors;
 
 import com.google.common.annotations.VisibleForTesting;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import net.jfabricationgames.genesis_project.game.Alliance;
 import net.jfabricationgames.genesis_project.game.AllianceBonus;
+import net.jfabricationgames.genesis_project.game.AllianceBuilder;
 import net.jfabricationgames.genesis_project.game.Board;
 import net.jfabricationgames.genesis_project.game.Board.Position;
 import net.jfabricationgames.genesis_project.game.Building;
@@ -26,20 +29,29 @@ public class AllianceManager implements IAllianceManager {
 	
 	private List<Alliance> alliances;
 	
-	private Map<AllianceBonus, boolean[]> bonusesTaken;
+	private Map<AllianceBonus, BooleanProperty[]> bonusesTaken;
 	
 	private Player player;
+	
+	private AllianceBuilder builder;
 	
 	public AllianceManager(Player player) {
 		this.player = player;
 		alliances = new ArrayList<Alliance>(3);
+		if (player != null) {
+			builder = new AllianceBuilder(player);			
+		}
 		initializeBonusesTaken();
 	}
 	
 	private void initializeBonusesTaken() {
-		bonusesTaken = new HashMap<AllianceBonus, boolean[]>();
+		bonusesTaken = new HashMap<AllianceBonus, BooleanProperty[]>();
 		for (AllianceBonus bonus : AllianceBonus.values()) {
-			bonusesTaken.put(bonus, new boolean[Constants.ALLIANCE_BONUS_COPIES]);//initialize with false
+			BooleanProperty[] properties = new BooleanProperty[Constants.ALLIANCE_BONUS_COPIES];
+			for (int i = 0; i < properties.length; i++) {
+				properties[i] = new SimpleBooleanProperty(this, "allianceBonusTaken_" + bonus.name(), false);
+			}
+			bonusesTaken.put(bonus, properties);
 		}
 	}
 	
@@ -137,7 +149,7 @@ public class AllianceManager implements IAllianceManager {
 		}
 		//bonuses taken are managed in the global alliance manager (composite implementation)
 		if (getPlayer() == null) {
-			return bonusesTaken.get(bonus)[bonusIndex];
+			return bonusesTaken.get(bonus)[bonusIndex].get();
 		}
 		else {
 			return getPlayer().getGame().getAllianceManager().isAllianceBonusTaken(bonus, bonusIndex);
@@ -152,10 +164,28 @@ public class AllianceManager implements IAllianceManager {
 		}
 		//bonuses taken are managed in the global alliance manager (composite implementation)
 		if (getPlayer() == null) {
-			bonusesTaken.get(bonus)[bonusIndex] = taken;			
+			//the any bonus can never be taken (one can take it but it still remains there)
+			if (bonus != AllianceBonus.ANY) {
+				bonusesTaken.get(bonus)[bonusIndex].set(taken);				
+			}
 		}
 		else {
 			getPlayer().getGame().getAllianceManager().setAllianceBonusTaken(bonus, bonusIndex, taken);
+		}
+	}
+	@Override
+	public BooleanProperty getAllianceBonusTakenProperty(AllianceBonus bonus, int bonusIndex) {
+		Objects.requireNonNull(bonus, "The bonus mussn't be null.");
+		if (bonusIndex < 0 || bonusIndex > Constants.ALLIANCE_BONUS_COPIES - 1) {
+			throw new IllegalArgumentException(
+					"The bonus index must be between 0 and " + (Constants.ALLIANCE_BONUS_COPIES - 1) + " (inclusive); not " + bonusIndex);
+		}
+		//bonuses taken are managed in the global alliance manager (composite implementation)
+		if (getPlayer() == null) {
+			return bonusesTaken.get(bonus)[bonusIndex];
+		}
+		else {
+			return getPlayer().getGame().getAllianceManager().getAllianceBonusTakenProperty(bonus, bonusIndex);
 		}
 	}
 	
@@ -279,6 +309,10 @@ public class AllianceManager implements IAllianceManager {
 		}
 		
 		return fieldsConnected;
+	}
+	
+	public AllianceBuilder getAllianceBuilder() {
+		return builder;
 	}
 	
 	@VisibleForTesting

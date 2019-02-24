@@ -1,6 +1,7 @@
 package net.jfabricationgames.genesis_project.game;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -212,5 +213,16 @@ public class Field {
 		}
 		
 		return alliancesOnField;
+	}
+	
+	public List<PlayerBuilding> getPlayerBuildings(Player player) {
+		List<PlayerBuilding> playerBuildings = Arrays.asList(buildings).stream()
+				.filter(building -> building != null && building.getPlayer().equals(player)).collect(Collectors.toList());
+		return playerBuildings;
+	}
+	public List<PlayerBuilding> getOtherPlayersBuildings(Player player) {
+		List<PlayerBuilding> otherPlayerBuildings = Arrays.asList(buildings).stream()
+				.filter(building -> building != null && !building.getPlayer().equals(player)).collect(Collectors.toList());
+		return otherPlayerBuildings;
 	}
 }

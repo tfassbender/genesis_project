@@ -26,6 +26,7 @@ public class GameCreationUtil {
 		ConstantsInitializerUtil.initBuildingNumbers();
 		ConstantsInitializerUtil.initStartingResearchStates();
 		ConstantsInitializerUtil.initResearchResources();
+		ConstantsInitializerUtil.initAllianceValues();
 		ConstantsInitializerUtil.initBuildingCosts();
 		ConstantsInitializerUtil.initBuildingDefense();
 		ConstantsInitializerUtil.initCellPositions();
