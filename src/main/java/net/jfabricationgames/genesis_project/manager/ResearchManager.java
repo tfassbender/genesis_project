@@ -3,7 +3,12 @@ package net.jfabricationgames.genesis_project.manager;
 import java.util.HashMap;
 import java.util.Map;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import net.jfabricationgames.genesis_project.game.Constants;
+import net.jfabricationgames.genesis_project.game.Game;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
@@ -11,18 +16,38 @@ import net.jfabricationgames.genesis_project.game.Resource;
 
 public class ResearchManager implements IResearchManager {
 	
-	private Map<ResearchArea, Integer> researchStates;
+	private Map<ResearchArea, IntegerProperty> researchStates;
 	private Map<ResearchArea, Map<Integer, ResearchResources>> researchResourcesAdded;
+	private Map<ResearchArea, IntegerProperty> maxReachableState;
+	private Map<ResearchArea, ObjectProperty<ResearchResources>> researchResourcesNeededLeftProperties;
 	
 	private int playersInGame;
 	
+	private Player player;
+	
 	private static final double EPSILON = 1e-2;//for rounding values because of the double epsilon
 	
+	public ResearchManager(Player player) {
+		this(player, -1);
+	}
 	public ResearchManager(Player player, int playersInGame) {
+		this.player = player;
 		this.playersInGame = playersInGame;
 		initResearchResourcesAdded();
 		if (Constants.STARTING_RESEARCH_STATES != null) {
-			researchStates = new HashMap<ResearchArea, Integer>(Constants.STARTING_RESEARCH_STATES.get(player.getPlayerClass()));
+			if (player != null) {
+				researchStates = new HashMap<ResearchArea, IntegerProperty>();
+				for (Map.Entry<ResearchArea, Integer> startStates : Constants.STARTING_RESEARCH_STATES.get(player.getPlayerClass()).entrySet()) {
+					IntegerProperty property = new SimpleIntegerProperty(this, "researchState_" + startStates.getKey().name());
+					property.set(startStates.getValue().intValue());
+					researchStates.put(startStates.getKey(), property);
+				}
+			}
+			else {
+				//when player is null the research manager is for a composite implementation -> states are not needed
+				researchStates = new HashMap<ResearchArea, IntegerProperty>();
+				researchStates.put(ResearchArea.WEAPON, new SimpleIntegerProperty(this, "researchState_WEAPON"));
+			}
 		}
 		else {
 			throw new IllegalStateException("The field STARTING_RESEARCH_STATES in the class Constants has not been initialized.");
@@ -30,8 +55,22 @@ public class ResearchManager implements IResearchManager {
 		if (Constants.RESEARCH_RESOURCES == null) {
 			throw new IllegalStateException("The field RESEARCH_RESOURCES in the class Constants has not been inizialized.");
 		}
+		
+		//initialize maxReachableState properties and researchResourcesNeededLeftProperties when the number of players in the game is known (till then just use default values)
+		maxReachableState = new HashMap<ResearchArea, IntegerProperty>();
+		for (ResearchArea area : ResearchArea.values()) {
+			IntegerProperty property = new SimpleIntegerProperty(this, "maxResearchStateAccessible_" + area.name());
+			property.set(Constants.MAX_RESEARCH_STATE_DEFAULT);
+			maxReachableState.put(area, property);
+		}
+		
+		researchResourcesNeededLeftProperties = new HashMap<ResearchArea, ObjectProperty<ResearchResources>>();
+		for (ResearchArea area : ResearchArea.values()) {
+			ObjectProperty<ResearchResources> property = new SimpleObjectProperty<>(this, "researchResourcesNeededLeft_" + area.name());
+			property.set(new ResearchResources());
+			researchResourcesNeededLeftProperties.put(area, property);
+		}
 	}
-	
 	/**
 	 * Add an empty ResearchResource object to every research state for every research area.
 	 */
@@ -51,9 +90,40 @@ public class ResearchManager implements IResearchManager {
 		}
 	}
 	
+	private void updateMaxReachableState() {
+		for (ResearchArea area : ResearchArea.values()) {
+			IntegerProperty property = maxReachableState.get(area);
+			int nextResourceNeedingState = getNextResourceNeedingState(area);
+			if (nextResourceNeedingState == -1) {
+				if (area == ResearchArea.WEAPON) {
+					property.set(Constants.MAX_RESEARCH_STATE_WEAPON);
+				}
+				else {
+					property.set(Constants.MAX_RESEARCH_STATE_DEFAULT);
+				}
+			}
+			else {
+				property.set(nextResourceNeedingState - 1);
+			}
+		}
+	}
+	private void updateResearchResourcesNeededLeftProperties() {
+		for (ResearchArea area : ResearchArea.values()) {
+			ObjectProperty<ResearchResources> property = researchResourcesNeededLeftProperties.get(area);
+			int nextResourceNeedingState = getNextResourceNeedingState(area);
+			if (nextResourceNeedingState == -1) {
+				property.set(new ResearchResources());
+			}
+			else {
+				ResearchResources neededLeft = getResearchResourcesNeededLeft(area, nextResourceNeedingState);
+				property.set(neededLeft);
+			}
+		}
+	}
+	
 	@Override
 	public int getState(ResearchArea area) {
-		return researchStates.get(area).intValue();
+		return researchStates.get(area).get();
 	}
 	
 	@Override
@@ -61,7 +131,9 @@ public class ResearchManager implements IResearchManager {
 		int currentState = getState(area);
 		if (currentState < Constants.MAX_RESEARCH_STATE_DEFAULT
 				|| (area == ResearchArea.WEAPON && currentState < Constants.MAX_RESEARCH_STATE_WEAPON)) {
-			researchStates.put(area, currentState + 1);
+			
+			IntegerProperty researchState = researchStates.get(area);
+			researchState.set(currentState + 1);
 		}
 		else {
 			throw new IllegalStateException("The maximum research state (in research area: " + area + ") is already reached.");
@@ -111,7 +183,7 @@ public class ResearchManager implements IResearchManager {
 		if (resources != null) {
 			ResearchResources researchResources = new ResearchResources();
 			for (Resource resource : ResearchResources.RESEARCH_RESOURCES) {
-				researchResources.setResources(resource, (int) (resources.get(resource) * playersInGame + EPSILON));
+				researchResources.setResources(resource, (int) (resources.get(resource) * getNumPlayersInGame() + EPSILON));
 			}
 			return researchResources;
 		}
@@ -142,6 +214,10 @@ public class ResearchManager implements IResearchManager {
 		ResearchResources adding = new ResearchResources();
 		adding.addResources(resource, amount);
 		addResearchResources(adding, area);
+		
+		//update the properties
+		updateMaxReachableState();
+		updateResearchResourcesNeededLeftProperties();
 	}
 	
 	@Override
@@ -179,5 +255,130 @@ public class ResearchManager implements IResearchManager {
 			//add the resources
 			added.addResources(resources);
 		}
+		
+		//update the properties
+		updateMaxReachableState();
+		updateResearchResourcesNeededLeftProperties();
+	}
+	
+	public int getNumPlayersInGame() {
+		if (playersInGame == -1) {
+			Game game = player.getGame();
+			if (game != null) {
+				playersInGame = game.getPlayers().size();
+				updateMaxReachableState();
+				updateResearchResourcesNeededLeftProperties();
+			}
+			else {
+				throw new IllegalStateException("The field 'playersInGame' has not yet been set.");
+			}
+		}
+		return playersInGame;
+	}
+
+	@Override
+	public int getDroneAdditionalDefense() {
+		int additionalDefense = 0;
+		
+		int militaryState = getState(ResearchArea.MILITARY);
+		if (militaryState >= 3) {
+			additionalDefense = 1;
+		}
+		
+		return additionalDefense;
+	}
+	@Override
+	public int getSpaceStationAdditionalDefense() {
+		int additionalDefense = 0;
+		
+		int militaryState = getState(ResearchArea.MILITARY);
+		if (militaryState >= 5) {
+			additionalDefense = 2;
+		}
+		else if (militaryState >= 4) {
+			additionalDefense = 1;
+		}
+		return additionalDefense;
+	}
+	@Override
+	public int getDroneAdditionalRange() {
+		int additionalRange = 0;
+		
+		int militaryState = getState(ResearchArea.MILITARY);
+		if (militaryState >= 4) {
+			additionalRange += 2;
+		}
+		else if (militaryState >= 1) {
+			additionalRange += 1;
+		}
+		
+		int ftlState = getState(ResearchArea.FTL);
+		if (ftlState >= 5) {
+			additionalRange += 2;
+		}
+		else if (ftlState >= 3) {
+			additionalRange += 1;
+		}
+		
+		return additionalRange;
+	}
+	@Override
+	public int getSpaceStationAdditionalRange() {
+		int additionalRange = 0;
+		
+		int militaryState = getState(ResearchArea.MILITARY);
+		if (militaryState >= 5) {
+			additionalRange += 2;
+		}
+		else if (militaryState >= 4) {
+			additionalRange += 1;
+		}
+		
+		int ftlState = getState(ResearchArea.FTL);
+		if (ftlState >= 5) {
+			additionalRange += 2;
+		}
+		else if (ftlState >= 3) {
+			additionalRange += 1;
+		}
+		
+		return additionalRange;
+	}
+	
+	/**
+	 * Get the additional defense by the WEAPON research area (for all fields)
+	 */
+	@Override
+	public int getAdditionalWeaponDefense() {
+		int additionalDefense = 0;
+		
+		int weaponState = getState(ResearchArea.WEAPON);
+		if (weaponState >= 10) {
+			additionalDefense = 999;
+		}
+		else if (weaponState >= 8) {
+			additionalDefense = 15;
+		}
+		else if (weaponState >= 6) {
+			additionalDefense = 10;
+		}
+		else if (weaponState >= 4) {
+			additionalDefense = 5;
+		}
+		
+		return additionalDefense;
+	}
+	
+	@Override
+	public IntegerProperty getStateProperty(ResearchArea area) {
+		return researchStates.get(area);
+	}
+	@Override
+	public IntegerProperty getMaxReachableStateProperty(ResearchArea area) {
+		return maxReachableState.get(area);
+	}
+	@Override
+	public ObjectProperty<ResearchResources> getResearchResourcesNeededLeftProperties(ResearchArea area) {
+		return researchResourcesNeededLeftProperties.get(area);
 	}
 }

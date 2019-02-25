@@ -3,11 +3,25 @@ package net.jfabricationgames.genesis_project.game_frame;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.beans.binding.Bindings;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
+import net.jfabricationgames.genesis_project.game.Building;
+import net.jfabricationgames.genesis_project.game.Player;
+import net.jfabricationgames.genesis_project.game.PlayerClass;
+import net.jfabricationgames.genesis_project.manager.IBuildingManager;
+import net.jfabricationgames.genesis_project.manager.IPointManager;
+import net.jfabricationgames.genesis_project.manager.IResourceManager;
 
 public class ClassPaneController implements Initializable {
 	
@@ -50,8 +64,99 @@ public class ClassPaneController implements Initializable {
 	@FXML
 	private Pane panelGameClassClassEffectCover;
 	
+	private Player player;
+	private PlayerClass playerClass;
+	
+	public ClassPaneController(Player player) {
+		this.player = player;
+		playerClass = player.getPlayerClass();
+	}
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		GuiUtils.loadImageToView("classes/class_boards/class_board_blue_1.png", true, imageViewGameClassBackground);
+		GuiUtils.loadImageToView(playerClass.getClassPaneImagePath(), true, imageViewGameClassBackground);
+		
+		bindResourceLabels();
+		bindPointLabel();
+		bindBuildingLabels();
+		
+		addSpecialAbilityExplenations();
+		addSpecialAbilityMoveContextMenus();
+	}
+	
+	private void bindResourceLabels() {
+		IResourceManager resourceManager = player.getResourceManager();
+		labelGameClassCarbon.textProperty().bind(Bindings.convert(resourceManager.getResourcesCProperty()));
+		labelGameClassSilicium.textProperty().bind(Bindings.convert(resourceManager.getResourcesSiProperty()));
+		labelGameClassFerum.textProperty().bind(Bindings.convert(resourceManager.getResourcesFeProperty()));
+		labelGameClassResearchPoints.textProperty().bind(Bindings.convert(resourceManager.getResearchPointsProperty()));
+		labelGameClassScientists.textProperty().bind(Bindings.convert(resourceManager.getScientistsProperty()));
+		labelGameClassFTL.textProperty().bind(Bindings.convert(resourceManager.getFTLProperty()));
+	}
+	
+	private void bindPointLabel() {
+		IPointManager pointManager = player.getPointManager();
+		labelGameClassPoints.textProperty().bind(Bindings.convert(pointManager.getPointsProperty()));
+	}
+	
+	private void bindBuildingLabels() {
+		IBuildingManager buildingManager = player.getBuildingManager();
+		labelGameClassColonyBuildings.textProperty().bind(Bindings.convert(buildingManager.getNumBuildingsLeftProperty(Building.COLONY)));
+		labelGameClassMineBuildings.textProperty().bind(Bindings.convert(buildingManager.getNumBuildingsLeftProperty(Building.MINE)));
+		labelGameClassTraidingPostBuildings.textProperty().bind(Bindings.convert(buildingManager.getNumBuildingsLeftProperty(Building.TRADING_POST)));
+		labelGameClassLaboratoryBuildings.textProperty().bind(Bindings.convert(buildingManager.getNumBuildingsLeftProperty(Building.LABORATORY)));
+		labelGameClassGovermentBuildings.textProperty().bind(Bindings.convert(buildingManager.getNumBuildingsLeftProperty(Building.GOVERNMENT)));
+		labelGameClassCityBuildings.textProperty().bind(Bindings.convert(buildingManager.getNumBuildingsLeftProperty(Building.CITY)));
+		labelGameClassResearchStationBuildings.textProperty()
+				.bind(Bindings.convert(buildingManager.getNumBuildingsLeftProperty(Building.RESEARCH_CENTER)));
+		labelGameClassDroneBuildings.textProperty().bind(Bindings.convert(buildingManager.getNumBuildingsLeftProperty(Building.DRONE)));
+		labelGameClassSpaceStationBuildings.textProperty()
+				.bind(Bindings.convert(buildingManager.getNumBuildingsLeftProperty(Building.SPACE_STATION)));
+	}
+	
+	private void addSpecialAbilityExplenations() {
+		Tooltip tooltipClassEffect = new Tooltip();
+		Tooltip tooltipGovernmentEffect = new Tooltip();
+		tooltipClassEffect.setText(player.getPlayerClass().getClassEffectDescription());
+		tooltipGovernmentEffect.setText(player.getPlayerClass().getGovernmentEffectDescription());
+		
+		Tooltip.install(panelGameClassClassEffectCover, tooltipClassEffect);
+		Tooltip.install(panelGameClassGovermentEffectCover, tooltipGovernmentEffect);
+	}
+	
+	private void addSpecialAbilityMoveContextMenus() {
+		if (player.getPlayerClass().isClassAbilityMove()) {
+			addContextMenu("Spezialfähigkeit: " + player.getPlayerClass().getClassEffectName(), panelGameClassClassEffectCover,
+					e -> executeClassAbilityMove());
+		}
+		if (player.getPlayerClass().isGovernmentAbilityMove()) {
+			addContextMenu("Spezialfähigkeit: " + player.getPlayerClass().getGovernmentEffectName(), panelGameClassGovermentEffectCover,
+					e -> executeGovernmentAbilityMove());
+		}
+	}
+	
+	private void executeClassAbilityMove() {
+		// TODO Auto-generated method stub
+	}
+	
+	private void executeGovernmentAbilityMove() {
+		// TODO Auto-generated method stub
+	}
+	
+	private void addContextMenu(String itemText, Node node, EventHandler<ActionEvent> handler) {
+		ContextMenu contextMenu = new ContextMenu();
+		MenuItem menu = new MenuItem(itemText);
+		menu.setOnAction(handler);
+		contextMenu.getItems().add(menu);
+		
+		//show or hide the context menu
+		node.setOnMouseClicked((e) -> {
+			if (e.getButton() == MouseButton.SECONDARY) {
+				contextMenu.show(node, e.getScreenX(), e.getScreenY());
+			}
+			else {
+				contextMenu.hide();
+			}
+		});
 	}
 }

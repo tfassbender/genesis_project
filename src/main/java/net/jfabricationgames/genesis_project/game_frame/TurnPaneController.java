@@ -6,7 +6,10 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import net.jfabricationgames.genesis_project.game.Constants;
+import net.jfabricationgames.genesis_project.manager.ITurnManager;
 
 public class TurnPaneController implements Initializable {
 	
@@ -36,13 +39,42 @@ public class TurnPaneController implements Initializable {
 	@FXML
 	private Label labelTurnName6;
 	
+	private final String turnOverImage = "cards/turn_goals/turn_goal_turn_over.png";
+	
+	private ITurnManager turnManager;
+	
+	public TurnPaneController(ITurnManager turnManager) {
+		this.turnManager = turnManager;
+	}
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		GuiUtils.loadImageToView("cards/turn_goals/turn_goal_turn_over.png", true, imageTurn1);
-		GuiUtils.loadImageToView("cards/turn_goals/turn_goal_turn_over.png", true, imageTurn2);
-		GuiUtils.loadImageToView("cards/turn_goals/turn_goal_turn_over.png", true, imageTurn3);
-		GuiUtils.loadImageToView("cards/turn_goals/turn_goal_turn_over.png", true, imageTurn4);
-		GuiUtils.loadImageToView("cards/turn_goals/turn_goal_turn_over.png", true, imageTurn5);
-		GuiUtils.loadImageToView("cards/turn_goals/turn_goal_turn_over.png", true, imageTurn6);
+		initializeTurnLabels();
+		updateTurnImages();
+	}
+	
+	private void initializeTurnLabels() {
+		Label[] labels = new Label[] {labelTurnName1, labelTurnName2, labelTurnName3, labelTurnName4, labelTurnName5, labelTurnName6};
+		
+		for (int i = 0; i < Constants.TURNS_PLAYED; i++) {
+			Label label = labels[i];
+			label.setText(turnManager.getTurnGoals().get(i).getName());
+		}
+	}
+	
+	public void updateTurnImages() {
+		ImageView[] images = new ImageView[] {imageTurn1, imageTurn2, imageTurn3, imageTurn4, imageTurn5, imageTurn6};
+		
+		for (int i = 0; i < turnManager.getTurn() - 1; i++) {
+			Image image = GuiUtils.loadImage(turnOverImage, true);
+			images[i].setImage(image);
+			images[i].setCache(true);
+		}
+		for (int i = turnManager.getTurn() - 1; i < Constants.TURNS_PLAYED; i++) {
+			String imagePath = turnManager.getTurnGoals().get(i).getImagePath();
+			Image image = GuiUtils.loadImage(imagePath, true);
+			images[i].setImage(image);
+			images[i].setCache(true);
+		}
 	}
 }

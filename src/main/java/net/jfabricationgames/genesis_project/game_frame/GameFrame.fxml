@@ -17,7 +17,7 @@
               <items>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                      <children>
-                        <SplitPane dividerPositions="0.6" layoutX="286.0" layoutY="312.0" orientation="VERTICAL" prefHeight="773.0" prefWidth="892.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <SplitPane dividerPositions="0.2230869001297017" layoutX="286.0" layoutY="312.0" orientation="VERTICAL" prefHeight="773.0" prefWidth="892.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <items>
                             <AnchorPane fx:id="anchorBoardPane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
@@ -37,6 +37,11 @@
                                           <Tab text="Technologien">
                                             <content>
                                               <AnchorPane fx:id="anchorTechnologyPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                            </content>
+                                          </Tab>
+                                          <Tab text="Allianzen">
+                                            <content>
+                                              <AnchorPane fx:id="anchorAlliancePanel" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                                             </content>
                                           </Tab>
                                           <Tab text="Runden">

@@ -1,6 +1,9 @@
 package net.jfabricationgames.genesis_project.manager;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import net.jfabricationgames.genesis_project.game.BuildingResources;
+import net.jfabricationgames.genesis_project.game.CompleteResources;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
 import net.jfabricationgames.genesis_project.game.Resource;
@@ -9,93 +12,94 @@ public class ResourceManager implements IResourceManager {
 	
 	private Player player;
 	
-	private BuildingResources buildingResources;
-	private int researchPoints;
-	private int scientists;
-	private int ftl;
+	private IntegerProperty resourcesC = new SimpleIntegerProperty(this, "resourcesC");
+	private IntegerProperty resourcesSi = new SimpleIntegerProperty(this, "resourcesSi");
+	private IntegerProperty resourcesFe = new SimpleIntegerProperty(this, "resourcesFe");
+	private IntegerProperty researchPoints = new SimpleIntegerProperty(this, "researchPoints");
+	private IntegerProperty scientists = new SimpleIntegerProperty(this, "scientists");
+	private IntegerProperty ftl = new SimpleIntegerProperty(this, "ftl");
 	
 	public ResourceManager(Player player) {
 		this.player = player;
-		buildingResources = new BuildingResources();
 	}
 	
 	@Override
 	public int getResourcesC() {
-		return buildingResources.getResourcesC();
+		return resourcesC.get();
 	}
 	@Override
 	public void setResourcesC(int resources) {
-		buildingResources.setResourcesC(resources);
+		resourcesC.set(resources);
 	}
 	@Override
 	public void addResourcesC(int resources) {
-		buildingResources.addResourcesC(resources);
+		resourcesC.set(resourcesC.get() + resources);
 	}
 	
 	@Override
 	public int getResourcesSi() {
-		return buildingResources.getResourcesSi();
+		return resourcesSi.get();
 	}
 	@Override
 	public void setResourcesSi(int resources) {
-		buildingResources.setResourcesSi(resources);
+		resourcesSi.set(resources);
 	}
 	@Override
 	public void addResourcesSi(int resources) {
-		buildingResources.addResourcesSi(resources);
+		resourcesSi.set(resourcesSi.get() + resources);
 	}
 	
 	@Override
 	public int getResourcesFe() {
-		return buildingResources.getResourcesFe();
+		return resourcesFe.get();
 	}
 	@Override
 	public void setResourcesFe(int resources) {
-		buildingResources.setResourcesFe(resources);
+		resourcesFe.set(resources);
 	}
 	
 	@Override
 	public void addResourcesFe(int resources) {
-		buildingResources.addResourcesFe(resources);
+		resourcesFe.set(resourcesFe.get() + resources);
 	}
 	
 	@Override
 	public int getResearchPoints() {
-		return researchPoints;
+		return researchPoints.get();
 	}
 	@Override
 	public void setResearchPoints(int points) {
-		this.researchPoints = points;
+		this.researchPoints.set(points);
 	}
 	@Override
 	public void addResearchPoints(int points) {
-		this.researchPoints += points;
+		this.researchPoints.set(this.researchPoints.get() + points);
 	}
 	
 	@Override
 	public int getScientists() {
-		return scientists;
+		return scientists.get();
 	}
 	@Override
 	public void setScientists(int scientists) {
-		this.scientists = scientists;
+		this.scientists.set(scientists);
 	}
 	@Override
 	public void addScientists(int scientists) {
-		this.scientists += scientists;
+		this.scientists.set(this.scientists.get() + scientists);
 	}
 	
 	@Override
 	public int getFTL() {
-		return ftl;
+		return ftl.get();
 	}
 	@Override
 	public void setFTL(int ftl) {
-		this.ftl = ftl;
+		this.ftl.set(ftl);
 	}
 	@Override
 	public void addFTL(int ftl) {
-		this.ftl += ftl;
+		this.ftl.set(this.ftl.get() + ftl);
 	}
 	
 	@Override
@@ -122,7 +126,17 @@ public class ResourceManager implements IResourceManager {
 		
 		return resourcesAvailable;
 	}
-
+	@Override
+	public boolean isResourcesAvailable(CompleteResources resources) {
+		boolean resourcesAvailable = true;
+		
+		for (Resource resource : CompleteResources.COMPLETE_RESOURCES) {
+			resourcesAvailable &= isResourceAvailable(resource, resources.getResources(resource));
+		}
+		
+		return resourcesAvailable;
+	}
+	
 	@Override
 	public int getResources(Resource resource) {
 		switch (resource) {
@@ -194,6 +208,11 @@ public class ResourceManager implements IResourceManager {
 	}
 	@Override
 	public void reduceResources(Resource resource, int amount) {
+		if (getResources(resource) < amount) {
+			throw new IllegalArgumentException("Trying to take more resources than present (type: " + resource + "current: " + getResources(resource)
+					+ "; to be taken: " + amount + ")");
+		}
+		
 		switch (resource) {
 			case CARBON:
 				addResourcesC(-amount);
@@ -217,7 +236,7 @@ public class ResourceManager implements IResourceManager {
 				throw new IllegalArgumentException("The Resource " + resource + " is unknown");
 		}
 	}
-
+	
 	@Override
 	public void addResources(BuildingResources resources) {
 		for (Resource resource : BuildingResources.BUILDING_RESOURCES) {
@@ -226,11 +245,32 @@ public class ResourceManager implements IResourceManager {
 	}
 	@Override
 	public void reduceResources(BuildingResources resources) {
+		if (!isResourcesAvailable(resources)) {
+			throw new IllegalArgumentException(
+					"Trying to take more resources than present (current: " + getBuildingResources() + "; to be taken: " + resources + ")");
+		}
 		for (Resource resource : BuildingResources.BUILDING_RESOURCES) {
 			reduceResources(resource, resources.getResources(resource));
 		}
 	}
-
+	
+	@Override
+	public void addResources(CompleteResources resources) {
+		for (Resource resource : CompleteResources.COMPLETE_RESOURCES) {
+			addResources(resource, resources.getResources(resource));
+		}
+	}
+	@Override
+	public void reduceResources(CompleteResources resources) {
+		if (!isResourcesAvailable(resources)) {
+			throw new IllegalArgumentException(
+					"Trying to take more resources than present (current: " + getCompleteResources() + "; to be taken: " + resources + ")");
+		}
+		for (Resource resource : CompleteResources.COMPLETE_RESOURCES) {
+			reduceResources(resource, resources.getResources(resource));
+		}
+	}
+	
 	@Override
 	public void addResources(ResearchResources resources) {
 		for (Resource resource : ResearchResources.RESEARCH_RESOURCES) {
@@ -239,6 +279,10 @@ public class ResourceManager implements IResourceManager {
 	}
 	@Override
 	public void reduceResources(ResearchResources resources) {
+		if (!isResourcesAvailable(resources)) {
+			throw new IllegalArgumentException(
+					"Trying to take more resources than present (current: " + getResearchResources() + "; to be taken: " + resources + ")");
+		}
 		for (Resource resource : ResearchResources.RESEARCH_RESOURCES) {
 			reduceResources(resource, resources.getResources(resource));
 		}
@@ -258,40 +302,78 @@ public class ResourceManager implements IResourceManager {
 	
 	@Override
 	public int getResourcesPrimary() {
-		return buildingResources.getResourcesPrimary(player.getPlayerClass());
+		return getResources(player.getPlayerClass().getPrimaryResource());
 	}
 	@Override
 	public void setResourcesPrimary(int resources) {
-		buildingResources.setResourcesPrimary(player.getPlayerClass(), resources);
+		setResources(player.getPlayerClass().getPrimaryResource(), resources);
 	}
 	@Override
 	public void addResourcesPrimary(int resources) {
-		buildingResources.addResourcesPrimary(player.getPlayerClass(), resources);
+		addResources(player.getPlayerClass().getPrimaryResource(), resources);
 	}
 	
 	@Override
 	public int getResourcesSecundary() {
-		return buildingResources.getResourcesSecundary(player.getPlayerClass());
+		return getResources(player.getPlayerClass().getSecundaryResource());
 	}
 	@Override
 	public void setResourcesSecundary(int resources) {
-		buildingResources.setResourcesSecundary(player.getPlayerClass(), resources);
+		setResources(player.getPlayerClass().getSecundaryResource(), resources);
 	}
 	@Override
 	public void addResourcesSecundary(int resources) {
-		buildingResources.addResourcesSecundary(player.getPlayerClass(), resources);
+		addResources(player.getPlayerClass().getSecundaryResource(), resources);
 	}
 	
 	@Override
 	public int getResourcesTertiary() {
-		return buildingResources.getResourcesTertiary(player.getPlayerClass());
+		return getResources(player.getPlayerClass().getTertiaryResource());
 	}
 	@Override
 	public void setResourcesTertiary(int resources) {
-		buildingResources.setResourcesTertiary(player.getPlayerClass(), resources);
+		setResources(player.getPlayerClass().getTertiaryResource(), resources);
 	}
 	@Override
 	public void addResourcesTertiary(int resources) {
-		buildingResources.addResourcesTertiary(player.getPlayerClass(), resources);
+		addResources(player.getPlayerClass().getTertiaryResource(), resources);
+	}
+	
+	@Override
+	public BuildingResources getBuildingResources() {
+		return new BuildingResources(getResourcesC(), getResourcesSi(), getResourcesFe());
+	}
+	@Override
+	public ResearchResources getResearchResources() {
+		return new ResearchResources(getResourcesC(), getResourcesSi(), getResourcesFe(), getScientists());
+	}
+	@Override
+	public CompleteResources getCompleteResources() {
+		return new CompleteResources(getResourcesC(), getResourcesSi(), getResourcesFe(), getScientists(), getResearchPoints(), getFTL());
+	}
+	
+	@Override
+	public IntegerProperty getResourcesCProperty() {
+		return resourcesC;
+	}
+	@Override
+	public IntegerProperty getResourcesSiProperty() {
+		return resourcesSi;
+	}
+	@Override
+	public IntegerProperty getResourcesFeProperty() {
+		return resourcesFe;
+	}
+	@Override
+	public IntegerProperty getResearchPointsProperty() {
+		return researchPoints;
+	}
+	@Override
+	public IntegerProperty getScientistsProperty() {
+		return scientists;
+	}
+	@Override
+	public IntegerProperty getFTLProperty() {
+		return ftl;
 	}
 }

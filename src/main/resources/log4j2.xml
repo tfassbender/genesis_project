@@ -6,8 +6,8 @@
 
 	<Appenders>
 		<RollingFile name="fileLogger"
-			fileName="${basePath}/partikel_measuring_controller.log"
-			filePattern="${basePath}/partikel_measuring_controller-%d{yyyy-MM-dd}.log">
+			fileName="${basePath}/genesis_project.log"
+			filePattern="${basePath}/genesis_project-%d{yyyy-MM-dd}.log">
 			<PatternLayout>
 				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
 				</pattern>
@@ -24,7 +24,7 @@
 		</Console>
 	</Appenders>
 	<Loggers>
-		<Logger name="fzj.partikel_measuring_controller" level="debug"
+		<Logger name="net.jfabricationgames.genesis_project" level="debug"
 			additivity="true">
 			<appender-ref ref="fileLogger" level="debug" />
 		</Logger>

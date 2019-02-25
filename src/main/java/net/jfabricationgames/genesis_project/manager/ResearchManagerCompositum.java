@@ -1,5 +1,9 @@
 package net.jfabricationgames.genesis_project.manager;
 
+import com.google.common.annotations.VisibleForTesting;
+
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
 import net.jfabricationgames.genesis_project.game.Game;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
@@ -9,7 +13,7 @@ public class ResearchManagerCompositum implements IResearchManager {
 	
 	private Game game;
 	
-	private ResearchManager globalManager;
+	private IResearchManager globalManager;
 	
 	public ResearchManagerCompositum(Game game) {
 		this.game = game;
@@ -22,7 +26,7 @@ public class ResearchManagerCompositum implements IResearchManager {
 			return globalManager.getState(ResearchArea.WEAPON);
 		}
 		else {
-			throw new UnsupportedOperationException("The compositum implementation can only handle WEAPON states");
+			throw new IllegalArgumentException("The compositum implementation can only handle WEAPON states");
 		}
 	}
 	
@@ -33,7 +37,7 @@ public class ResearchManagerCompositum implements IResearchManager {
 			game.getPlayers().forEach((p) -> p.getResearchManager().increaseState(ResearchArea.WEAPON));
 		}
 		else {
-			throw new UnsupportedOperationException("The compositum implementation can only handle WEAPON states");
+			throw new IllegalArgumentException("The compositum implementation can only handle WEAPON states");
 		}
 	}
 	
@@ -70,5 +74,54 @@ public class ResearchManagerCompositum implements IResearchManager {
 	@Override
 	public void addResearchResources(ResearchResources resources, ResearchArea area) {
 		globalManager.addResearchResources(resources, area);
+	}
+	
+	@VisibleForTesting
+	protected Game getGame() {
+		return game;
+	}
+	
+	@Override
+	public IntegerProperty getStateProperty(ResearchArea area) {
+		if (area == ResearchArea.WEAPON) {
+			return globalManager.getStateProperty(ResearchArea.WEAPON);
+		}
+		else {
+			throw new IllegalArgumentException("The compositum implementation can only handle WEAPON states");
+		}
+	}
+	
+	@Override
+	public int getDroneAdditionalDefense() {
+		throw new UnsupportedOperationException("The compositum implementation has no user bound functions");
+	}
+	@Override
+	public int getSpaceStationAdditionalDefense() {
+		throw new UnsupportedOperationException("The compositum implementation has no user bound functions");
+	}
+	@Override
+	public int getDroneAdditionalRange() {
+		throw new UnsupportedOperationException("The compositum implementation has no user bound functions");
+	}
+	@Override
+	public int getSpaceStationAdditionalRange() {
+		throw new UnsupportedOperationException("The compositum implementation has no user bound functions");
+	}
+	/**
+	 * Get the additional defense by the WEAPON research area (for all fields)
+	 */
+	@Override
+	public int getAdditionalWeaponDefense() {
+		return globalManager.getAdditionalWeaponDefense();
+	}
+	
+	@Override
+	public IntegerProperty getMaxReachableStateProperty(ResearchArea area) {
+		return globalManager.getMaxReachableStateProperty(area);
+	}
+	
+	@Override
+	public ObjectProperty<ResearchResources> getResearchResourcesNeededLeftProperties(ResearchArea area) {
+		return globalManager.getResearchResourcesNeededLeftProperties(area);
 	}
 }

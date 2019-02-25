@@ -2,6 +2,8 @@ package net.jfabricationgames.genesis_project.game;
 
 import java.util.Map;
 
+import net.jfabricationgames.genesis_project.game.Board.Position;
+
 /**
  * This class is used to keep all game constants as public static fields.</br>
  * No final fields are used because the constants are loaded from the database at game start
@@ -13,6 +15,11 @@ public abstract class Constants {
 	public static int TURNS_PLAYED = 6;
 	public static int MAX_RESEARCH_STATE_DEFAULT = 6;
 	public static int MAX_RESEARCH_STATE_WEAPON = 10;
+	public static int RESEARCH_POINTS_FOR_STATE_INCREASE = 5;
+	public static int RESEARCH_SCIENTISTS_FOR_LOW_STATE = 0;
+	public static int RESEARCH_SCIENTISTS_FOR_HIGH_STATE = 1;
+	public static int RESEARCH_STATE_HIGH = 5;//5 or above
+	public static int ALLIANCE_BONUS_COPIES = 2;
 	
 	//alliances
 	public static int ALLIANCE_MIN_PLANETS;
@@ -103,7 +110,7 @@ public abstract class Constants {
 				return BUILDING_COSTS_COLONIE[planetDistance];
 			case DRONE:
 				return BUILDING_COSTS_DRONE[planetDistance];
-			case GOVERMENT:
+			case GOVERNMENT:
 				return BUILDING_COSTS_GOVERNMENT[planetDistance];
 			case LABORATORY:
 				return BUILDING_COSTS_LABORATORY[planetDistance];
@@ -123,7 +130,21 @@ public abstract class Constants {
 	}
 	
 	/**
+	 * Building earnings for research points, scientists and dependent resources (primary, secondary and tertiary because they depend on the planet
+	 * the're built on)
+	 */
+	public static Map<Building, Integer> BUILDING_EARNINGS_RESEARCH_POINTS;
+	public static Map<Building, Integer> BUILDING_EARNINGS_SCIENTISTS;
+	public static Map<Building, DependentResources> BUILDING_EARNINGS_DEPENDENT;
+	public static Map<Building, Integer> BUILDING_EARNINGS_DEFENSE;
+	
+	/**
 	 * The number of buildings per player at game start (on field and class board).
 	 */
 	public static Map<Building, Integer> BUILDING_NUMBERS;
+	
+	/**
+	 * The positions of the cells on the board.
+	 */
+	public static Map<Position, int[]> CELL_COORDINATES;
 }

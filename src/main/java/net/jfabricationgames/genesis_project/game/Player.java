@@ -2,6 +2,7 @@ package net.jfabricationgames.genesis_project.game;
 
 import java.util.Objects;
 
+import net.jfabricationgames.genesis_project.manager.AllianceManager;
 import net.jfabricationgames.genesis_project.manager.BuildingManager;
 import net.jfabricationgames.genesis_project.manager.IAllianceManager;
 import net.jfabricationgames.genesis_project.manager.IBuildingManager;
@@ -10,7 +11,9 @@ import net.jfabricationgames.genesis_project.manager.IResearchManager;
 import net.jfabricationgames.genesis_project.manager.IResourceManager;
 import net.jfabricationgames.genesis_project.manager.ITechnologyManager;
 import net.jfabricationgames.genesis_project.manager.PointManager;
+import net.jfabricationgames.genesis_project.manager.ResearchManager;
 import net.jfabricationgames.genesis_project.manager.ResourceManager;
+import net.jfabricationgames.genesis_project.manager.TechnologyManager;
 import net.jfabricationgames.genesis_project.user.User;
 
 public class Player {
@@ -31,12 +34,15 @@ public class Player {
 	public Player(User user) {
 		this(user, null);
 	}
-	public Player(User user, Game game) {
-		this.game = game;
+	public Player(User user, PlayerClass playerClass) {
 		this.user = user;
-		pointManager = new PointManager();
+		this.playerClass = playerClass;
+		pointManager = new PointManager(this);
 		resourceManager = new ResourceManager(this);
 		buildingManager = new BuildingManager(this);
+		researchManager = new ResearchManager(this);
+		technologyManager = new TechnologyManager(this);
+		allianceManager = new AllianceManager(this);
 	}
 	
 	@Override
@@ -55,7 +61,7 @@ public class Player {
 	}
 	@Override
 	public String toString() {
-		return "Player[" + user.toString() + "]";
+		return user.getUsername();
 	}
 	
 	public User getUser() {
@@ -91,5 +97,7 @@ public class Player {
 	}
 	public void setGame(Game game) {
 		this.game = game;
+		//initialize the number of players in the research manager by calling the counter method
+		((ResearchManager) researchManager).getNumPlayersInGame();
 	}
 }

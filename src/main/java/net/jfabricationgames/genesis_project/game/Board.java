@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.OptionalInt;
 
 public class Board {
 	
@@ -43,12 +44,20 @@ public class Board {
 			return "Board.Position[" + x + "; " + y + "]";
 		}
 		
+		public String asCoordinateString() {
+			return x + " | " + y;
+		}
+		
 		public int getX() {
 			return x;
 		}
 		
 		public int getY() {
 			return y;
+		}
+		
+		public int[] getBoardLocation() {
+			return Constants.CELL_COORDINATES.get(this);
 		}
 	}
 	
@@ -90,6 +99,28 @@ public class Board {
 		}
 		
 		return neighbours;
+	}
+	
+	public List<Field> getPlayersPlanets(Player player) {
+		List<Field> playersPlanets = new ArrayList<Field>();
+		for (Field field : fields.values()) {
+			if (field.isPlanetField()) {
+				boolean playerOnPlanet = false;
+				for (PlayerBuilding building : field.getBuildings()) {
+					playerOnPlanet |= building != null && building.getPlayer().equals(player);
+				}
+				if (playerOnPlanet) {
+					playersPlanets.add(field);
+				}
+			}
+		}
+		return playersPlanets;
+	}
+	
+	public int getDistanceToNextPlayerField(Field field, Player player) {
+		List<Field> playersFields = getPlayersPlanets(player);
+		OptionalInt minDistance = playersFields.stream().mapToInt(field2 -> field.distanceTo(field2)).min();
+		return minDistance.orElse(-1);
 	}
 	
 	public Map<Position, Field> getFields() {

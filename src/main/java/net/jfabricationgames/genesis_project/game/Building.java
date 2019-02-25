@@ -3,18 +3,20 @@ package net.jfabricationgames.genesis_project.game;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.jfabricationgames.genesis_project.game_frame.GuiUtils;
+
 public enum Building {
 	
 	COLONY(Constants.BUILDING_COSTS_COLONIE, null, "colonies/colonie_"),//
 	MINE(Constants.BUILDING_COSTS_MINE, COLONY, "mines/mine_"),//
-	TRADING_POST(Constants.BUILDING_COSTS_TRAIDING_POST, COLONY, "traiding_posts/traiding_post_"),//
+	TRADING_POST(Constants.BUILDING_COSTS_TRAIDING_POST, COLONY, "trading_posts/trading_post_"),//
 	LABORATORY(Constants.BUILDING_COSTS_LABORATORY, COLONY, "laboratories/laboratory_"),//
-	GOVERMENT(Constants.BUILDING_COSTS_GOVERNMENT, TRADING_POST, "goverments/goverment_"),//
+	GOVERNMENT(Constants.BUILDING_COSTS_GOVERNMENT, TRADING_POST, "goverments/goverment_"),//
 	CITY(Constants.BUILDING_COSTS_CITY, TRADING_POST, "cities/city_"),//
 	RESEARCH_CENTER(Constants.BUILDING_COSTS_RESEARCH_CENTER, LABORATORY, "research_centers/research_center_"),//
 	DRONE(Constants.BUILDING_COSTS_DRONE, null, "drones/drone_"),//
 	SPACE_STATION(Constants.BUILDING_COSTS_SPACE_STATION, DRONE, "space_stations/space_station_"),//
-	SATELLITE(Constants.BUILDING_COSTS_SATELLITE, null, null);//TODO add satellite images
+	SATELLITE(Constants.BUILDING_COSTS_SATELLITE, null, "satellites/satellite_");//
 	
 	private final int[][] costs;
 	
@@ -61,7 +63,7 @@ public enum Building {
 			case COLONY:
 			case MINE:
 			case TRADING_POST:
-			case GOVERMENT:
+			case GOVERNMENT:
 			case CITY:
 			case LABORATORY:
 			case RESEARCH_CENTER:
@@ -72,6 +74,19 @@ public enum Building {
 				return true;
 			default:
 				throw new IllegalArgumentException("Unknown building type: " + this.name());
+		}
+	}
+	
+	public String getName() {
+		switch (this) {
+			case RESEARCH_CENTER:
+				return "Research Center";
+			case SPACE_STATION:
+				return "Space Station";
+			case TRADING_POST:
+				return "Trainding Post";
+			default:
+				return GuiUtils.toLeadingCapitalLetter(name());
 		}
 	}
 }

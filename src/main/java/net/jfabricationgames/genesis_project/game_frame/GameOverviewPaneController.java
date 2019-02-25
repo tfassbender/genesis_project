@@ -3,70 +3,131 @@ package net.jfabricationgames.genesis_project.game_frame;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import net.jfabricationgames.genesis_project.game.Game;
+import net.jfabricationgames.genesis_project.game.Player;
+import net.jfabricationgames.genesis_project.game.PlayerScore;
+import net.jfabricationgames.genesis_project.manager.GamePointManager;
+import net.jfabricationgames.genesis_project.manager.IPointManager;
+import net.jfabricationgames.genesis_project.manager.ITurnManager;
 
 public class GameOverviewPaneController implements Initializable {
 	
 	@FXML
-	private ListView<?> listGameOverviewPoints;
+	private ListView<PlayerScore> listGameOverviewPoints;
 	@FXML
 	private Label labelGameOverviewPlayerPoints;
 	@FXML
 	private Label labelGameOverviewPlayerPosition;
 	@FXML
-	private ListView<?> listGameOverviewPlayerOrder;
+	private ListView<Player> listGameOverviewPlayerOrder;
 	@FXML
 	private Label labelGameOverviewPlayersTurn;
+	@FXML
+	private ListView<Player> listGameOverviewNextTurnPlayerOrder;
 	
 	@FXML
-	private TableView<?> tableGameOverview;
+	private TableView<PlayerInfo> tableGameOverview;
 	@FXML
-	private TableColumn<?, ?> tableColumnGameOverviewPlayerName;
+	private TableColumn<PlayerInfo, String> tableColumnGameOverviewPlayerName;
 	@FXML
-	private TableColumn<?, ?> tableColumnGameOverviewPoints;
+	private TableColumn<PlayerInfo, Integer> tableColumnGameOverviewPoints;
 	@FXML
-	private TableColumn<?, ?> tableColumnGameOverviewPlanets;
+	private TableColumn<PlayerInfo, Integer> tableColumnGameOverviewPlanets;
 	@FXML
-	private TableColumn<?, ?> tableColumnGameOverviewAlliances;
+	private TableColumn<PlayerInfo, Integer> tableColumnGameOverviewAlliances;
 	@FXML
-	private TableColumn<?, ?> tableColumnGameOverviewResourcesC;
+	private TableColumn<PlayerInfo, Integer> tableColumnGameOverviewResourcesC;
 	@FXML
-	private TableColumn<?, ?> tableColumnGameOverviewResourcesFe;
+	private TableColumn<PlayerInfo, Integer> tableColumnGameOverviewResourcesFe;
 	@FXML
-	private TableColumn<?, ?> tableColumnGameOverviewResourcesSi;
+	private TableColumn<PlayerInfo, Integer> tableColumnGameOverviewResourcesSi;
 	@FXML
-	private TableColumn<?, ?> tableColumnGameOverviewResearchPoints;
+	private TableColumn<PlayerInfo, Integer> tableColumnGameOverviewResearchPoints;
 	@FXML
-	private TableColumn<?, ?> tableColumnGameOverviewScientists;
+	private TableColumn<PlayerInfo, Integer> tableColumnGameOverviewScientists;
 	@FXML
-	private TableColumn<?, ?> tableColumnGameOverviewNumBuildings;
+	private TableColumn<PlayerInfo, Integer> tableColumnGameOverviewNumBuildings;
 	@FXML
-	private TableColumn<?, ?> tableColumnGameOverviewColonies;
+	private TableColumn<PlayerInfo, Integer> tableColumnGameOverviewColonies;
 	@FXML
-	private TableColumn<?, ?> tableColumnGameOverviewMines;
+	private TableColumn<PlayerInfo, Integer> tableColumnGameOverviewMines;
 	@FXML
-	private TableColumn<?, ?> tableColumnGameOverviewTraidingPosts;
+	private TableColumn<PlayerInfo, Integer> tableColumnGameOverviewTraidingPosts;
 	@FXML
-	private TableColumn<?, ?> tableColumnGameOverviewLaboratories;
+	private TableColumn<PlayerInfo, Integer> tableColumnGameOverviewLaboratories;
 	@FXML
-	private TableColumn<?, ?> tableColumnGameOverviewGoverments;
+	private TableColumn<PlayerInfo, Integer> tableColumnGameOverviewGoverments;
 	@FXML
-	private TableColumn<?, ?> tableColumnGameOverviewCities;
+	private TableColumn<PlayerInfo, Integer> tableColumnGameOverviewCities;
 	@FXML
-	private TableColumn<?, ?> tableColumnGameOverviewResearchStations;
+	private TableColumn<PlayerInfo, Integer> tableColumnGameOverviewResearchStations;
 	@FXML
-	private TableColumn<?, ?> tableColumnGameOverviewDrones;
+	private TableColumn<PlayerInfo, Integer> tableColumnGameOverviewDrones;
 	@FXML
-	private TableColumn<?, ?> tableColumnGameOverviewSpaceStations;
+	private TableColumn<PlayerInfo, Integer> tableColumnGameOverviewSpaceStations;
+	
+	private Game game;
+	private Player player;
+	
+	public GameOverviewPaneController(Game game, Player player) {
+		this.game = game;
+		this.player = player;
+	}
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		// TODO Auto-generated method stub
+		bindPlayerOrderLists();
+		bindLabels();
+		addTableContent();
+	}
+	
+	private void bindPlayerOrderLists() {
+		ITurnManager turnManager = game.getTurnManager();
+		GamePointManager pointManager = game.getPointManager();
 		
+		listGameOverviewPoints.setItems(pointManager.getScoreList());
+		listGameOverviewPlayerOrder.setItems(turnManager.getCurrentTurnPlayerOrder());
+		listGameOverviewNextTurnPlayerOrder.setItems(turnManager.getNextTurnPlayerOrder());
+	}
+	
+	private void bindLabels() {
+		IPointManager pointManager = player.getPointManager();
+		ITurnManager turnManager = game.getTurnManager();
+		
+		labelGameOverviewPlayerPoints.textProperty().bind(Bindings.convert(pointManager.getPointsProperty()));
+		labelGameOverviewPlayerPosition.textProperty().bind(Bindings.convert(pointManager.getPositionProperty()));
+		labelGameOverviewPlayersTurn.textProperty().bind(Bindings.convert(turnManager.getCurrentPlayerProperty()));
+	}
+	
+	private void addTableContent() {
+		tableColumnGameOverviewPlayerName.setCellValueFactory(new PropertyValueFactory<PlayerInfo, String>("name"));
+		tableColumnGameOverviewPoints.setCellValueFactory(new PropertyValueFactory<PlayerInfo, Integer>("points"));
+		tableColumnGameOverviewPlanets.setCellValueFactory(new PropertyValueFactory<PlayerInfo, Integer>("planets"));
+		tableColumnGameOverviewAlliances.setCellValueFactory(new PropertyValueFactory<PlayerInfo, Integer>("alliances"));
+		tableColumnGameOverviewResourcesC.setCellValueFactory(new PropertyValueFactory<PlayerInfo, Integer>("resourcesC"));
+		tableColumnGameOverviewResourcesFe.setCellValueFactory(new PropertyValueFactory<PlayerInfo, Integer>("resourcesFe"));
+		tableColumnGameOverviewResourcesSi.setCellValueFactory(new PropertyValueFactory<PlayerInfo, Integer>("resourcesSi"));
+		tableColumnGameOverviewResearchPoints.setCellValueFactory(new PropertyValueFactory<PlayerInfo, Integer>("researchPoints"));
+		tableColumnGameOverviewScientists.setCellValueFactory(new PropertyValueFactory<PlayerInfo, Integer>("scientists"));
+		tableColumnGameOverviewNumBuildings.setCellValueFactory(new PropertyValueFactory<PlayerInfo, Integer>("buildings"));
+		tableColumnGameOverviewColonies.setCellValueFactory(new PropertyValueFactory<PlayerInfo, Integer>("colonies"));
+		tableColumnGameOverviewMines.setCellValueFactory(new PropertyValueFactory<PlayerInfo, Integer>("mines"));
+		tableColumnGameOverviewTraidingPosts.setCellValueFactory(new PropertyValueFactory<PlayerInfo, Integer>("tradingPosts"));
+		tableColumnGameOverviewLaboratories.setCellValueFactory(new PropertyValueFactory<PlayerInfo, Integer>("laboratories"));
+		tableColumnGameOverviewGoverments.setCellValueFactory(new PropertyValueFactory<PlayerInfo, Integer>("governments"));
+		tableColumnGameOverviewCities.setCellValueFactory(new PropertyValueFactory<PlayerInfo, Integer>("cities"));
+		tableColumnGameOverviewResearchStations.setCellValueFactory(new PropertyValueFactory<PlayerInfo, Integer>("researchCenters"));
+		tableColumnGameOverviewDrones.setCellValueFactory(new PropertyValueFactory<PlayerInfo, Integer>("drones"));
+		tableColumnGameOverviewSpaceStations.setCellValueFactory(new PropertyValueFactory<PlayerInfo, Integer>("spaceStations"));
+		
+		tableGameOverview.setItems(game.getPlayerInfoList());
 	}
 }
