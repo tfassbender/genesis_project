@@ -92,7 +92,7 @@ public class PlanetInfoPaneController implements Initializable {
 			else {
 				labelPlanetInfoPrimariResource.setText(noInfo);
 			}
-			labelPlanetInfoDefence.setText(Integer.toString(field.calculateDefence(game)));
+			labelPlanetInfoDefence.setText(Integer.toString(field.calculateDefense(game)));
 			labelPlanetInfoAlliances.setText(Integer.toString(field.getAlliances(game).size()));
 			PlayerBuilding[] buildings = field.getBuildings();
 			if (buildings.length > 3) {
@@ -136,7 +136,7 @@ public class PlanetInfoPaneController implements Initializable {
 			//space field
 			labelPlanetInfoType.setText(noInfo);
 			labelPlanetInfoPrimariResource.setText(noInfo);
-			labelPlanetInfoDefence.setText(Integer.toString(field.calculateDefence(game)));
+			labelPlanetInfoDefence.setText(Integer.toString(field.calculateDefense(game)));
 			labelPlanetInfoAlliances.setText(noInfo);
 			//search for a space building except a satellite (satellites are not listed here)
 			Optional<PlayerBuilding> spaceBuilding = field.getSpaceBuildings().stream()

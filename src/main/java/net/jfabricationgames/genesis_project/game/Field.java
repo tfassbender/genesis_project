@@ -147,7 +147,7 @@ public class Field {
 	/**
 	 * Calculate the total defense of this field (consists of WEAPON defense and defense buildings)
 	 */
-	public int calculateDefence(Game game) {
+	public int calculateDefense(Game game) {
 		if (planet == Planet.CENTER) {
 			return 99;//the center planet can't be attacked (till the end of the game)
 		}

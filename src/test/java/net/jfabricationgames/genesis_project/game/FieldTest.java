@@ -36,6 +36,19 @@ class FieldTest {
 		Constants.BUILDING_NUMBERS.put(Building.SATELLITE, 99);
 	}
 	
+	protected static Game getInitializedGameWithDefenseBuildings() {
+		//create an initialized game with planets, buildings, ... (drone on 7|0, space station on 6|0)
+		Game game = GameCreationUtil.createGame();
+		
+		//add some additional buildings (player1 buildings have default range of 2; player2 buildings have range of 0)
+		Player player1 = game.getLocalPlayer();
+		Board board = game.getBoard();
+		board.getFields().get(new Position(1, 1)).build(new PlayerBuilding(Building.DRONE, player1), 0);
+		board.getFields().get(new Position(3, 3)).build(new PlayerBuilding(Building.SPACE_STATION, player1), 0);
+		board.getFields().get(new Position(0, 3)).build(new PlayerBuilding(Building.SPACE_STATION, player1), 0);
+		return game;
+	}
+	
 	@Test
 	public void testBuild() {
 		initBuildingNumbers();
@@ -147,20 +160,12 @@ class FieldTest {
 	
 	@Test
 	public void testGetDefense() {
-		//create an initialized game with planets, buildings, ... (drone on 7|0, space station on 6|0)
-		Game game = GameCreationUtil.createGame();
+		Game game = getInitializedGameWithDefenseBuildings();
 		
-		//add some additional buildings (player1 buildings have default range of 2; player2 buildings have range of 0)
-		Player player1 = game.getLocalPlayer();
-		Board board = game.getBoard();
-		board.getFields().get(new Position(1, 1)).build(new PlayerBuilding(Building.DRONE, player1), 0);
-		board.getFields().get(new Position(3, 3)).build(new PlayerBuilding(Building.SPACE_STATION, player1), 0);
-		board.getFields().get(new Position(0, 3)).build(new PlayerBuilding(Building.SPACE_STATION, player1), 0);
-		
-		assertEquals(2, game.getBoard().getFields().get(new Position(0, 0)).calculateDefence(game));
-		assertEquals(12, game.getBoard().getFields().get(new Position(2, 3)).calculateDefence(game));
-		assertEquals(10, game.getBoard().getFields().get(new Position(2, 4)).calculateDefence(game));
-		assertEquals(5, game.getBoard().getFields().get(new Position(3, 3)).calculateDefence(game));
+		assertEquals(2, game.getBoard().getFields().get(new Position(0, 0)).calculateDefense(game));
+		assertEquals(12, game.getBoard().getFields().get(new Position(2, 3)).calculateDefense(game));
+		assertEquals(10, game.getBoard().getFields().get(new Position(2, 4)).calculateDefense(game));
+		assertEquals(5, game.getBoard().getFields().get(new Position(3, 3)).calculateDefense(game));
 	}
 	
 	@Test
