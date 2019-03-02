@@ -126,4 +126,8 @@ public class Board {
 	public Map<Position, Field> getFields() {
 		return fields;
 	}
+	
+	public Field getField(int x, int y) {
+		return fields.get(new Position(x, y));
+	}
 }
