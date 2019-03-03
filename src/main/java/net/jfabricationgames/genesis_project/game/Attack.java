@@ -149,4 +149,10 @@ public class Attack {
 	public AttackTarget getAttackTarget() {
 		return attackTarget;
 	}
+	public int[] getAttackPenalty() {
+		return attackPenalty;
+	}
+	public int[] getPenaltyOffsets() {
+		return penaltyOffsets;
+	}
 }
