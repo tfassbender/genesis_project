@@ -15,6 +15,14 @@ public class User implements Serializable {
 	private boolean online;
 	private boolean inGame;
 	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public User() {
+		
+	}
+	
 	public User(String username) {
 		this.username = username;
 	}

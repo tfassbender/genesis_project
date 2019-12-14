@@ -2,10 +2,16 @@ package net.jfabricationgames.genesis_project.manager;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import net.jfabricationgames.genesis_project.game.Alliance;
 import net.jfabricationgames.genesis_project.game.AllianceBonus;
 import net.jfabricationgames.genesis_project.game.Field;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY)
+@JsonSubTypes({@JsonSubTypes.Type(value = AllianceManager.class, name = "AllianceManager"),
+		@JsonSubTypes.Type(value = AllianceManagerCompositum.class, name = "AllianceManagerCompositum")})
 public interface IAllianceManager {
 	
 	public List<Alliance> getAlliances();

@@ -1,11 +1,16 @@
 package net.jfabricationgames.genesis_project.manager;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import javafx.beans.property.IntegerProperty;
 import net.jfabricationgames.genesis_project.game.BuildingResources;
 import net.jfabricationgames.genesis_project.game.CompleteResources;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
 import net.jfabricationgames.genesis_project.game.Resource;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY)
+@JsonSubTypes({@JsonSubTypes.Type(value = ResourceManager.class, name = "ResourceManager")})
 public interface IResourceManager {
 	
 	public int getResourcesC();

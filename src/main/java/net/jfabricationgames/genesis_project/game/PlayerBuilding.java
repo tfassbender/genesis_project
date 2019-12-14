@@ -10,6 +10,14 @@ public class PlayerBuilding {
 	private Building building;
 	private Player player;
 	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public PlayerBuilding() {
+		
+	}
+	
 	public PlayerBuilding(Building building, Player player) {
 		this.building = building;
 		this.player = player;

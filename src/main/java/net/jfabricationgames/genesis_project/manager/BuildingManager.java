@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.annotations.VisibleForTesting;
 
@@ -23,7 +24,8 @@ import net.jfabricationgames.genesis_project.game.Planet;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.PlayerBuilding;
 import net.jfabricationgames.genesis_project.game.Resource;
-import net.jfabricationgames.genesis_project.json.CustomIntegerPropertySerializer;
+import net.jfabricationgames.genesis_project.json.deserializer.CustomIntegerPropertyDeserializer;
+import net.jfabricationgames.genesis_project.json.serializer.CustomIntegerPropertySerializer;
 
 public class BuildingManager implements IBuildingManager {
 	
@@ -32,7 +34,16 @@ public class BuildingManager implements IBuildingManager {
 	//the buildings left on the class board
 	@VisibleForTesting
 	@JsonSerialize(contentUsing = CustomIntegerPropertySerializer.class)
+	@JsonDeserialize(contentUsing = CustomIntegerPropertyDeserializer.class)
 	protected Map<Building, IntegerProperty> numBuildingsLeft;
+	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public BuildingManager() {
+		
+	}
 	
 	public BuildingManager(Player player) {
 		this.player = player;

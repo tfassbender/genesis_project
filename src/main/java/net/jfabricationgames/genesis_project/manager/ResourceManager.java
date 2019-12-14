@@ -1,6 +1,7 @@
 package net.jfabricationgames.genesis_project.manager;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javafx.beans.property.IntegerProperty;
@@ -10,24 +11,39 @@ import net.jfabricationgames.genesis_project.game.CompleteResources;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
 import net.jfabricationgames.genesis_project.game.Resource;
-import net.jfabricationgames.genesis_project.json.CustomIntegerPropertySerializer;
+import net.jfabricationgames.genesis_project.json.deserializer.CustomIntegerPropertyDeserializer;
+import net.jfabricationgames.genesis_project.json.serializer.CustomIntegerPropertySerializer;
 
 public class ResourceManager implements IResourceManager {
 	
 	private Player player;
-
+	
 	@JsonSerialize(using = CustomIntegerPropertySerializer.class)
+	@JsonDeserialize(using = CustomIntegerPropertyDeserializer.class)
 	private IntegerProperty resourcesC = new SimpleIntegerProperty(this, "resourcesC");
 	@JsonSerialize(using = CustomIntegerPropertySerializer.class)
+	@JsonDeserialize(using = CustomIntegerPropertyDeserializer.class)
 	private IntegerProperty resourcesSi = new SimpleIntegerProperty(this, "resourcesSi");
 	@JsonSerialize(using = CustomIntegerPropertySerializer.class)
+	@JsonDeserialize(using = CustomIntegerPropertyDeserializer.class)
 	private IntegerProperty resourcesFe = new SimpleIntegerProperty(this, "resourcesFe");
 	@JsonSerialize(using = CustomIntegerPropertySerializer.class)
+	@JsonDeserialize(using = CustomIntegerPropertyDeserializer.class)
 	private IntegerProperty researchPoints = new SimpleIntegerProperty(this, "researchPoints");
 	@JsonSerialize(using = CustomIntegerPropertySerializer.class)
+	@JsonDeserialize(using = CustomIntegerPropertyDeserializer.class)
 	private IntegerProperty scientists = new SimpleIntegerProperty(this, "scientists");
 	@JsonSerialize(using = CustomIntegerPropertySerializer.class)
+	@JsonDeserialize(using = CustomIntegerPropertyDeserializer.class)
 	private IntegerProperty ftl = new SimpleIntegerProperty(this, "ftl");
+	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public ResourceManager() {
+		
+	}
 	
 	public ResourceManager(Player player) {
 		this.player = player;

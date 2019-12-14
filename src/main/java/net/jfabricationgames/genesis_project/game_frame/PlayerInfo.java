@@ -30,6 +30,14 @@ public class PlayerInfo {
 	private int drones;
 	private int spaceStations;
 	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public PlayerInfo() {
+		
+	}
+	
 	public PlayerInfo(Player player) {
 		initializeValues(player);
 	}

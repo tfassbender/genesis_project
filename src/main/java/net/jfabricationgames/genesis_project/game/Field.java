@@ -7,14 +7,23 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.annotations.VisibleForTesting;
 
 public class Field {
 	
 	private Board.Position position;
 	private Planet planet;
-	private final PlayerBuilding[] buildings;
-	private final List<PlayerBuilding> spaceBuildings;
+	private PlayerBuilding[] buildings;
+	private List<PlayerBuilding> spaceBuildings;
+	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public Field() {
+		
+	}
 	
 	public Field(Board.Position position, Planet planet, int players) {
 		this.position = position;
@@ -119,6 +128,7 @@ public class Field {
 		}
 	}
 	
+	@JsonIgnore
 	public boolean isPlanetField() {
 		return planet != null;
 	}
@@ -128,6 +138,7 @@ public class Field {
 	 * 
 	 * @return Returns true if the field has any content that is to be displayed.
 	 */
+	@JsonIgnore
 	public boolean isDisplayed() {
 		return isPlanetField() || !getSpaceBuildings().isEmpty();
 	}

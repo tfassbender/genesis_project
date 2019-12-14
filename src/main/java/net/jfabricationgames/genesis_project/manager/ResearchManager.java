@@ -3,6 +3,7 @@ package net.jfabricationgames.genesis_project.manager;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javafx.beans.property.IntegerProperty;
@@ -15,17 +16,22 @@ import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
 import net.jfabricationgames.genesis_project.game.Resource;
-import net.jfabricationgames.genesis_project.json.CustomIntegerPropertySerializer;
-import net.jfabricationgames.genesis_project.json.CustomObjectPropertyResearchResourcesSerializer;
+import net.jfabricationgames.genesis_project.json.deserializer.CustomIntegerPropertyDeserializer;
+import net.jfabricationgames.genesis_project.json.deserializer.CustomObjectPropertyResearchResourcesDeserializer;
+import net.jfabricationgames.genesis_project.json.serializer.CustomIntegerPropertySerializer;
+import net.jfabricationgames.genesis_project.json.serializer.CustomObjectPropertyResearchResourcesSerializer;
 
 public class ResearchManager implements IResearchManager {
 	
 	@JsonSerialize(contentUsing = CustomIntegerPropertySerializer.class)
+	@JsonDeserialize(contentUsing = CustomIntegerPropertyDeserializer.class)
 	private Map<ResearchArea, IntegerProperty> researchStates;
 	private Map<ResearchArea, Map<Integer, ResearchResources>> researchResourcesAdded;
 	@JsonSerialize(contentUsing = CustomIntegerPropertySerializer.class)
+	@JsonDeserialize(contentUsing = CustomIntegerPropertyDeserializer.class)
 	private Map<ResearchArea, IntegerProperty> maxReachableState;
 	@JsonSerialize(contentUsing = CustomObjectPropertyResearchResourcesSerializer.class)
+	@JsonDeserialize(contentUsing = CustomObjectPropertyResearchResourcesDeserializer.class)
 	private Map<ResearchArea, ObjectProperty<ResearchResources>> researchResourcesNeededLeftProperties;
 	
 	private int playersInGame;
@@ -33,6 +39,14 @@ public class ResearchManager implements IResearchManager {
 	private Player player;
 	
 	private static final double EPSILON = 1e-2;//for rounding values because of the double epsilon
+	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public ResearchManager() {
+		
+	}
 	
 	public ResearchManager(Player player) {
 		this(player, -1);

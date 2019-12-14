@@ -9,6 +9,12 @@ import java.util.OptionalInt;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import net.jfabricationgames.genesis_project.json.deserializer.CustomBoardPositionDeserializer;
+import net.jfabricationgames.genesis_project.json.serializer.CustomBoardPositionSerializer;
+import net.jfabricationgames.genesis_project.json.serializer.SerializationIdGenerator;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Board {
@@ -17,6 +23,14 @@ public class Board {
 		
 		private int x;
 		private int y;
+		
+		/**
+		 * DO NOT USE - empty constructor for json deserialization
+		 */
+		@Deprecated
+		public Position() {
+			
+		}
 		
 		public Position(int x, int y) {
 			this.x = x;
@@ -70,10 +84,12 @@ public class Board {
 	
 	private final Position center = new Position(8, 4);
 	
+	@JsonSerialize(keyUsing = CustomBoardPositionSerializer.class)
+	@JsonDeserialize(keyUsing = CustomBoardPositionDeserializer.class)
 	private Map<Position, Field> fields;
 	
-	//id for json serialization
-	private int id;
+	//final id for json serialization
+	private final int id = SerializationIdGenerator.getNextId();
 	
 	public Board() {
 		this.fields = new HashMap<Position, Field>();
@@ -140,8 +156,5 @@ public class Board {
 	
 	public int getId() {
 		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
 	}
 }

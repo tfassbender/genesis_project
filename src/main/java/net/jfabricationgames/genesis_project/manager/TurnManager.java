@@ -1,12 +1,13 @@
 package net.jfabricationgames.genesis_project.manager;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.google.common.annotations.VisibleForTesting;
 
 import javafx.beans.property.ObjectProperty;
@@ -17,14 +18,9 @@ import net.jfabricationgames.genesis_project.game.Constants;
 import net.jfabricationgames.genesis_project.game.Game;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.TurnGoal;
-import net.jfabricationgames.genesis_project.json.CustomObjectPropertyPlayerSerializer;
 import net.jfabricationgames.genesis_project.move.IMove;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class TurnManager implements ITurnManager {
-	
-	//id for json serialization
-	private int id;
 	
 	private int turn;
 	private PlayerOrder<Player> playerOrder;
@@ -33,10 +29,17 @@ public class TurnManager implements ITurnManager {
 	private ObservableList<Player> currentTurnPlayerOrder;
 	private ObservableList<Player> nextTurnPlayerOrder;
 	
-	@JsonSerialize(using = CustomObjectPropertyPlayerSerializer.class)
 	private ObjectProperty<Player> currentPlayer;
 	
 	private Game game;
+	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public TurnManager() {
+		
+	}
 	
 	public TurnManager(Game game) {
 		this.game = game;
@@ -174,6 +177,7 @@ public class TurnManager implements ITurnManager {
 	}
 	
 	@Override
+	@JsonIgnore
 	public boolean isTurnEnd() {
 		return playerOrder.isTurnEnd();
 	}
@@ -183,10 +187,30 @@ public class TurnManager implements ITurnManager {
 		return currentPlayer;
 	}
 	
-	public int getId() {
-		return id;
+	@JsonGetter("currentTurnPlayerOrder")
+	public List<Player> getCurrentTurnPlayerOrderAsArrayList() {
+		return new ArrayList<Player>(currentTurnPlayerOrder);
 	}
-	public void setId(int id) {
-		this.id = id;
+	@JsonSetter("currentTurnPlayerOrder")
+	public void setCurrentTurnPlayerOrderFromList(List<Player> currentTurnPlayerOrder) {
+		this.currentTurnPlayerOrder = FXCollections.observableArrayList(currentTurnPlayerOrder);
+	}
+	
+	@JsonGetter("nextTurnPlayerOrder")
+	public List<Player> getNextTurnPlayerOrderAsArrayList() {
+		return new ArrayList<Player>(nextTurnPlayerOrder);
+	}
+	@JsonSetter("nextTurnPlayerOrder")
+	public void setNextTurnPlayerOrderFromList(List<Player> nextTurnPlayerOrder) {
+		this.nextTurnPlayerOrder = FXCollections.observableArrayList(nextTurnPlayerOrder);
+	}
+	
+	@JsonGetter("currentPlayer")
+	public Player getCurrentPlayerWithoutProperty() {
+		return currentPlayer.get();
+	}
+	@JsonSetter("currentPlayer")
+	public void setCurrentPlayerWithoutProperty(Player player) {
+		this.currentPlayer = new SimpleObjectProperty<Player>(player);
 	}
 }

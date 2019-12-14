@@ -1,4 +1,4 @@
-package net.jfabricationgames.genesis_project.json;
+package net.jfabricationgames.genesis_project.json.serializer;
 
 import java.io.IOException;
 

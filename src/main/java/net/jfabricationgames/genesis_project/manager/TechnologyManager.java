@@ -12,6 +12,14 @@ public class TechnologyManager implements ITechnologyManager {
 	
 	//private Player player;
 	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public TechnologyManager() {
+		
+	}
+	
 	public TechnologyManager(Player player) {
 		//this.player = player;
 		initExploredTechnologies();

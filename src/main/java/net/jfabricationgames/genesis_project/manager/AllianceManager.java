@@ -30,6 +30,14 @@ public class AllianceManager implements IAllianceManager {
 	
 	private Player player;
 	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public AllianceManager() {
+		
+	}
+	
 	public AllianceManager(Player player) {
 		this.player = player;
 		alliances = new ArrayList<Alliance>(3);
@@ -152,7 +160,7 @@ public class AllianceManager implements IAllianceManager {
 		}
 		//bonuses taken are managed in the global alliance manager (composite implementation)
 		if (getPlayer() == null) {
-			bonusesTaken.get(bonus)[bonusIndex] = taken;			
+			bonusesTaken.get(bonus)[bonusIndex] = taken;
 		}
 		else {
 			getPlayer().getGame().getAllianceManager().setAllianceBonusTaken(bonus, bonusIndex, taken);

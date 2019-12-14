@@ -1,18 +1,22 @@
 package net.jfabricationgames.genesis_project.game;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import net.jfabricationgames.genesis_project.game_frame.GameFrameController;
 import net.jfabricationgames.genesis_project.game_frame.PlayerInfo;
+import net.jfabricationgames.genesis_project.json.serializer.SerializationIdGenerator;
 import net.jfabricationgames.genesis_project.manager.AllianceManagerCompositum;
 import net.jfabricationgames.genesis_project.manager.GamePointManager;
 import net.jfabricationgames.genesis_project.manager.IAllianceManager;
@@ -27,8 +31,8 @@ import net.jfabricationgames.genesis_project.move.IMove;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Game {
 	
-	//id for json serialization
-	private int id;
+	//final id for json serialization
+	private final int id = SerializationIdGenerator.getNextId();
 	
 	private List<Player> players;
 	private transient String localPlayerName;
@@ -44,6 +48,14 @@ public class Game {
 	
 	@JsonIgnore
 	private GameFrameController gameFrameController;
+	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public Game() {
+		
+	}
 	
 	public Game(List<Player> players, String localPlayerName) {
 		this.players = players;
@@ -304,7 +316,13 @@ public class Game {
 	public int getId() {
 		return id;
 	}
-	public void setId(int id) {
-		this.id = id;
+	
+	@JsonGetter("playerInfoList")
+	public List<PlayerInfo> getPlayerInfoListAsArrayList() {
+		return new ArrayList<PlayerInfo>(playerInfoList);
+	}
+	@JsonSetter("playerInfoList")
+	public void setPlayerInfoListFromList(List<PlayerInfo> playerInfoList) {
+		this.playerInfoList = FXCollections.observableArrayList(playerInfoList);
 	}
 }
