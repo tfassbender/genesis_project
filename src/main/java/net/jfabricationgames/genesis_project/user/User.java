@@ -3,6 +3,10 @@ package net.jfabricationgames.genesis_project.user;
 import java.io.Serializable;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "username")
 public class User implements Serializable {
 	
 	private static final long serialVersionUID = -1283513600616522694L;

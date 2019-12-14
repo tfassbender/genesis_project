@@ -5,6 +5,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import net.jfabricationgames.genesis_project.game_frame.GameFrameController;
@@ -20,7 +24,11 @@ import net.jfabricationgames.genesis_project.manager.ResearchManagerCompositum;
 import net.jfabricationgames.genesis_project.manager.TurnManager;
 import net.jfabricationgames.genesis_project.move.IMove;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Game {
+	
+	//id for json serialization
+	private int id;
 	
 	private List<Player> players;
 	private transient String localPlayerName;
@@ -34,6 +42,7 @@ public class Game {
 	
 	private ObservableList<PlayerInfo> playerInfoList;
 	
+	@JsonIgnore
 	private GameFrameController gameFrameController;
 	
 	public Game(List<Player> players, String localPlayerName) {
@@ -252,7 +261,7 @@ public class Game {
 	private void updateBoard() {
 		if (gameFrameController != null) {
 			//only if the controller is already set (will not be set in tests)
-			gameFrameController.getBoardPaneController().buildField();			
+			gameFrameController.getBoardPaneController().buildField();
 		}
 	}
 	
@@ -290,5 +299,12 @@ public class Game {
 	}
 	public void setGameFrameController(GameFrameController gameFrameController) {
 		this.gameFrameController = gameFrameController;
+	}
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
 	}
 }

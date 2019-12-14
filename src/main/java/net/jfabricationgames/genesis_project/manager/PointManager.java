@@ -1,12 +1,18 @@
 package net.jfabricationgames.genesis_project.manager;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import net.jfabricationgames.genesis_project.game.Player;
+import net.jfabricationgames.genesis_project.json.CustomIntegerPropertySerializer;
 
 public class PointManager implements IPointManager {
 	
+	@JsonSerialize(using = CustomIntegerPropertySerializer.class)
 	private IntegerProperty points = new SimpleIntegerProperty(this, "points");
+	@JsonSerialize(using = CustomIntegerPropertySerializer.class)
 	private IntegerProperty position = new SimpleIntegerProperty(this, "position");
 	
 	private Player player;
@@ -38,13 +44,17 @@ public class PointManager implements IPointManager {
 	public int getPosition() {
 		return player.getGame().getPointManager().getPosition(player);
 	}
-	
+
 	@Override
+	@JsonGetter("points")
+	@JsonSerialize(using = CustomIntegerPropertySerializer.class)
 	public IntegerProperty getPointsProperty() {
 		return points;
 	}
 	
 	@Override
+	@JsonGetter("position")
+	@JsonSerialize(using = CustomIntegerPropertySerializer.class)
 	public IntegerProperty getPositionProperty() {
 		return position;
 	}

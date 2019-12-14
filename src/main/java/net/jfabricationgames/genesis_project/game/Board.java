@@ -7,6 +7,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.OptionalInt;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Board {
 	
 	public static class Position {
@@ -66,14 +70,17 @@ public class Board {
 	
 	private final Position center = new Position(8, 4);
 	
-	public Field getCenterField() {
-		return fields.get(center);
-	}
-	
 	private Map<Position, Field> fields;
+	
+	//id for json serialization
+	private int id;
 	
 	public Board() {
 		this.fields = new HashMap<Position, Field>();
+	}
+	
+	public Field getCenterField() {
+		return fields.get(center);
 	}
 	
 	public List<Field> getNeighbourFields(Field field) {
@@ -129,5 +136,12 @@ public class Board {
 	
 	public Field getField(int x, int y) {
 		return fields.get(new Position(x, y));
+	}
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
 	}
 }

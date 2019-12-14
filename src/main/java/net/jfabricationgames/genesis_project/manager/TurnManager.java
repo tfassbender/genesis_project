@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.annotations.VisibleForTesting;
 
 import javafx.beans.property.ObjectProperty;
@@ -14,9 +17,14 @@ import net.jfabricationgames.genesis_project.game.Constants;
 import net.jfabricationgames.genesis_project.game.Game;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.TurnGoal;
+import net.jfabricationgames.genesis_project.json.CustomObjectPropertyPlayerSerializer;
 import net.jfabricationgames.genesis_project.move.IMove;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class TurnManager implements ITurnManager {
+	
+	//id for json serialization
+	private int id;
 	
 	private int turn;
 	private PlayerOrder<Player> playerOrder;
@@ -25,6 +33,7 @@ public class TurnManager implements ITurnManager {
 	private ObservableList<Player> currentTurnPlayerOrder;
 	private ObservableList<Player> nextTurnPlayerOrder;
 	
+	@JsonSerialize(using = CustomObjectPropertyPlayerSerializer.class)
 	private ObjectProperty<Player> currentPlayer;
 	
 	private Game game;
@@ -172,5 +181,12 @@ public class TurnManager implements ITurnManager {
 	@Override
 	public ObjectProperty<Player> getCurrentPlayerProperty() {
 		return currentPlayer;
+	}
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
 	}
 }

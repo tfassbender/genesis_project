@@ -2,6 +2,9 @@ package net.jfabricationgames.genesis_project.game;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import net.jfabricationgames.genesis_project.manager.AllianceManager;
 import net.jfabricationgames.genesis_project.manager.BuildingManager;
 import net.jfabricationgames.genesis_project.manager.IAllianceManager;
@@ -16,6 +19,7 @@ import net.jfabricationgames.genesis_project.manager.ResourceManager;
 import net.jfabricationgames.genesis_project.manager.TechnologyManager;
 import net.jfabricationgames.genesis_project.user.User;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "user")
 public class Player {
 	
 	private User user;

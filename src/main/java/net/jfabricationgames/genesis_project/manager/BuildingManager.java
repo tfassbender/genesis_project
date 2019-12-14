@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.annotations.VisibleForTesting;
 
 import javafx.beans.property.IntegerProperty;
@@ -22,6 +23,7 @@ import net.jfabricationgames.genesis_project.game.Planet;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.PlayerBuilding;
 import net.jfabricationgames.genesis_project.game.Resource;
+import net.jfabricationgames.genesis_project.json.CustomIntegerPropertySerializer;
 
 public class BuildingManager implements IBuildingManager {
 	
@@ -29,6 +31,7 @@ public class BuildingManager implements IBuildingManager {
 	
 	//the buildings left on the class board
 	@VisibleForTesting
+	@JsonSerialize(contentUsing = CustomIntegerPropertySerializer.class)
 	protected Map<Building, IntegerProperty> numBuildingsLeft;
 	
 	public BuildingManager(Player player) {

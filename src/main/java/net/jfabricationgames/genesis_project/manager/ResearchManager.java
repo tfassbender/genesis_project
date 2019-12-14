@@ -3,6 +3,8 @@ package net.jfabricationgames.genesis_project.manager;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -13,12 +15,17 @@ import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
 import net.jfabricationgames.genesis_project.game.Resource;
+import net.jfabricationgames.genesis_project.json.CustomIntegerPropertySerializer;
+import net.jfabricationgames.genesis_project.json.CustomObjectPropertyResearchResourcesSerializer;
 
 public class ResearchManager implements IResearchManager {
 	
+	@JsonSerialize(contentUsing = CustomIntegerPropertySerializer.class)
 	private Map<ResearchArea, IntegerProperty> researchStates;
 	private Map<ResearchArea, Map<Integer, ResearchResources>> researchResourcesAdded;
+	@JsonSerialize(contentUsing = CustomIntegerPropertySerializer.class)
 	private Map<ResearchArea, IntegerProperty> maxReachableState;
+	@JsonSerialize(contentUsing = CustomObjectPropertyResearchResourcesSerializer.class)
 	private Map<ResearchArea, ObjectProperty<ResearchResources>> researchResourcesNeededLeftProperties;
 	
 	private int playersInGame;
@@ -275,7 +282,7 @@ public class ResearchManager implements IResearchManager {
 		}
 		return playersInGame;
 	}
-
+	
 	@Override
 	public int getDroneAdditionalDefense() {
 		int additionalDefense = 0;
