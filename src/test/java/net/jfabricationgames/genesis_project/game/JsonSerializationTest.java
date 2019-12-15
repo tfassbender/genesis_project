@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -13,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import net.jfabricationgames.genesis_project.game.Board.Position;
 import net.jfabricationgames.genesis_project.testUtils.GameCreationUtil;
 
 class JsonSerializationTest {
@@ -35,11 +39,13 @@ class JsonSerializationTest {
 	public void testGameSerialization() throws JsonProcessingException {
 		Game game = GameCreationUtil.createGame();
 		
-		//just test whether there is no exception thrown
-		String serialized = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(game);
-		
 		if (printSerialized) {
+			String serialized = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(game);
 			System.out.println(serialized);
+		}
+		else {
+			//just test whether there is no exception thrown
+			mapper.writeValueAsString(game);
 		}
 	}
 	
@@ -72,6 +78,56 @@ class JsonSerializationTest {
 			PlayerBuilding building = deserialized.getBoard().getField(1, 1).getBuildings()[1];
 			assertEquals(Building.CITY, building.getBuilding());
 			assertEquals("Player1", building.getPlayer().getUser().getUsername());
+		}
+		catch (IOException ioe) {
+			ioe.printStackTrace();
+			throw ioe;
+		}
+	}
+	
+	@Test
+	public void testSerializeGameWithAlliance() throws IOException {
+		Game game = GameCreationUtil.createGame();
+		
+		//find the alliance
+		Map<Position, Field> fields = game.getBoard().getFields();
+		List<Field> alliance = Arrays
+				.asList(new Field[] {fields.get(new Position(0, 0)), fields.get(new Position(1, 1)), fields.get(new Position(2, 0))});
+		List<Field> satellites = Arrays.asList(new Field[] {fields.get(new Position(1, 0))});
+		
+		//create the alliance
+		game.getPlayers().get(0).getAllianceManager().addAlliance(alliance, satellites, AllianceBonus.POINTS, 0);
+		
+		//serialize and deserialize the game with the alliance
+		try {
+			String serialized = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(game);
+			
+			Game deserialized = mapper.readerFor(Game.class).readValue(serialized);
+			
+			assertTrue(!deserialized.getAllianceManager().getAllianceBonuses().isEmpty());
+			assertTrue(deserialized.getAllianceManager().getAlliances().get(0).getPlanets().get(0).getPosition().equals(new Position(0, 0)));
+			assertTrue(deserialized.getAllianceManager().getAlliances().get(0).getBonus().equals(AllianceBonus.POINTS));
+		}
+		catch (IOException ioe) {
+			ioe.printStackTrace();
+			throw ioe;
+		}
+	}
+	
+	@Test
+	public void testSerializeAttack() throws IOException {
+		Game game = GameCreationUtil.createGame();
+		Attack attack = new AttackBuilder().setGame(game).setAttackPenalty(5, 10, 15).setPenaltyOffsets(1, 2, 3).setEnemy(Enemy.PARASITE)
+				.setAttackTarget(AttackTarget.POINTS).setStrength(10).build();
+		
+		try {
+			String serialized = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(attack);
+			
+			Attack deserialized = mapper.readerFor(Attack.class).readValue(serialized);
+			
+			assertEquals(AttackTarget.POINTS, deserialized.getAttackTarget());
+			assertEquals(10, deserialized.getStrength());
+			assertEquals(Enemy.PARASITE, attack.getEnemy());
 		}
 		catch (IOException ioe) {
 			ioe.printStackTrace();

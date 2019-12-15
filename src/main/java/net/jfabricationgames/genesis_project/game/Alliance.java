@@ -8,6 +8,14 @@ public class Alliance {
 	private List<Field> connectingSatellites;
 	private AllianceBonus bonus;
 	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public Alliance() {
+		
+	}
+	
 	public Alliance(List<Field> planets, List<Field> connectingSatellites, AllianceBonus bonus) {
 		this.planets = planets;
 		this.connectingSatellites = connectingSatellites;

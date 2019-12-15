@@ -20,6 +20,14 @@ public class Attack {
 	private int[] attackPenalty;//the penalties for all players on the planet depending on the attack offset
 	private int[] penaltyOffsets;//the offsets on which penalties are applied
 	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public Attack() {
+		
+	}
+	
 	public Attack(Game game, Field targetField, Enemy enemy, int strength, AttackTarget attackTarget, int[] attackPenalty, int[] penaltyOffsets) {
 		if (attackPenalty.length != penaltyOffsets.length) {
 			throw new IllegalArgumentException("attackPenalty and penaltyOffsets must have the same length");
