@@ -67,84 +67,96 @@ public class MoveBuilder {
 	public MoveType getType() {
 		return type;
 	}
-	public void setType(MoveType type) {
+	public MoveBuilder setType(MoveType type) {
 		this.type = type;
+		return this;
 	}
 	
 	public Player getPlayer() {
 		return player;
 	}
-	public void setPlayer(Player player) {
+	public MoveBuilder setPlayer(Player player) {
 		this.player = player;
+		return this;
 	}
 	
 	public Field getField() {
 		return field;
 	}
-	public void setField(Field field) {
+	public MoveBuilder setField(Field field) {
 		this.field = field;
+		return this;
 	}
 	
 	public Building getBuilding() {
 		return building;
 	}
-	public void setBuilding(Building building) {
+	public MoveBuilder setBuilding(Building building) {
 		this.building = building;
+		return this;
 	}
 	
 	public ResearchArea getResearchArea() {
 		return researchArea;
 	}
-	public void setResearchArea(ResearchArea researchArea) {
+	public MoveBuilder setResearchArea(ResearchArea researchArea) {
 		this.researchArea = researchArea;
+		return this;
 	}
 	
 	public ResearchResources getResearchResources() {
 		return researchResources;
 	}
-	public void setResearchResources(ResearchResources researchResources) {
+	public MoveBuilder setResearchResources(ResearchResources researchResources) {
 		this.researchResources = researchResources;
+		return this;
 	}
 	
 	public Technology getTechnology() {
 		return technology;
 	}
-	public void setTechnology(Technology technology) {
+	public MoveBuilder setTechnology(Technology technology) {
 		this.technology = technology;
+		return this;
 	}
 	
 	public List<Field> getAlliancePlanets() {
 		return alliancePlanets;
 	}
-	public void setAlliancePlanets(List<Field> alliancePlanets) {
+	public MoveBuilder setAlliancePlanets(List<Field> alliancePlanets) {
 		this.alliancePlanets = alliancePlanets;
+		return this;
 	}
 	
 	public List<Field> getSatelliteFields() {
 		return satelliteFields;
 	}
-	public void setSatelliteFields(List<Field> satelliteFields) {
+	public MoveBuilder setSatelliteFields(List<Field> satelliteFields) {
 		this.satelliteFields = satelliteFields;
+		return this;
 	}
 	
 	public AllianceBonus getAllianceBonus() {
 		return allianceBonus;
 	}
-	public void setAllianceBonus(AllianceBonus allianceBonus) {
+	public MoveBuilder setAllianceBonus(AllianceBonus allianceBonus) {
 		this.allianceBonus = allianceBonus;
+		return this;
 	}
 	
 	public int getAllianceBonusIndex() {
 		return allianceBonusIndex;
 	}
-	public void setAllianceBonusIndex(int allianceBonusIndex) {
+	public MoveBuilder setAllianceBonusIndex(int allianceBonusIndex) {
 		this.allianceBonusIndex = allianceBonusIndex;
+		return this;
 	}
 	
 	public boolean isPass() {
 		return pass;
 	}
-	public void setPass(boolean pass) {
+	public MoveBuilder setPass(boolean pass) {
 		this.pass = pass;
+		return this;
 	}
 }
