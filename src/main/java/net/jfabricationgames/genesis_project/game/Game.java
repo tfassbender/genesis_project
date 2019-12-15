@@ -164,9 +164,7 @@ public class Game {
 		
 		ResearchArea area;
 		Player player;
-		IResourceManager resourceManager;
-		IResearchManager researchManager;
-		
+		IResourceManager localResourceManager;
 		switch (move.getType()) {
 			case BUILD:
 				//the building has to be valid and the resources for the building have to be there
@@ -193,17 +191,16 @@ public class Game {
 				int currentState = move.getPlayer().getResearchManager().getState(area);
 				int nextState = currentState + 1;
 				
-				researchManager = move.getPlayer().getResearchManager();
-				resourceManager = move.getPlayer().getResourceManager();
+				localResourceManager = move.getPlayer().getResourceManager();
 				int researchPointsNeeded = Constants.RESEARCH_POINTS_FOR_STATE_INCREASE;
 				int researchScientistsNeeded = Constants.RESEARCH_SCIENTISTS_FOR_LOW_STATE;
 				if (nextState >= Constants.RESEARCH_STATE_HIGH) {
 					researchScientistsNeeded = Constants.RESEARCH_SCIENTISTS_FOR_HIGH_STATE;
 				}
 				
-				boolean stateAccessible = move.getPlayer().getResearchManager().isStateAccessible(area, nextState);
-				boolean resourcesAvialable = resourceManager.isResourceAvailable(Resource.RESEARCH_POINTS, researchPointsNeeded);
-				resourcesAvialable &= resourceManager.isResourceAvailable(Resource.SCIENTISTS, researchScientistsNeeded);
+				boolean stateAccessible = this.researchManager.isStateAccessible(area, nextState);
+				boolean resourcesAvialable = localResourceManager.isResourceAvailable(Resource.RESEARCH_POINTS, researchPointsNeeded);
+				resourcesAvialable &= localResourceManager.isResourceAvailable(Resource.SCIENTISTS, researchScientistsNeeded);
 				
 				moveExecutable &= stateAccessible & resourcesAvialable;
 				break;
@@ -212,15 +209,14 @@ public class Game {
 				ResearchResources resourcesAdded = move.getResearchResources();
 				
 				player = move.getPlayer();
-				researchManager = player.getResearchManager();
 				moveExecutable &= player.getResourceManager().isResourcesAvailable(resourcesAdded);
 				moveExecutable &= !move.getResearchResources().isEmpty();
 				
 				area = move.getResearchArea();
-				int nextResoucesNeedingState = researchManager.getNextResourceNeedingState(area);
+				int nextResoucesNeedingState = this.researchManager.getNextResourceNeedingState(area);
 				
 				if (nextResoucesNeedingState != -1) {
-					ResearchResources neededLeft = researchManager.getResearchResourcesNeededLeft(area, nextResoucesNeedingState);
+					ResearchResources neededLeft = this.researchManager.getResearchResourcesNeededLeft(area, nextResoucesNeedingState);
 					
 					for (Resource resource : ResearchResources.RESEARCH_RESOURCES) {
 						moveExecutable &= neededLeft.getResources(resource) >= resourcesAdded.getResources(resource);
