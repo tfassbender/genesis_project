@@ -69,7 +69,8 @@ public class Game {
 		
 		Player player;
 		ResearchArea area;
-		IResourceManager resourceManager;
+		IResourceManager localResourceManager;
+		IResearchManager localResearchManager;
 		
 		if (!turnManager.isPlayersTurn(move.getPlayer())) {
 			throw new IllegalArgumentException(
@@ -102,24 +103,24 @@ public class Game {
 				int nextState = currentState + 1;
 				
 				player = move.getPlayer();
-				researchManager = player.getResearchManager();
-				resourceManager = player.getResourceManager();
+				localResearchManager = player.getResearchManager();
+				localResourceManager = player.getResourceManager();
 				int researchPointsNeeded = Constants.RESEARCH_POINTS_FOR_STATE_INCREASE;
 				int researchScientistsNeeded = Constants.RESEARCH_SCIENTISTS_FOR_LOW_STATE;
 				if (nextState >= Constants.RESEARCH_STATE_HIGH) {
 					researchScientistsNeeded = Constants.RESEARCH_SCIENTISTS_FOR_HIGH_STATE;
 				}
 				
-				resourceManager.reduceResources(Resource.RESEARCH_POINTS, researchPointsNeeded);
-				resourceManager.reduceResources(Resource.SCIENTISTS, researchScientistsNeeded);
+				localResourceManager.reduceResources(Resource.RESEARCH_POINTS, researchPointsNeeded);
+				localResourceManager.reduceResources(Resource.SCIENTISTS, researchScientistsNeeded);
 				
 				if (area == ResearchArea.WEAPON) {
 					//WEAPON upgrades are executed on the global IResearchManager (composite)
-					researchManager.increaseState(area);
+					this.researchManager.increaseState(area);
 				}
 				else {
 					//other ResearchAreas are executed locally on the player's IResearchManager
-					move.getPlayer().getResearchManager().increaseState(area);
+					localResearchManager.increaseState(area);
 				}
 				turnManager.nextMove();
 				break;
@@ -129,10 +130,10 @@ public class Game {
 				
 				//pay here because resources are added on the global manager that has no player references
 				player = move.getPlayer();
-				resourceManager = player.getResourceManager();
-				resourceManager.reduceResources(resources);
+				localResourceManager = player.getResourceManager();
+				localResourceManager.reduceResources(resources);
 				
-				researchManager.addResearchResources(resources, area);
+				this.researchManager.addResearchResources(resources, area);
 				break;
 			case PASS:
 				player = move.getPlayer();
