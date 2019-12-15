@@ -1,6 +1,7 @@
 package net.jfabricationgames.genesis_project.game;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -17,6 +18,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.jfabricationgames.genesis_project.game.Board.Position;
+import net.jfabricationgames.genesis_project.move.IMove;
+import net.jfabricationgames.genesis_project.move.MoveBuilder;
+import net.jfabricationgames.genesis_project.move.MoveType;
 import net.jfabricationgames.genesis_project.testUtils.GameCreationUtil;
 
 class JsonSerializationTest {
@@ -128,6 +132,41 @@ class JsonSerializationTest {
 			assertEquals(AttackTarget.POINTS, deserialized.getAttackTarget());
 			assertEquals(10, deserialized.getStrength());
 			assertEquals(Enemy.PARASITE, attack.getEnemy());
+		}
+		catch (IOException ioe) {
+			ioe.printStackTrace();
+			throw ioe;
+		}
+	}
+	
+	@Test
+	public void testSerializeMove() throws IOException {
+		Game game = GameCreationUtil.createGame();
+		
+		IMove buildMove = new MoveBuilder(game).setField(game.getBoard().getCenterField()).setPlayer(game.getPlayers().get(0))
+				.setBuilding(Building.COLONY).setType(MoveType.BUILD).build();
+		IMove researchMove = new MoveBuilder(game).setResearchArea(ResearchArea.WEAPON).setType(MoveType.RESEARCH).build();
+		IMove passingMove = new MoveBuilder(game).setPass(true).build();
+		
+		try {
+			String serializedBuildMove = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(buildMove);
+			String serializedResearchMove = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(researchMove);
+			String serializedPassingMove = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(passingMove);
+			
+			IMove deserializedBuildMove = mapper.readerFor(IMove.class).readValue(serializedBuildMove);
+			IMove deserializedResearchMove = mapper.readerFor(IMove.class).readValue(serializedResearchMove);
+			IMove deserializedPassingMove = mapper.readerFor(IMove.class).readValue(serializedPassingMove);
+			
+			assertEquals(MoveType.BUILD, deserializedBuildMove.getType());
+			assertEquals(Building.COLONY, deserializedBuildMove.getBuilding());
+			assertEquals(game.getPlayers().get(0).getUser().getUsername(), deserializedBuildMove.getPlayer().getUser().getUsername());
+			assertFalse(deserializedBuildMove.isPassing());
+			
+			assertEquals(MoveType.RESEARCH, deserializedResearchMove.getType());
+			assertEquals(ResearchArea.WEAPON, deserializedResearchMove.getResearchArea());
+			assertFalse(deserializedResearchMove.isPassing());
+			
+			assertTrue(deserializedPassingMove.isPassing());
 		}
 		catch (IOException ioe) {
 			ioe.printStackTrace();
