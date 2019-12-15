@@ -54,7 +54,10 @@ public class ResearchManager implements IResearchManager {
 	public ResearchManager(Player player, int playersInGame) {
 		this.player = player;
 		this.playersInGame = playersInGame;
-		initResearchResourcesAdded();
+		if (player == null) {
+			//only for global research manager
+			initResearchResourcesAdded();
+		}
 		if (Constants.STARTING_RESEARCH_STATES != null) {
 			if (player != null) {
 				researchStates = new HashMap<ResearchArea, IntegerProperty>();
@@ -85,11 +88,14 @@ public class ResearchManager implements IResearchManager {
 			maxReachableState.put(area, property);
 		}
 		
-		researchResourcesNeededLeftProperties = new HashMap<ResearchArea, ObjectProperty<ResearchResources>>();
-		for (ResearchArea area : ResearchArea.values()) {
-			ObjectProperty<ResearchResources> property = new SimpleObjectProperty<>(this, "researchResourcesNeededLeft_" + area.name());
-			property.set(new ResearchResources());
-			researchResourcesNeededLeftProperties.put(area, property);
+		if (player == null) {
+			//only for global research manager
+			researchResourcesNeededLeftProperties = new HashMap<ResearchArea, ObjectProperty<ResearchResources>>();
+			for (ResearchArea area : ResearchArea.values()) {
+				ObjectProperty<ResearchResources> property = new SimpleObjectProperty<>(this, "researchResourcesNeededLeft_" + area.name());
+				property.set(new ResearchResources());
+				researchResourcesNeededLeftProperties.put(area, property);
+			}
 		}
 	}
 	/**
@@ -287,8 +293,11 @@ public class ResearchManager implements IResearchManager {
 			Game game = player.getGame();
 			if (game != null) {
 				playersInGame = game.getPlayers().size();
-				updateMaxReachableState();
-				updateResearchResourcesNeededLeftProperties();
+				if (player == null) {
+					//only update the states if it's a global manager (others will fail to update)
+					updateMaxReachableState();
+					updateResearchResourcesNeededLeftProperties();
+				}
 			}
 			else {
 				throw new IllegalStateException("The field 'playersInGame' has not yet been set.");

@@ -292,6 +292,12 @@ class GameTest {
 		
 		assertFalse(game.isMoveExecutable(researchMoveMilitary));
 		
+		//after adding the resources the military research becomes possible
+		IMove addMilitaryResources = MoveCreaterUtil.getResearchResourcesMove(game, player, ResearchArea.MILITARY, new ResearchResources(2, 2, 2, 0));
+		game.executeMove(addMilitaryResources);
+		assertTrue(game.isMoveExecutable(researchMoveMilitary));
+		
+		//after resetting the research points there are no more researches possible 
 		resourceManager.setResearchPoints(0);
 		assertFalse(game.isMoveExecutable(researchMoveMines));
 	}

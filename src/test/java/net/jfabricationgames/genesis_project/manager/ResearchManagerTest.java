@@ -19,6 +19,9 @@ import net.jfabricationgames.genesis_project.testUtils.ConstantsInitializerUtil;
 
 class ResearchManagerTest {
 	
+	/**
+	 * Creates a player-local research manager (that doesn't hold any resource information)
+	 */
 	private ResearchManager getResearchManager() {
 		Player player1 = mock(Player.class);
 		when(player1.getPlayerClass()).thenReturn(PlayerClass.ENCOR);
@@ -27,6 +30,18 @@ class ResearchManagerTest {
 		ConstantsInitializerUtil.initStartingResearchStates();
 		ConstantsInitializerUtil.initResearchResources();
 		ResearchManager manager = new ResearchManager(player1, playersInGame);
+		return manager;
+	}
+	
+	/**
+	 * Creates a global research manager that manages global research (area: WEAPON) and resources
+	 */
+	private ResearchManager getGlobalResearchManager() {
+		final int playersInGame = 4;
+		
+		ConstantsInitializerUtil.initStartingResearchStates();
+		ConstantsInitializerUtil.initResearchResources();
+		ResearchManager manager = new ResearchManager(null, playersInGame);
 		return manager;
 	}
 	
@@ -79,7 +94,7 @@ class ResearchManagerTest {
 	
 	@Test
 	public void testAddResearchResources() {
-		ResearchManager manager = getResearchManager();
+		ResearchManager manager = getGlobalResearchManager();
 		
 		//before adding
 		assertEquals(new ResearchResources(8, 8, 8, 0), manager.getResearchResourcesNeededLeft(ResearchArea.FTL, 4));
@@ -96,7 +111,7 @@ class ResearchManagerTest {
 	
 	@Test
 	public void testAddResearchResources_errorCases() {
-		ResearchManager manager = getResearchManager();
+		ResearchManager manager = getGlobalResearchManager();
 		
 		//more resources than needed
 		assertThrows(IllegalArgumentException.class, () -> manager.addResearchResources(Resource.CARBON, 3, ResearchArea.MINES));
@@ -116,7 +131,7 @@ class ResearchManagerTest {
 	
 	@Test
 	public void testIsStateAccessible() {
-		ResearchManager manager = getResearchManager();
+		ResearchManager manager = getGlobalResearchManager();
 		
 		//in the areas MINES (and ECONOMY) all states are accessible
 		for (int i = 1; i < Constants.MAX_RESEARCH_STATE_DEFAULT; i++) {
@@ -135,7 +150,7 @@ class ResearchManagerTest {
 	
 	@Test
 	public void testIsStateAccessible_afterAddingAllResources() {
-		ResearchManager manager = getResearchManager();
+		ResearchManager manager = getGlobalResearchManager();
 		
 		ResearchResources neededLeft = manager.getResearchResourcesNeededLeft(ResearchArea.FTL, 2);
 		manager.addResearchResources(neededLeft, ResearchArea.FTL);
@@ -146,7 +161,7 @@ class ResearchManagerTest {
 	@Test
 	public void testNoReferences() {
 		//test that the returned ResearchResources are not returned by reference but by copy
-		ResearchManager manager = getResearchManager();
+		ResearchManager manager = getGlobalResearchManager();
 		
 		ResearchResources neededLeft = manager.getResearchResourcesNeededLeft(ResearchArea.FTL, 2);
 		ResearchResources neededTotal = manager.getResearchResourcesNeededTotal(ResearchArea.FTL, 2);
