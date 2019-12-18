@@ -21,13 +21,14 @@ import net.jfabricationgames.genesis_project.game.Board.Position;
 import net.jfabricationgames.genesis_project.move.IMove;
 import net.jfabricationgames.genesis_project.move.MoveBuilder;
 import net.jfabricationgames.genesis_project.move.MoveType;
+import net.jfabricationgames.genesis_project.testUtils.ConstantsInitializerUtil;
 import net.jfabricationgames.genesis_project.testUtils.GameCreationUtil;
 
 class JsonSerializationTest {
 	
 	private static ObjectMapper mapper;
 	
-	private static final boolean printSerialized = false;
+	private static final boolean printSerialized = true;
 	
 	@BeforeAll
 	public static void initializeMapper() {
@@ -45,6 +46,7 @@ class JsonSerializationTest {
 		
 		if (printSerialized) {
 			String serialized = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(game);
+			System.out.println("\n\n\n");
 			System.out.println(serialized);
 		}
 		else {
@@ -167,6 +169,30 @@ class JsonSerializationTest {
 			assertFalse(deserializedResearchMove.isPassing());
 			
 			assertTrue(deserializedPassingMove.isPassing());
+		}
+		catch (IOException ioe) {
+			ioe.printStackTrace();
+			throw ioe;
+		}
+	}
+	
+	@Test
+	public void testSerializeConstants() throws IOException {
+		Constants constants = Constants.getInstance();
+		ConstantsInitializerUtil.initAll();
+		
+		try {
+			String serialized;
+			if (printSerialized) {
+				serialized = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(constants);
+				System.out.println("\n\n\n");
+				System.out.println(serialized);
+			}
+			else {
+				serialized = mapper.writeValueAsString(constants);
+			}
+			
+			mapper.readerFor(Constants.class).readValue(serialized);
 		}
 		catch (IOException ioe) {
 			ioe.printStackTrace();

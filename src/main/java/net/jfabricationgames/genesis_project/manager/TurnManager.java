@@ -119,7 +119,7 @@ public class TurnManager implements ITurnManager {
 	
 	@Override
 	public boolean gameEnded() {
-		return turn >= Constants.TURNS_PLAYED;
+		return turn >= Constants.getInstance().TURNS_PLAYED;
 	}
 	
 	@Override

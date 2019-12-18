@@ -126,10 +126,10 @@ public class Game {
 				player = move.getPlayer();
 				localResearchManager = player.getResearchManager();
 				localResourceManager = player.getResourceManager();
-				int researchPointsNeeded = Constants.RESEARCH_POINTS_FOR_STATE_INCREASE;
-				int researchScientistsNeeded = Constants.RESEARCH_SCIENTISTS_FOR_LOW_STATE;
-				if (nextState >= Constants.RESEARCH_STATE_HIGH) {
-					researchScientistsNeeded = Constants.RESEARCH_SCIENTISTS_FOR_HIGH_STATE;
+				int researchPointsNeeded = Constants.getInstance().RESEARCH_POINTS_FOR_STATE_INCREASE;
+				int researchScientistsNeeded = Constants.getInstance().RESEARCH_SCIENTISTS_FOR_LOW_STATE;
+				if (nextState >= Constants.getInstance().RESEARCH_STATE_HIGH) {
+					researchScientistsNeeded = Constants.getInstance().RESEARCH_SCIENTISTS_FOR_HIGH_STATE;
 				}
 				
 				localResourceManager.reduceResources(Resource.RESEARCH_POINTS, researchPointsNeeded);
@@ -213,10 +213,10 @@ public class Game {
 				int nextState = currentState + 1;
 				
 				localResourceManager = move.getPlayer().getResourceManager();
-				int researchPointsNeeded = Constants.RESEARCH_POINTS_FOR_STATE_INCREASE;
-				int researchScientistsNeeded = Constants.RESEARCH_SCIENTISTS_FOR_LOW_STATE;
-				if (nextState >= Constants.RESEARCH_STATE_HIGH) {
-					researchScientistsNeeded = Constants.RESEARCH_SCIENTISTS_FOR_HIGH_STATE;
+				int researchPointsNeeded = Constants.getInstance().RESEARCH_POINTS_FOR_STATE_INCREASE;
+				int researchScientistsNeeded = Constants.getInstance().RESEARCH_SCIENTISTS_FOR_LOW_STATE;
+				if (nextState >= Constants.getInstance().RESEARCH_STATE_HIGH) {
+					researchScientistsNeeded = Constants.getInstance().RESEARCH_SCIENTISTS_FOR_HIGH_STATE;
 				}
 				
 				boolean stateAccessible = this.researchManager.isStateAccessible(area, nextState);

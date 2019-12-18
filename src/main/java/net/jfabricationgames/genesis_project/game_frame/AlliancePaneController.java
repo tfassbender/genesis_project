@@ -183,7 +183,7 @@ public class AlliancePaneController implements Initializable {
 		IAllianceManager allianceManager = player.getAllianceManager();
 		
 		for (AllianceBonus bonus : AllianceBonus.values()) {
-			for (int i = 0; i < Constants.ALLIANCE_BONUS_COPIES; i++) {
+			for (int i = 0; i < Constants.getInstance().ALLIANCE_BONUS_COPIES; i++) {
 				if (!allianceManager.isAllianceBonusTaken(bonus, i)) {
 					Button button = exploreButtons.get(bonus)[i];
 					button.setDisable(false);
@@ -197,7 +197,7 @@ public class AlliancePaneController implements Initializable {
 	 */
 	public void disableExploreButtons() {
 		for (AllianceBonus bonus : AllianceBonus.values()) {
-			for (int i = 0; i < Constants.ALLIANCE_BONUS_COPIES; i++) {
+			for (int i = 0; i < Constants.getInstance().ALLIANCE_BONUS_COPIES; i++) {
 				Button button = exploreButtons.get(bonus)[i];
 				button.setDisable(true);
 			}

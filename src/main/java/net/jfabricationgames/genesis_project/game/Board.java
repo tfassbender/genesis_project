@@ -75,7 +75,7 @@ public class Board {
 		}
 		
 		public int[] getBoardLocation() {
-			return Constants.CELL_COORDINATES.get(this);
+			return Constants.getInstance().CELL_COORDINATES.get(this);
 		}
 	}
 	

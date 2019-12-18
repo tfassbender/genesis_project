@@ -34,7 +34,7 @@ public class Field {
 		}
 		else {
 			//normal planets have a fixed number of buildings
-			buildings = new PlayerBuilding[Constants.BUILDINGS_PER_PLANET];
+			buildings = new PlayerBuilding[Constants.getInstance().BUILDINGS_PER_PLANET];
 		}
 		spaceBuildings = new ArrayList<PlayerBuilding>();
 	}

@@ -236,7 +236,7 @@ public class ResearchPaneController implements Initializable {
 	
 	private void bindIncreaseStateButtonsDisabledProperties() {
 		BooleanBinding researchPointsAvailable = player.getResourceManager().getResearchPointsProperty()
-				.greaterThanOrEqualTo(Constants.RESEARCH_POINTS_FOR_STATE_INCREASE);
+				.greaterThanOrEqualTo(Constants.getInstance().RESEARCH_POINTS_FOR_STATE_INCREASE);
 		
 		buttonResearchPromotionMines.disableProperty().bind(researchPointsAvailable.and(stateAccessible(ResearchArea.MINES)).not());
 		buttonResearchPromotionEconomy.disableProperty().bind(researchPointsAvailable.and(stateAccessible(ResearchArea.ECONOMY)).not());

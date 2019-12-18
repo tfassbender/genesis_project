@@ -22,18 +22,18 @@ class FieldTest {
 	
 	private void initBuildingNumbers() {
 		//initialize the BUILDING_NUMBERS field in the Constants class
-		Constants.BUILDING_NUMBERS = new HashMap<Building, Integer>();
+		Constants.getInstance().BUILDING_NUMBERS = new HashMap<Building, Integer>();
 		
-		Constants.BUILDING_NUMBERS.put(Building.COLONY, 10);
-		Constants.BUILDING_NUMBERS.put(Building.MINE, 6);
-		Constants.BUILDING_NUMBERS.put(Building.TRADING_POST, 6);
-		Constants.BUILDING_NUMBERS.put(Building.LABORATORY, 5);
-		Constants.BUILDING_NUMBERS.put(Building.GOVERNMENT, 1);
-		Constants.BUILDING_NUMBERS.put(Building.CITY, 2);
-		Constants.BUILDING_NUMBERS.put(Building.RESEARCH_CENTER, 3);
-		Constants.BUILDING_NUMBERS.put(Building.DRONE, 10);
-		Constants.BUILDING_NUMBERS.put(Building.SPACE_STATION, 5);
-		Constants.BUILDING_NUMBERS.put(Building.SATELLITE, 99);
+		Constants.getInstance().BUILDING_NUMBERS.put(Building.COLONY, 10);
+		Constants.getInstance().BUILDING_NUMBERS.put(Building.MINE, 6);
+		Constants.getInstance().BUILDING_NUMBERS.put(Building.TRADING_POST, 6);
+		Constants.getInstance().BUILDING_NUMBERS.put(Building.LABORATORY, 5);
+		Constants.getInstance().BUILDING_NUMBERS.put(Building.GOVERNMENT, 1);
+		Constants.getInstance().BUILDING_NUMBERS.put(Building.CITY, 2);
+		Constants.getInstance().BUILDING_NUMBERS.put(Building.RESEARCH_CENTER, 3);
+		Constants.getInstance().BUILDING_NUMBERS.put(Building.DRONE, 10);
+		Constants.getInstance().BUILDING_NUMBERS.put(Building.SPACE_STATION, 5);
+		Constants.getInstance().BUILDING_NUMBERS.put(Building.SATELLITE, 99);
 	}
 	
 	protected static Game getInitializedGameWithDefenseBuildings() {
