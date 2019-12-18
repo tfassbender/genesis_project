@@ -28,7 +28,7 @@ class JsonSerializationTest {
 	
 	private static ObjectMapper mapper;
 	
-	private static final boolean printSerialized = true;
+	private static final boolean printSerialized = false;
 	
 	@BeforeAll
 	public static void initializeMapper() {

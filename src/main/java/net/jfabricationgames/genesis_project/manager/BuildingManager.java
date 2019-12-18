@@ -183,6 +183,11 @@ public class BuildingManager implements IBuildingManager {
 		resourcesNeeded.addResources(getPlayer().getPlayerClass().getSecundaryResource(), costs[1]);
 		resourcesNeeded.addResources(getPlayer().getPlayerClass().getTertiaryResource(), costs[2]);
 		
+		int[] discount = Constants.getInstance().getBuildingDiscountTotal(building, getPlayer().getPlayerClass(), field);
+		resourcesNeeded.addResources(getPlayer().getPlayerClass().getPrimaryResource(), -discount[0]);
+		resourcesNeeded.addResources(getPlayer().getPlayerClass().getSecundaryResource(), -discount[1]);
+		resourcesNeeded.addResources(getPlayer().getPlayerClass().getTertiaryResource(), -discount[2]);
+		
 		return resourcesNeeded;
 	}
 	

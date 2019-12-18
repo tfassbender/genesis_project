@@ -199,4 +199,46 @@ class FieldTest {
 		assertEquals(0, alliancesPlanet4.size());
 		assertEquals(0, alliancesSpaceField4.size());
 	}
+	
+	@Test
+	public void testContainsPlayersBuildings() {
+		Game game = GameCreationUtil.createGame();
+		
+		Field fieldWithoutBuildings = new Field(new Position(0, 0), Planet.BLACK, 3);
+		Field fieldWithPlayersBuildings = new Field(new Position(0, 0), Planet.BLACK, 3);
+		Field fieldWithOtherPlayersBuildings = new Field(new Position(0, 0), Planet.BLACK, 3);
+		Field fieldWithMultiplePlayersBuildings = new Field(new Position(0, 0), Planet.BLACK, 3);
+		
+		fieldWithPlayersBuildings.build(new PlayerBuilding(Building.COLONY, game.getPlayers().get(0)), 0);
+		fieldWithOtherPlayersBuildings.build(new PlayerBuilding(Building.COLONY, game.getPlayers().get(1)), 1);
+		fieldWithMultiplePlayersBuildings.build(new PlayerBuilding(Building.COLONY, game.getPlayers().get(0)), 0);
+		fieldWithMultiplePlayersBuildings.build(new PlayerBuilding(Building.COLONY, game.getPlayers().get(1)), 1);
+		
+		PlayerClass localPlayersClass = game.getPlayers().get(0).getPlayerClass();
+		assertFalse(fieldWithoutBuildings.containsPlayersBuildings(localPlayersClass));
+		assertTrue(fieldWithPlayersBuildings.containsPlayersBuildings(localPlayersClass));
+		assertFalse(fieldWithOtherPlayersBuildings.containsPlayersBuildings(localPlayersClass));
+		assertTrue(fieldWithMultiplePlayersBuildings.containsPlayersBuildings(localPlayersClass));
+	}
+	
+	@Test
+	public void testContainsOtherPlayersBuildings() {
+		Game game = GameCreationUtil.createGame();
+		
+		Field fieldWithoutBuildings = new Field(new Position(0, 0), Planet.BLACK, 3);
+		Field fieldWithPlayersBuildings = new Field(new Position(0, 0), Planet.BLACK, 3);
+		Field fieldWithOtherPlayersBuildings = new Field(new Position(0, 0), Planet.BLACK, 3);
+		Field fieldWithMultiplePlayersBuildings = new Field(new Position(0, 0), Planet.BLACK, 3);
+		
+		fieldWithPlayersBuildings.build(new PlayerBuilding(Building.COLONY, game.getPlayers().get(0)), 0);
+		fieldWithOtherPlayersBuildings.build(new PlayerBuilding(Building.COLONY, game.getPlayers().get(1)), 1);
+		fieldWithMultiplePlayersBuildings.build(new PlayerBuilding(Building.COLONY, game.getPlayers().get(0)), 0);
+		fieldWithMultiplePlayersBuildings.build(new PlayerBuilding(Building.COLONY, game.getPlayers().get(1)), 1);
+		
+		PlayerClass localPlayersClass = game.getPlayers().get(0).getPlayerClass();
+		assertFalse(fieldWithoutBuildings.containsOtherPlayersBuildings(localPlayersClass));
+		assertFalse(fieldWithPlayersBuildings.containsOtherPlayersBuildings(localPlayersClass));
+		assertTrue(fieldWithOtherPlayersBuildings.containsOtherPlayersBuildings(localPlayersClass));
+		assertTrue(fieldWithMultiplePlayersBuildings.containsOtherPlayersBuildings(localPlayersClass));
+	}
 }

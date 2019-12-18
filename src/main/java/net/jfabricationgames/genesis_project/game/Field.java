@@ -224,4 +224,26 @@ public class Field {
 		
 		return alliancesOnField;
 	}
+	
+	/**
+	 * Check whether the planet contains at least one building of the player.
+	 */
+	public boolean containsPlayersBuildings(PlayerClass playerClass) {
+		boolean containsBuilding = false;
+		for (PlayerBuilding building : buildings) {
+			containsBuilding |= building != null && building.getPlayer().getPlayerClass().equals(playerClass);
+		}
+		return containsBuilding;
+	}
+	
+	/**
+	 * Check whether the planet contains at least one building of any other player.
+	 */
+	public boolean containsOtherPlayersBuildings(PlayerClass playerClass) {
+		boolean containsBuilding = false;
+		for (PlayerBuilding building : buildings) {
+			containsBuilding |= building != null && !building.getPlayer().getPlayerClass().equals(playerClass);
+		}
+		return containsBuilding;
+	}
 }

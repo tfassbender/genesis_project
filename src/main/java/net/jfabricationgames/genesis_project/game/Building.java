@@ -7,6 +7,8 @@ import net.jfabricationgames.genesis_project.game_frame.GuiUtils;
 
 public enum Building {
 	
+	//TODO Constants are loaded as configurations -> references won't work -> use supplier (?)
+	
 	COLONY(Constants.getInstance().BUILDING_COSTS_COLONIE, null, "colonies/colonie_"),//
 	MINE(Constants.getInstance().BUILDING_COSTS_MINE, COLONY, "mines/mine_"),//
 	TRADING_POST(Constants.getInstance().BUILDING_COSTS_TRAIDING_POST, COLONY, "trading_posts/trading_post_"),//

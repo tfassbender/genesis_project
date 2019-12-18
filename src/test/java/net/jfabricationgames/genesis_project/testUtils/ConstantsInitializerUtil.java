@@ -235,10 +235,13 @@ public class ConstantsInitializerUtil {
 	 */
 	public static void initCellPositions() {
 		Constants.getInstance().CELL_COORDINATES = new HashMap<Position, int[]>((int) (170 * 1.3));//about 170 cells * default load factor
-		for (int i = 0; i < 17; i++) {
-			for (int j = 0; j < 9; j++) {
+		
+		int[] x = new int[] {82, 192, 309, 430, 543, 656, 769, 882, 1003, 1119, 1232, 1342, 1456, 1577, 1692, 1807, 1920};
+		int[][] y = new int[][] {{65, 195, 325, 462, 592, 725, 855, 993, 1125}, {130, 260, 390, 530, 658, 790, 927, 1060}};
+		for (int i = 0; i < x.length; i++) {
+			for (int j = 0; j < y[i % 2].length; j++) {
 				Position pos = new Position(i, j);
-				int[] boardPosition = new int[] {i * 120 + 30, j * 60 + 10};
+				int[] boardPosition = new int[] {x[i], y[i % 2][j]};
 				Constants.getInstance().CELL_COORDINATES.put(pos, boardPosition);
 			}
 		}

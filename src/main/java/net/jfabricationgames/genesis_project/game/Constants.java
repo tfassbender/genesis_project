@@ -110,7 +110,7 @@ public class Constants {
 	 * first index: planet type (distance 0 to 3) </br>
 	 * second index: resource type (0 -> prime, ...)
 	 * </p>
-	 * WARNING: don't set to other arrays but insert the values because they are referenced by the Building-Enum.
+	 * TODO WARNING: don't set to other arrays but insert the values because they are referenced by the Building-Enum.
 	 */
 	public int[][] BUILDING_COSTS_COLONIE = new int[4][3];
 	public int[][] BUILDING_COSTS_MINE = new int[4][3];
@@ -148,6 +148,108 @@ public class Constants {
 				return BUILDING_COSTS_TRAIDING_POST[planetDistance];
 			default:
 				throw new IllegalArgumentException("The Building type " + building + " is unknown");
+		}
+	}
+	
+	/**
+	 * BUILDING_DISCOUNTS_... arrays keep all information about the discount of a building for neighbors (self or others):
+	 * <p>
+	 * index: resource type (0 -> prime, ...)
+	 * </p>
+	 * TODO WARNING: don't set to other arrays but insert the values because they are referenced by the Building-Enum.
+	 */
+	public int[] BUILDING_DISCOUNT_NEIGHBOR_COLONIE = new int[3];
+	public int[] BUILDING_DISCOUNT_NEIGHBOR_MINE = new int[3];
+	public int[] BUILDING_DISCOUNT_NEIGHBOR_TRAIDING_POST = new int[3];
+	public int[] BUILDING_DISCOUNT_NEIGHBOR_LABORATORY = new int[3];
+	public int[] BUILDING_DISCOUNT_NEIGHBOR_GOVERNMENT = new int[3];
+	public int[] BUILDING_DISCOUNT_NEIGHBOR_CITY = new int[3];
+	public int[] BUILDING_DISCOUNT_NEIGHBOR_RESEARCH_CENTER = new int[3];
+	public int[] BUILDING_DISCOUNT_NEIGHBOR_DRONE = new int[3];
+	public int[] BUILDING_DISCOUNT_NEIGHBOR_SPACE_STATION = new int[3];
+	public int[] BUILDING_DISCOUNT_NEIGHBOR_SATELLITE = new int[3];
+	
+	public int[] BUILDING_DISCOUNT_NEIGHBOR_OTHER_COLONIE = new int[3];
+	public int[] BUILDING_DISCOUNT_NEIGHBOR_OTHER_MINE = new int[3];
+	public int[] BUILDING_DISCOUNT_NEIGHBOR_OTHER_TRAIDING_POST = new int[3];
+	public int[] BUILDING_DISCOUNT_NEIGHBOR_OTHER_LABORATORY = new int[3];
+	public int[] BUILDING_DISCOUNT_NEIGHBOR_OTHER_GOVERNMENT = new int[3];
+	public int[] BUILDING_DISCOUNT_NEIGHBOR_OTHER_CITY = new int[3];
+	public int[] BUILDING_DISCOUNT_NEIGHBOR_OTHER_RESEARCH_CENTER = new int[3];
+	public int[] BUILDING_DISCOUNT_NEIGHBOR_OTHER_DRONE = new int[3];
+	public int[] BUILDING_DISCOUNT_NEIGHBOR_OTHER_SPACE_STATION = new int[3];
+	public int[] BUILDING_DISCOUNT_NEIGHBOR_OTHER_SATELLITE = new int[3];
+	
+	public int[] getBuildingDiscountTotal(Building building, PlayerClass playerClass, Field field) {
+		int[] discountTotal = getBuildingDiscountOwnBuildings(building, playerClass, field);
+		int[] discountOpponentBuildings = getBuildingDiscountOpponentBuildings(building, playerClass, field);
+		for (int i = 0; i < discountTotal.length; i++) {
+			discountTotal[i] += discountOpponentBuildings[i];
+		}
+		return discountTotal;
+	}
+	public int[] getBuildingDiscountOwnBuildings(Building building, PlayerClass playerClass, Field field) {
+		boolean containsOwnBuildings = field.containsPlayersBuildings(playerClass);
+		if (containsOwnBuildings) {
+			switch (building) {
+				case CITY:
+					return BUILDING_DISCOUNT_NEIGHBOR_CITY;
+				case COLONY:
+					return BUILDING_DISCOUNT_NEIGHBOR_COLONIE;
+				case DRONE:
+					return BUILDING_DISCOUNT_NEIGHBOR_DRONE;
+				case GOVERNMENT:
+					return BUILDING_DISCOUNT_NEIGHBOR_GOVERNMENT;
+				case LABORATORY:
+					return BUILDING_DISCOUNT_NEIGHBOR_LABORATORY;
+				case MINE:
+					return BUILDING_DISCOUNT_NEIGHBOR_MINE;
+				case RESEARCH_CENTER:
+					return BUILDING_DISCOUNT_NEIGHBOR_RESEARCH_CENTER;
+				case SATELLITE:
+					return BUILDING_DISCOUNT_NEIGHBOR_SATELLITE;
+				case SPACE_STATION:
+					return BUILDING_DISCOUNT_NEIGHBOR_SPACE_STATION;
+				case TRADING_POST:
+					return BUILDING_DISCOUNT_NEIGHBOR_TRAIDING_POST;
+				default:
+					throw new IllegalArgumentException("The Building type " + building + " is unknown");
+			}
+		}
+		else {
+			return new int[BUILDING_DISCOUNT_NEIGHBOR_COLONIE.length];
+		}
+	}
+	public int[] getBuildingDiscountOpponentBuildings(Building building, PlayerClass playerClass, Field field) {
+		boolean containsOpponentBuildings = field.containsOtherPlayersBuildings(playerClass);
+		if (containsOpponentBuildings) {
+			switch (building) {
+				case CITY:
+					return BUILDING_DISCOUNT_NEIGHBOR_OTHER_CITY;
+				case COLONY:
+					return BUILDING_DISCOUNT_NEIGHBOR_OTHER_COLONIE;
+				case DRONE:
+					return BUILDING_DISCOUNT_NEIGHBOR_OTHER_DRONE;
+				case GOVERNMENT:
+					return BUILDING_DISCOUNT_NEIGHBOR_OTHER_GOVERNMENT;
+				case LABORATORY:
+					return BUILDING_DISCOUNT_NEIGHBOR_OTHER_LABORATORY;
+				case MINE:
+					return BUILDING_DISCOUNT_NEIGHBOR_OTHER_MINE;
+				case RESEARCH_CENTER:
+					return BUILDING_DISCOUNT_NEIGHBOR_OTHER_RESEARCH_CENTER;
+				case SATELLITE:
+					return BUILDING_DISCOUNT_NEIGHBOR_OTHER_SATELLITE;
+				case SPACE_STATION:
+					return BUILDING_DISCOUNT_NEIGHBOR_OTHER_SPACE_STATION;
+				case TRADING_POST:
+					return BUILDING_DISCOUNT_NEIGHBOR_OTHER_TRAIDING_POST;
+				default:
+					throw new IllegalArgumentException("The Building type " + building + " is unknown");
+			}
+		}
+		else {
+			return new int[BUILDING_DISCOUNT_NEIGHBOR_OTHER_COLONIE.length];
 		}
 	}
 	
