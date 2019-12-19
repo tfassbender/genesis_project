@@ -110,7 +110,6 @@ public class Constants {
 	 * first index: planet type (distance 0 to 3) </br>
 	 * second index: resource type (0 -> prime, ...)
 	 * </p>
-	 * TODO WARNING: don't set to other arrays but insert the values because they are referenced by the Building-Enum.
 	 */
 	public int[][] BUILDING_COSTS_COLONIE = new int[4][3];
 	public int[][] BUILDING_COSTS_MINE = new int[4][3];
@@ -156,7 +155,6 @@ public class Constants {
 	 * <p>
 	 * index: resource type (0 -> prime, ...)
 	 * </p>
-	 * TODO WARNING: don't set to other arrays but insert the values because they are referenced by the Building-Enum.
 	 */
 	public int[] BUILDING_DISCOUNT_NEIGHBOR_COLONIE = new int[3];
 	public int[] BUILDING_DISCOUNT_NEIGHBOR_MINE = new int[3];

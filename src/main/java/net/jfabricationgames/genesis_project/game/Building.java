@@ -3,24 +3,24 @@ package net.jfabricationgames.genesis_project.game;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.common.base.Supplier;
+
 import net.jfabricationgames.genesis_project.game_frame.GuiUtils;
 
 public enum Building {
 	
-	//TODO Constants are loaded as configurations -> references won't work -> use supplier (?)
+	COLONY(() -> Constants.getInstance().BUILDING_COSTS_COLONIE, null, "colonies/colonie_"),//
+	MINE(() -> Constants.getInstance().BUILDING_COSTS_MINE, COLONY, "mines/mine_"),//
+	TRADING_POST(() -> Constants.getInstance().BUILDING_COSTS_TRAIDING_POST, COLONY, "trading_posts/trading_post_"),//
+	LABORATORY(() -> Constants.getInstance().BUILDING_COSTS_LABORATORY, COLONY, "laboratories/laboratory_"),//
+	GOVERNMENT(() -> Constants.getInstance().BUILDING_COSTS_GOVERNMENT, TRADING_POST, "goverments/goverment_"),//
+	CITY(() -> Constants.getInstance().BUILDING_COSTS_CITY, TRADING_POST, "cities/city_"),//
+	RESEARCH_CENTER(() -> Constants.getInstance().BUILDING_COSTS_RESEARCH_CENTER, LABORATORY, "research_centers/research_center_"),//
+	DRONE(() -> Constants.getInstance().BUILDING_COSTS_DRONE, null, "drones/drone_"),//
+	SPACE_STATION(() -> Constants.getInstance().BUILDING_COSTS_SPACE_STATION, DRONE, "space_stations/space_station_"),//
+	SATELLITE(() -> Constants.getInstance().BUILDING_COSTS_SATELLITE, null, "satellites/satellite_");//
 	
-	COLONY(Constants.getInstance().BUILDING_COSTS_COLONIE, null, "colonies/colonie_"),//
-	MINE(Constants.getInstance().BUILDING_COSTS_MINE, COLONY, "mines/mine_"),//
-	TRADING_POST(Constants.getInstance().BUILDING_COSTS_TRAIDING_POST, COLONY, "trading_posts/trading_post_"),//
-	LABORATORY(Constants.getInstance().BUILDING_COSTS_LABORATORY, COLONY, "laboratories/laboratory_"),//
-	GOVERNMENT(Constants.getInstance().BUILDING_COSTS_GOVERNMENT, TRADING_POST, "goverments/goverment_"),//
-	CITY(Constants.getInstance().BUILDING_COSTS_CITY, TRADING_POST, "cities/city_"),//
-	RESEARCH_CENTER(Constants.getInstance().BUILDING_COSTS_RESEARCH_CENTER, LABORATORY, "research_centers/research_center_"),//
-	DRONE(Constants.getInstance().BUILDING_COSTS_DRONE, null, "drones/drone_"),//
-	SPACE_STATION(Constants.getInstance().BUILDING_COSTS_SPACE_STATION, DRONE, "space_stations/space_station_"),//
-	SATELLITE(Constants.getInstance().BUILDING_COSTS_SATELLITE, null, "satellites/satellite_");//
-	
-	private final int[][] costs;
+	private final Supplier<int[][]> costs;
 	
 	//the building that can be upgraded to this building
 	private final Building previousBuilding;
@@ -28,7 +28,7 @@ public enum Building {
 	//private final Map<PlayerColor, Image> images;
 	private final Map<PlayerColor, String> imagePathes;
 	
-	private Building(int[][] costs, Building previouseBuilding, String imagePath) {
+	private Building(Supplier<int[][]> costs, Building previouseBuilding, String imagePath) {
 		this.costs = costs;
 		this.previousBuilding = previouseBuilding;
 		//this.images = new HashMap<PlayerColor, Image>((int) (PlayerColor.values().length * 1.3));
@@ -46,7 +46,7 @@ public enum Building {
 	}
 	
 	public int[][] getCosts() {
-		return costs;
+		return costs.get();
 	}
 	
 	public Building getPreviousBuilding() {
