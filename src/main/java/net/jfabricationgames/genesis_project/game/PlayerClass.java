@@ -56,20 +56,16 @@ public enum PlayerClass {
 	}
 	
 	public String getClassEffectName() {
-		//TODO
-		return "";
+		return DescriptionTexts.getInstance().CLASS_EFFECT_NAMES.get(this);
 	}
 	public String getClassEffectDescription() {
-		//TODO implement method
-		return "";
+		return DescriptionTexts.getInstance().CLASS_EFFECT_DESCRIPTIONS.get(this);
 	}
 	public String getGovernmentEffectName() {
-		//TODO
-		return "";
+		return DescriptionTexts.getInstance().GOVERNMENT_EFFECT_NAMES.get(this);
 	}
 	public String getGovernmentEffectDescription() {
-		//TODO implement method
-		return "";
+		return DescriptionTexts.getInstance().GOVERNMENT_EFFECT_DESCRIPTIONS.get(this);
 	}
 	
 	public String getClassPaneImagePath() {

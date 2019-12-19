@@ -22,6 +22,7 @@ import net.jfabricationgames.genesis_project.move.IMove;
 import net.jfabricationgames.genesis_project.move.MoveBuilder;
 import net.jfabricationgames.genesis_project.move.MoveType;
 import net.jfabricationgames.genesis_project.testUtils.ConstantsInitializerUtil;
+import net.jfabricationgames.genesis_project.testUtils.DescriptionTextsInitializerUtil;
 import net.jfabricationgames.genesis_project.testUtils.GameCreationUtil;
 
 class JsonSerializationTest {
@@ -193,6 +194,30 @@ class JsonSerializationTest {
 			}
 			
 			mapper.readerFor(Constants.class).readValue(serialized);
+		}
+		catch (IOException ioe) {
+			ioe.printStackTrace();
+			throw ioe;
+		}
+	}
+
+	@Test
+	public void testSerializeDescriptionTexts() throws IOException {
+		DescriptionTexts descriptionTexts = DescriptionTexts.getInstance();
+		DescriptionTextsInitializerUtil.initializeDescriptionTexts();
+		
+		try {
+			String serialized;
+			if (printSerialized) {
+				serialized = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(descriptionTexts);
+				System.out.println("\n\n\n");
+				System.out.println(serialized);
+			}
+			else {
+				serialized = mapper.writeValueAsString(descriptionTexts);
+			}
+			
+			mapper.readerFor(DescriptionTexts.class).readValue(serialized);
 		}
 		catch (IOException ioe) {
 			ioe.printStackTrace();
