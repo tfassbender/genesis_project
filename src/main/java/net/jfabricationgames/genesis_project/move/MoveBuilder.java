@@ -30,7 +30,6 @@ public class MoveBuilder {
 	private List<Field> satelliteFields;
 	private AllianceBonus allianceBonus;
 	private int allianceBonusIndex;
-	private boolean pass;
 	
 	public MoveBuilder(Game game) {
 		Objects.requireNonNull(game, "The game object mussn't be null.");
@@ -42,7 +41,7 @@ public class MoveBuilder {
 	 */
 	public IMove build() throws IllegalStateException {
 		IMove move = new Move(game, type, player, field, building, researchArea, researchResources, technology, alliancePlanets, satelliteFields,
-				allianceBonus, allianceBonusIndex, pass);
+				allianceBonus, allianceBonusIndex);
 		return move;
 	}
 	
@@ -61,7 +60,6 @@ public class MoveBuilder {
 		satelliteFields = null;
 		allianceBonus = null;
 		allianceBonusIndex = -1;
-		pass = false;
 	}
 	
 	public MoveType getType() {
@@ -153,10 +151,6 @@ public class MoveBuilder {
 	}
 	
 	public boolean isPass() {
-		return pass;
-	}
-	public MoveBuilder setPass(boolean pass) {
-		this.pass = pass;
-		return this;
+		return type == MoveType.PASS;
 	}
 }

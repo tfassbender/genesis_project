@@ -149,7 +149,7 @@ class JsonSerializationTest {
 		IMove buildMove = new MoveBuilder(game).setField(game.getBoard().getCenterField()).setPlayer(game.getPlayers().get(0))
 				.setBuilding(Building.COLONY).setType(MoveType.BUILD).build();
 		IMove researchMove = new MoveBuilder(game).setResearchArea(ResearchArea.WEAPON).setType(MoveType.RESEARCH).build();
-		IMove passingMove = new MoveBuilder(game).setPass(true).build();
+		IMove passingMove = new MoveBuilder(game).setType(MoveType.PASS).build();
 		
 		try {
 			String serializedBuildMove = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(buildMove);
@@ -200,7 +200,7 @@ class JsonSerializationTest {
 			throw ioe;
 		}
 	}
-
+	
 	@Test
 	public void testSerializeDescriptionTexts() throws IOException {
 		DescriptionTexts descriptionTexts = DescriptionTexts.getInstance();

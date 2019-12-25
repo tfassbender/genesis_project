@@ -40,7 +40,7 @@ public class Move implements IMove {
 	
 	protected Move(Game game, MoveType type, Player player, Field field, Building building, ResearchArea researchArea,
 			ResearchResources researchResources, Technology technology, List<Field> alliancePlanets, List<Field> satelliteFields,
-			AllianceBonus allianceBonus, int allianceBonusIndex, boolean pass) {
+			AllianceBonus allianceBonus, int allianceBonusIndex) {
 		this.game = game;
 		this.type = type;
 		this.player = player;
@@ -53,7 +53,7 @@ public class Move implements IMove {
 		this.satelliteFields = satelliteFields;
 		this.allianceBonus = allianceBonus;
 		this.allianceBonusIndex = allianceBonusIndex;
-		this.pass = pass;
+		this.pass = (type == MoveType.PASS);
 	}
 	
 	@Override

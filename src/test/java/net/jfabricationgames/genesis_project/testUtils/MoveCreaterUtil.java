@@ -66,7 +66,6 @@ public class MoveCreaterUtil {
 		MoveBuilder builder = new MoveBuilder(game);
 		builder.setType(MoveType.PASS);
 		builder.setPlayer(player);
-		builder.setPass(true);
 		
 		researchMove = builder.build();
 		return researchMove;
