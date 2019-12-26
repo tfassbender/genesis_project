@@ -19,8 +19,10 @@ import net.jfabricationgames.genesis_project.game.Board.Position;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.Field;
 import net.jfabricationgames.genesis_project.game.Game;
+import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
+import net.jfabricationgames.genesis_project.json.serializer.MixInIgnore;
 import net.jfabricationgames.genesis_project.testUtils.GameCreationUtil;
 
 class MoveSerializationTest {
@@ -28,6 +30,8 @@ class MoveSerializationTest {
 	private static ObjectMapper mapper;
 	
 	private static Game game;
+	
+	private static final int MAX_ACCEPTED_SIZE = 5000;
 	
 	@BeforeAll
 	public static void initializeMapper() {
@@ -37,6 +41,10 @@ class MoveSerializationTest {
 		mapper.setVisibility(mapper.getSerializationConfig().getDefaultVisibilityChecker().withFieldVisibility(JsonAutoDetect.Visibility.ANY)
 				.withGetterVisibility(JsonAutoDetect.Visibility.NONE).withSetterVisibility(JsonAutoDetect.Visibility.NONE)
 				.withCreatorVisibility(JsonAutoDetect.Visibility.NONE));
+		
+		//don't serialize Game and Player
+		mapper.addMixIn(Game.class, MixInIgnore.class);
+		mapper.addMixIn(Player.class, MixInIgnore.class);
 		
 		game = GameCreationUtil.createGame();
 	}
@@ -50,6 +58,7 @@ class MoveSerializationTest {
 		IMove deserialized = mapper.readerFor(IMove.class).readValue(serialized);
 		
 		assertTrue(game.isMoveExecutable(move));
+		assertTrue(serialized.length() < MAX_ACCEPTED_SIZE);
 		
 		assertEquals(move.getType(), deserialized.getType());
 		assertEquals(move.getField(), deserialized.getField());
@@ -64,6 +73,7 @@ class MoveSerializationTest {
 		IMove deserialized = mapper.readerFor(IMove.class).readValue(serialized);
 		
 		assertTrue(game.isMoveExecutable(move));
+		assertTrue(serialized.length() < MAX_ACCEPTED_SIZE);
 		
 		assertEquals(move.getType(), deserialized.getType());
 		assertEquals(move.getResearchArea(), deserialized.getResearchArea());
@@ -78,6 +88,7 @@ class MoveSerializationTest {
 		IMove deserialized = mapper.readerFor(IMove.class).readValue(serialized);
 		
 		assertTrue(game.isMoveExecutable(move));
+		assertTrue(serialized.length() < MAX_ACCEPTED_SIZE);
 		
 		assertEquals(move.getType(), deserialized.getType());
 		assertEquals(move.getResearchArea(), deserialized.getResearchArea());
@@ -101,6 +112,7 @@ class MoveSerializationTest {
 		IMove deserialized = mapper.readerFor(IMove.class).readValue(serialized);
 		
 		assertTrue(game.isMoveExecutable(move));
+		assertTrue(serialized.length() < MAX_ACCEPTED_SIZE);
 		
 		assertEquals(move.getType(), deserialized.getType());
 		assertEquals(move.getField(), deserialized.getField());
@@ -115,6 +127,7 @@ class MoveSerializationTest {
 		IMove deserialized = mapper.readerFor(IMove.class).readValue(serialized);
 		
 		assertTrue(game.isMoveExecutable(move));
+		assertTrue(serialized.length() < MAX_ACCEPTED_SIZE);
 		
 		assertEquals(move.getType(), deserialized.getType());
 		assertTrue(deserialized.isPassing());
