@@ -22,18 +22,18 @@ class FieldTest {
 	
 	private void initBuildingNumbers() {
 		//initialize the BUILDING_NUMBERS field in the Constants class
-		Constants.BUILDING_NUMBERS = new HashMap<Building, Integer>();
+		Constants.getInstance().BUILDING_NUMBERS = new HashMap<Building, Integer>();
 		
-		Constants.BUILDING_NUMBERS.put(Building.COLONY, 10);
-		Constants.BUILDING_NUMBERS.put(Building.MINE, 6);
-		Constants.BUILDING_NUMBERS.put(Building.TRADING_POST, 6);
-		Constants.BUILDING_NUMBERS.put(Building.LABORATORY, 5);
-		Constants.BUILDING_NUMBERS.put(Building.GOVERNMENT, 1);
-		Constants.BUILDING_NUMBERS.put(Building.CITY, 2);
-		Constants.BUILDING_NUMBERS.put(Building.RESEARCH_CENTER, 3);
-		Constants.BUILDING_NUMBERS.put(Building.DRONE, 10);
-		Constants.BUILDING_NUMBERS.put(Building.SPACE_STATION, 5);
-		Constants.BUILDING_NUMBERS.put(Building.SATELLITE, 99);
+		Constants.getInstance().BUILDING_NUMBERS.put(Building.COLONY, 10);
+		Constants.getInstance().BUILDING_NUMBERS.put(Building.MINE, 6);
+		Constants.getInstance().BUILDING_NUMBERS.put(Building.TRADING_POST, 6);
+		Constants.getInstance().BUILDING_NUMBERS.put(Building.LABORATORY, 5);
+		Constants.getInstance().BUILDING_NUMBERS.put(Building.GOVERNMENT, 1);
+		Constants.getInstance().BUILDING_NUMBERS.put(Building.CITY, 2);
+		Constants.getInstance().BUILDING_NUMBERS.put(Building.RESEARCH_CENTER, 3);
+		Constants.getInstance().BUILDING_NUMBERS.put(Building.DRONE, 10);
+		Constants.getInstance().BUILDING_NUMBERS.put(Building.SPACE_STATION, 5);
+		Constants.getInstance().BUILDING_NUMBERS.put(Building.SATELLITE, 99);
 	}
 	
 	protected static Game getInitializedGameWithDefenseBuildings() {
@@ -198,5 +198,47 @@ class FieldTest {
 		assertEquals(1, alliancesSpaceField2.size());
 		assertEquals(0, alliancesPlanet4.size());
 		assertEquals(0, alliancesSpaceField4.size());
+	}
+	
+	@Test
+	public void testContainsPlayersBuildings() {
+		Game game = GameCreationUtil.createGame();
+		
+		Field fieldWithoutBuildings = new Field(new Position(0, 0), Planet.BLACK, 3);
+		Field fieldWithPlayersBuildings = new Field(new Position(0, 0), Planet.BLACK, 3);
+		Field fieldWithOtherPlayersBuildings = new Field(new Position(0, 0), Planet.BLACK, 3);
+		Field fieldWithMultiplePlayersBuildings = new Field(new Position(0, 0), Planet.BLACK, 3);
+		
+		fieldWithPlayersBuildings.build(new PlayerBuilding(Building.COLONY, game.getPlayers().get(0)), 0);
+		fieldWithOtherPlayersBuildings.build(new PlayerBuilding(Building.COLONY, game.getPlayers().get(1)), 1);
+		fieldWithMultiplePlayersBuildings.build(new PlayerBuilding(Building.COLONY, game.getPlayers().get(0)), 0);
+		fieldWithMultiplePlayersBuildings.build(new PlayerBuilding(Building.COLONY, game.getPlayers().get(1)), 1);
+		
+		PlayerClass localPlayersClass = game.getPlayers().get(0).getPlayerClass();
+		assertFalse(fieldWithoutBuildings.containsPlayersBuildings(localPlayersClass));
+		assertTrue(fieldWithPlayersBuildings.containsPlayersBuildings(localPlayersClass));
+		assertFalse(fieldWithOtherPlayersBuildings.containsPlayersBuildings(localPlayersClass));
+		assertTrue(fieldWithMultiplePlayersBuildings.containsPlayersBuildings(localPlayersClass));
+	}
+	
+	@Test
+	public void testContainsOtherPlayersBuildings() {
+		Game game = GameCreationUtil.createGame();
+		
+		Field fieldWithoutBuildings = new Field(new Position(0, 0), Planet.BLACK, 3);
+		Field fieldWithPlayersBuildings = new Field(new Position(0, 0), Planet.BLACK, 3);
+		Field fieldWithOtherPlayersBuildings = new Field(new Position(0, 0), Planet.BLACK, 3);
+		Field fieldWithMultiplePlayersBuildings = new Field(new Position(0, 0), Planet.BLACK, 3);
+		
+		fieldWithPlayersBuildings.build(new PlayerBuilding(Building.COLONY, game.getPlayers().get(0)), 0);
+		fieldWithOtherPlayersBuildings.build(new PlayerBuilding(Building.COLONY, game.getPlayers().get(1)), 1);
+		fieldWithMultiplePlayersBuildings.build(new PlayerBuilding(Building.COLONY, game.getPlayers().get(0)), 0);
+		fieldWithMultiplePlayersBuildings.build(new PlayerBuilding(Building.COLONY, game.getPlayers().get(1)), 1);
+		
+		PlayerClass localPlayersClass = game.getPlayers().get(0).getPlayerClass();
+		assertFalse(fieldWithoutBuildings.containsOtherPlayersBuildings(localPlayersClass));
+		assertFalse(fieldWithPlayersBuildings.containsOtherPlayersBuildings(localPlayersClass));
+		assertTrue(fieldWithOtherPlayersBuildings.containsOtherPlayersBuildings(localPlayersClass));
+		assertTrue(fieldWithMultiplePlayersBuildings.containsOtherPlayersBuildings(localPlayersClass));
 	}
 }

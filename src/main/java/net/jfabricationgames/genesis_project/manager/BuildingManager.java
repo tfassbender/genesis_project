@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.annotations.VisibleForTesting;
 
 import javafx.beans.property.IntegerProperty;
@@ -22,6 +24,8 @@ import net.jfabricationgames.genesis_project.game.Planet;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.PlayerBuilding;
 import net.jfabricationgames.genesis_project.game.Resource;
+import net.jfabricationgames.genesis_project.json.deserializer.CustomIntegerPropertyDeserializer;
+import net.jfabricationgames.genesis_project.json.serializer.CustomIntegerPropertySerializer;
 
 public class BuildingManager implements IBuildingManager {
 	
@@ -29,13 +33,23 @@ public class BuildingManager implements IBuildingManager {
 	
 	//the buildings left on the class board
 	@VisibleForTesting
+	@JsonSerialize(contentUsing = CustomIntegerPropertySerializer.class)
+	@JsonDeserialize(contentUsing = CustomIntegerPropertyDeserializer.class)
 	protected Map<Building, IntegerProperty> numBuildingsLeft;
+	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public BuildingManager() {
+		
+	}
 	
 	public BuildingManager(Player player) {
 		this.player = player;
-		if (Constants.BUILDING_NUMBERS != null) {
+		if (Constants.getInstance().BUILDING_NUMBERS != null) {
 			numBuildingsLeft = new HashMap<Building, IntegerProperty>();
-			for (Map.Entry<Building, Integer> buildings : Constants.BUILDING_NUMBERS.entrySet()) {
+			for (Map.Entry<Building, Integer> buildings : Constants.getInstance().BUILDING_NUMBERS.entrySet()) {
 				IntegerProperty property = new SimpleIntegerProperty(this, "buildingsLeft_" + buildings.getKey().name());
 				property.set(buildings.getValue().intValue());
 				numBuildingsLeft.put(buildings.getKey(), property);
@@ -59,7 +73,7 @@ public class BuildingManager implements IBuildingManager {
 	
 	@Override
 	public int getNumBuildingsOnField(Building building) {
-		return Constants.BUILDING_NUMBERS.get(building).intValue() - getNumBuildingsLeft(building);
+		return Constants.getInstance().BUILDING_NUMBERS.get(building).intValue() - getNumBuildingsLeft(building);
 	}
 	
 	@Override
@@ -164,10 +178,15 @@ public class BuildingManager implements IBuildingManager {
 	public BuildingResources getResourcesNeededForBuilding(Building building, Field field) {
 		BuildingResources resourcesNeeded = new BuildingResources();
 		
-		int[] costs = Constants.getBuildingCosts(building, getPlayer().getPlayerClass(), field.getPlanet());
+		int[] costs = Constants.getInstance().getBuildingCosts(building, getPlayer().getPlayerClass(), field.getPlanet());
 		resourcesNeeded.addResources(getPlayer().getPlayerClass().getPrimaryResource(), costs[0]);
 		resourcesNeeded.addResources(getPlayer().getPlayerClass().getSecundaryResource(), costs[1]);
 		resourcesNeeded.addResources(getPlayer().getPlayerClass().getTertiaryResource(), costs[2]);
+		
+		int[] discount = Constants.getInstance().getBuildingDiscountTotal(building, getPlayer().getPlayerClass(), field);
+		resourcesNeeded.addResources(getPlayer().getPlayerClass().getPrimaryResource(), -discount[0]);
+		resourcesNeeded.addResources(getPlayer().getPlayerClass().getSecundaryResource(), -discount[1]);
+		resourcesNeeded.addResources(getPlayer().getPlayerClass().getTertiaryResource(), -discount[2]);
 		
 		return resourcesNeeded;
 	}
@@ -217,13 +236,13 @@ public class BuildingManager implements IBuildingManager {
 					Building building = playerBuilding.getBuilding();
 					
 					//find the resources the building produces and add them to the total earnings
-					DependentResources resources = Constants.BUILDING_EARNINGS_DEPENDENT.get(building);
+					DependentResources resources = Constants.getInstance().BUILDING_EARNINGS_DEPENDENT.get(building);
 					earnings.addResources(primary, resources.getResourcesPrimary());
 					earnings.addResources(secondary, resources.getResourcesSecondary());
 					earnings.addResources(tertiary, resources.getResourcesTertiary());
 					
-					earnings.addResearchPoints(Constants.BUILDING_EARNINGS_RESEARCH_POINTS.get(building));
-					earnings.addScientists(Constants.BUILDING_EARNINGS_SCIENTISTS.get(building));
+					earnings.addResearchPoints(Constants.getInstance().BUILDING_EARNINGS_RESEARCH_POINTS.get(building));
+					earnings.addScientists(Constants.getInstance().BUILDING_EARNINGS_SCIENTISTS.get(building));
 				}
 			}
 		}
@@ -244,7 +263,7 @@ public class BuildingManager implements IBuildingManager {
 	public int getDroneDefense() {
 		int defense = 0;
 		
-		defense += Constants.BUILDING_EARNINGS_DEFENSE.get(Building.DRONE);
+		defense += Constants.getInstance().BUILDING_EARNINGS_DEFENSE.get(Building.DRONE);
 		defense += player.getResearchManager().getDroneAdditionalDefense();
 		
 		return defense;
@@ -256,7 +275,7 @@ public class BuildingManager implements IBuildingManager {
 	public int getSpaceStationDefense() {
 		int defense = 0;
 		
-		defense += Constants.BUILDING_EARNINGS_DEFENSE.get(Building.SPACE_STATION);
+		defense += Constants.getInstance().BUILDING_EARNINGS_DEFENSE.get(Building.SPACE_STATION);
 		defense += player.getResearchManager().getSpaceStationAdditionalDefense();
 		
 		return defense;

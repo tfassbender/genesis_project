@@ -134,7 +134,7 @@ class ResearchManagerTest {
 		ResearchManager manager = getGlobalResearchManager();
 		
 		//in the areas MINES (and ECONOMY) all states are accessible
-		for (int i = 1; i < Constants.MAX_RESEARCH_STATE_DEFAULT; i++) {
+		for (int i = 1; i < Constants.getInstance().MAX_RESEARCH_STATE_DEFAULT; i++) {
 			assertTrue(manager.isStateAccessible(ResearchArea.MINES, i));
 		}
 		

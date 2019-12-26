@@ -2,17 +2,21 @@ package net.jfabricationgames.genesis_project.manager;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.TurnGoal;
 import net.jfabricationgames.genesis_project.move.IMove;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY)
+@JsonSubTypes({@JsonSubTypes.Type(value = TurnManager.class, name = "TurnManager")})
 public interface ITurnManager {
 	
 	public int getTurn();
 	public void nextTurn();
-	
 	
 	public void receivePointsForMove(IMove move);
 	

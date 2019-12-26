@@ -1,11 +1,17 @@
 package net.jfabricationgames.genesis_project.manager;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
 import net.jfabricationgames.genesis_project.game.Resource;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY)
+@JsonSubTypes({@JsonSubTypes.Type(value = ResearchManager.class, name = "ResearchManager"),
+		@JsonSubTypes.Type(value = ResearchManagerCompositum.class, name = "ResearchManagerCompositum")})
 public interface IResearchManager {
 	
 	public int getState(ResearchArea area);

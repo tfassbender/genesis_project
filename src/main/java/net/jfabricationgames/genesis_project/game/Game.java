@@ -1,14 +1,22 @@
 package net.jfabricationgames.genesis_project.game;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import net.jfabricationgames.genesis_project.game_frame.GameFrameController;
 import net.jfabricationgames.genesis_project.game_frame.PlayerInfo;
+import net.jfabricationgames.genesis_project.json.serializer.SerializationIdGenerator;
 import net.jfabricationgames.genesis_project.manager.AllianceManagerCompositum;
 import net.jfabricationgames.genesis_project.manager.GamePointManager;
 import net.jfabricationgames.genesis_project.manager.IAllianceManager;
@@ -20,7 +28,11 @@ import net.jfabricationgames.genesis_project.manager.ResearchManagerCompositum;
 import net.jfabricationgames.genesis_project.manager.TurnManager;
 import net.jfabricationgames.genesis_project.move.IMove;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Game {
+	
+	//final id for json serialization
+	private final int id = SerializationIdGenerator.getNextId();
 	
 	private List<Player> players;
 	private transient String localPlayerName;
@@ -34,7 +46,16 @@ public class Game {
 	
 	private ObservableList<PlayerInfo> playerInfoList;
 	
+	@JsonIgnore
 	private GameFrameController gameFrameController;
+	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public Game() {
+		
+	}
 	
 	public Game(List<Player> players, String localPlayerName) {
 		this.players = players;
@@ -105,10 +126,10 @@ public class Game {
 				player = move.getPlayer();
 				localResearchManager = player.getResearchManager();
 				localResourceManager = player.getResourceManager();
-				int researchPointsNeeded = Constants.RESEARCH_POINTS_FOR_STATE_INCREASE;
-				int researchScientistsNeeded = Constants.RESEARCH_SCIENTISTS_FOR_LOW_STATE;
-				if (nextState >= Constants.RESEARCH_STATE_HIGH) {
-					researchScientistsNeeded = Constants.RESEARCH_SCIENTISTS_FOR_HIGH_STATE;
+				int researchPointsNeeded = Constants.getInstance().RESEARCH_POINTS_FOR_STATE_INCREASE;
+				int researchScientistsNeeded = Constants.getInstance().RESEARCH_SCIENTISTS_FOR_LOW_STATE;
+				if (nextState >= Constants.getInstance().RESEARCH_STATE_HIGH) {
+					researchScientistsNeeded = Constants.getInstance().RESEARCH_SCIENTISTS_FOR_HIGH_STATE;
 				}
 				
 				localResourceManager.reduceResources(Resource.RESEARCH_POINTS, researchPointsNeeded);
@@ -192,10 +213,10 @@ public class Game {
 				int nextState = currentState + 1;
 				
 				localResourceManager = move.getPlayer().getResourceManager();
-				int researchPointsNeeded = Constants.RESEARCH_POINTS_FOR_STATE_INCREASE;
-				int researchScientistsNeeded = Constants.RESEARCH_SCIENTISTS_FOR_LOW_STATE;
-				if (nextState >= Constants.RESEARCH_STATE_HIGH) {
-					researchScientistsNeeded = Constants.RESEARCH_SCIENTISTS_FOR_HIGH_STATE;
+				int researchPointsNeeded = Constants.getInstance().RESEARCH_POINTS_FOR_STATE_INCREASE;
+				int researchScientistsNeeded = Constants.getInstance().RESEARCH_SCIENTISTS_FOR_LOW_STATE;
+				if (nextState >= Constants.getInstance().RESEARCH_STATE_HIGH) {
+					researchScientistsNeeded = Constants.getInstance().RESEARCH_SCIENTISTS_FOR_HIGH_STATE;
 				}
 				
 				boolean stateAccessible = this.researchManager.isStateAccessible(area, nextState);
@@ -249,7 +270,7 @@ public class Game {
 	private void updateBoard() {
 		if (gameFrameController != null) {
 			//only if the controller is already set (will not be set in tests)
-			gameFrameController.getBoardPaneController().buildField();			
+			gameFrameController.getBoardPaneController().buildField();
 		}
 	}
 	
@@ -287,5 +308,18 @@ public class Game {
 	}
 	public void setGameFrameController(GameFrameController gameFrameController) {
 		this.gameFrameController = gameFrameController;
+	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	@JsonGetter("playerInfoList")
+	public List<PlayerInfo> getPlayerInfoListAsArrayList() {
+		return new ArrayList<PlayerInfo>(playerInfoList);
+	}
+	@JsonSetter("playerInfoList")
+	public void setPlayerInfoListFromList(List<PlayerInfo> playerInfoList) {
+		this.playerInfoList = FXCollections.observableArrayList(playerInfoList);
 	}
 }

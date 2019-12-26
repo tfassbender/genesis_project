@@ -2,6 +2,8 @@ package net.jfabricationgames.genesis_project.move;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import net.jfabricationgames.genesis_project.game.AllianceBonus;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.Field;
@@ -28,9 +30,17 @@ public class Move implements IMove {
 	private int allianceBonusIndex;
 	private boolean pass;
 	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public Move() {
+		
+	}
+	
 	protected Move(Game game, MoveType type, Player player, Field field, Building building, ResearchArea researchArea,
 			ResearchResources researchResources, Technology technology, List<Field> alliancePlanets, List<Field> satelliteFields,
-			AllianceBonus allianceBonus, int allianceBonusIndex, boolean pass) {
+			AllianceBonus allianceBonus, int allianceBonusIndex) {
 		this.game = game;
 		this.type = type;
 		this.player = player;
@@ -43,7 +53,7 @@ public class Move implements IMove {
 		this.satelliteFields = satelliteFields;
 		this.allianceBonus = allianceBonus;
 		this.allianceBonusIndex = allianceBonusIndex;
-		this.pass = pass;
+		this.pass = (type == MoveType.PASS);
 	}
 	
 	@Override
@@ -52,6 +62,7 @@ public class Move implements IMove {
 	}
 	
 	@Override
+	@JsonIgnore
 	public boolean isExecutable() {
 		return game.isMoveExecutable(this);
 	}
@@ -112,6 +123,7 @@ public class Move implements IMove {
 	}
 	
 	@Override
+	@JsonIgnore
 	public boolean isPassing() {
 		return pass;
 	}

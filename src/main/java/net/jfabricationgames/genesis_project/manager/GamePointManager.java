@@ -1,9 +1,13 @@
 package net.jfabricationgames.genesis_project.manager;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonSetter;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,6 +18,14 @@ import net.jfabricationgames.genesis_project.game.PlayerScore;
 public class GamePointManager {
 	
 	private ObservableList<PlayerScore> scoreList;
+	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public GamePointManager() {
+		
+	}
 	
 	public GamePointManager(Game game) {
 		List<PlayerScore> scores = game.getPlayers().stream().map(p -> new PlayerScore(p, 0)).collect(Collectors.toList());
@@ -37,5 +49,14 @@ public class GamePointManager {
 			}
 		}
 		return position;
+	}
+	
+	@JsonGetter("scoreList")
+	public List<PlayerScore> getScoreListAsArrayList() {
+		return new ArrayList<PlayerScore>(scoreList);
+	}
+	@JsonSetter("scoreList")
+	public void setScoreListFromList(List<PlayerScore> scoreList) {
+		this.scoreList = FXCollections.observableArrayList(scoreList);
 	}
 }

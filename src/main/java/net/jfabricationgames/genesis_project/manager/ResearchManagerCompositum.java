@@ -15,6 +15,14 @@ public class ResearchManagerCompositum implements IResearchManager {
 	
 	private IResearchManager globalManager;
 	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public ResearchManagerCompositum() {
+		
+	}
+	
 	public ResearchManagerCompositum(Game game) {
 		this.game = game;
 		globalManager = new ResearchManager(null, game.getPlayers().size());

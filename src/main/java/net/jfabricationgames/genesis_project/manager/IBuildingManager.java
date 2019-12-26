@@ -1,11 +1,16 @@
 package net.jfabricationgames.genesis_project.manager;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import javafx.beans.property.IntegerProperty;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.BuildingResources;
 import net.jfabricationgames.genesis_project.game.CompleteResources;
 import net.jfabricationgames.genesis_project.game.Field;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY)
+@JsonSubTypes({@JsonSubTypes.Type(value = BuildingManager.class, name = "BuildingManager")})
 public interface IBuildingManager {
 	
 	public int getNumBuildingsLeft(Building building);

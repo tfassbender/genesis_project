@@ -3,6 +3,10 @@ package net.jfabricationgames.genesis_project.user;
 import java.io.Serializable;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "username")
 public class User implements Serializable {
 	
 	private static final long serialVersionUID = -1283513600616522694L;
@@ -10,6 +14,14 @@ public class User implements Serializable {
 	private String username;
 	private boolean online;
 	private boolean inGame;
+	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public User() {
+		
+	}
 	
 	public User(String username) {
 		this.username = username;

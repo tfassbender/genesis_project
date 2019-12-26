@@ -1,5 +1,7 @@
 package net.jfabricationgames.genesis_project.game;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class ResearchResources extends BuildingResources implements Cloneable {
 	
 	private int scientists;
@@ -16,6 +18,7 @@ public class ResearchResources extends BuildingResources implements Cloneable {
 	}
 	
 	@Override
+	@JsonIgnore
 	public boolean isEmpty() {
 		return super.isEmpty() && scientists == 0;
 	}
