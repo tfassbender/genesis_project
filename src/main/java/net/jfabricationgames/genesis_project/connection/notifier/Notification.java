@@ -1,4 +1,4 @@
-package net.jfabricationgames.genesis_project.connection;
+package net.jfabricationgames.genesis_project.connection.notifier;
 
 import java.util.Arrays;
 import java.util.List;
