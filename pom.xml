@@ -17,6 +17,7 @@
 
 		<jersey2.version>2.26</jersey2.version>
 		<jaxrs.version>2.1.1</jaxrs.version>
+		<jackson-jsr310.version>2.9.7</jackson-jsr310.version>
 	</properties>
 
 	<dependencies>
@@ -96,6 +97,12 @@
 			<groupId>org.glassfish.jersey.inject</groupId>
 			<artifactId>jersey-hk2</artifactId>
 			<version>${jersey2.version}</version>
+		</dependency>
+		<!-- jsr310 for serializing and deserializing LocalDateTime -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>${jackson-jsr310.version}</version>
 		</dependency>
 	</dependencies>
 
