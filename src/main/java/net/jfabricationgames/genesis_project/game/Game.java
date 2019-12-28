@@ -28,12 +28,13 @@ import net.jfabricationgames.genesis_project.manager.ResearchManagerCompositum;
 import net.jfabricationgames.genesis_project.manager.TurnManager;
 import net.jfabricationgames.genesis_project.move.IMove;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "jsonSerializationId")
 public class Game {
 	
 	//final id for json serialization
-	//TODO change to game id (id in database)
-	private int id = SerializationIdGenerator.getNextId();
+	private final int jsonSerializationId = SerializationIdGenerator.getNextId();
+	
+	private int id;
 	
 	private List<Player> players;
 	private transient String localPlayerName;
@@ -58,7 +59,8 @@ public class Game {
 		
 	}
 	
-	public Game(List<Player> players, String localPlayerName) {
+	public Game(int id, List<Player> players, String localPlayerName) {
+		this.id = id;
 		this.players = players;
 		this.localPlayerName = localPlayerName;
 		this.board = new Board();
@@ -313,6 +315,13 @@ public class Game {
 	
 	public int getId() {
 		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	public int getJsonSerializationId() {
+		return jsonSerializationId;
 	}
 	
 	@JsonGetter("playerInfoList")

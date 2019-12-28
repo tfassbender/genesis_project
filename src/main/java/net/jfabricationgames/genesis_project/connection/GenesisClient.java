@@ -112,8 +112,18 @@ public class GenesisClient {
 			}
 		}
 	}
-	public void loginAsync(String username, String password, int subscriberIdent) {
-		//TODO
+	public void loginAsync(String username, String password, GenesisClientEventSubscriber subscriber) {
+		Thread thread = new Thread(() -> {
+			try {
+				login(username, password);
+				subscriber.receiveLoginSucessful();
+			}
+			catch (GenesisServerException gse) {
+				subscriber.receiveException(gse);
+			}
+		}, "loginAsync");
+		thread.setDaemon(true);
+		thread.start();
 	}
 	
 	public void updateGame(Game game) throws GenesisServerException {
@@ -139,8 +149,18 @@ public class GenesisClient {
 				throw new GenesisServerException("The response contained an unexpected status code: " + response.getStatus());
 		}
 	}
-	public void updateGameAsync(Game game, int subscriberIdent) {
-		//TODO
+	public void updateGameAsync(Game game, GenesisClientEventSubscriber subscriber) {
+		Thread thread = new Thread(() -> {
+			try {
+				updateGame(game);
+				subscriber.receiveUpdateGameSuccessful();
+			}
+			catch (GenesisServerException gse) {
+				subscriber.receiveException(gse);
+			}
+		}, "updateGameAsync");
+		thread.setDaemon(true);
+		thread.start();
 	}
 	
 	public Game getGame(int gameId) throws GenesisServerException {
@@ -171,8 +191,18 @@ public class GenesisClient {
 			throw new GenesisServerException("Parsing of the game failed", ioe);
 		}
 	}
-	public void getGameAsync(int gameId, int subscriberIdent) {
-		//TODO
+	public void getGameAsync(int gameId, GenesisClientEventSubscriber subscriber) {
+		Thread thread = new Thread(() -> {
+			try {
+				Game game = getGame(gameId);
+				subscriber.receiveGetGameAnswer(game);
+			}
+			catch (GenesisServerException gse) {
+				subscriber.receiveException(gse);
+			}
+		}, "getGameAsync");
+		thread.setDaemon(true);
+		thread.start();
 	}
 	
 	public void setMove(IMove move, int gameId, String username) throws GenesisServerException {
@@ -200,8 +230,18 @@ public class GenesisClient {
 				throw new GenesisServerException("The response contained an unexpected status code: " + response.getStatus());
 		}
 	}
-	public void setMoveAsync(IMove move, int subscriberIdent) {
-		//TODO
+	public void setMoveAsync(IMove move, int gameId, String username, GenesisClientEventSubscriber subscriber) {
+		Thread thread = new Thread(() -> {
+			try {
+				setMove(move, gameId, username);
+				subscriber.receiveSetMoveSuccessful();
+			}
+			catch (GenesisServerException gse) {
+				subscriber.receiveException(gse);
+			}
+		}, "setMoveAsync");
+		thread.setDaemon(true);
+		thread.start();
 	}
 	
 	public String getConfig(String configName) throws GenesisServerException {
@@ -225,8 +265,18 @@ public class GenesisClient {
 		
 		return responseText;
 	}
-	public void getConfigAsync(String configName, int subscriberIdent) {
-		//TODO
+	public void getConfigAsync(String configName, GenesisClientEventSubscriber subscriber) {
+		Thread thread = new Thread(() -> {
+			try {
+				String config = getConfig(configName);
+				subscriber.receiveGetConfigAnswer(config);
+			}
+			catch (GenesisServerException gse) {
+				subscriber.receiveException(gse);
+			}
+		}, "getConfigAsync");
+		thread.setDaemon(true);
+		thread.start();
 	}
 	
 	public int createGame(List<String> players) throws GenesisServerException {
@@ -248,8 +298,18 @@ public class GenesisClient {
 		
 		return gameId;
 	}
-	public void createGameAsync(List<String> players, int subscriberIdent) {
-		//TODO
+	public void createGameAsync(List<String> players, GenesisClientEventSubscriber subscriber) {
+		Thread thread = new Thread(() -> {
+			try {
+				int id = createGame(players);
+				subscriber.receiveCreateGameAnswer(id);
+			}
+			catch (GenesisServerException gse) {
+				subscriber.receiveException(gse);
+			}
+		}, "createGameAsync");
+		thread.setDaemon(true);
+		thread.start();
 	}
 	
 	public void createUser(String username, String password) throws GenesisServerException {
@@ -269,8 +329,17 @@ public class GenesisClient {
 				throw new GenesisServerException("The response contained an unexpected status code: " + response.getStatus());
 		}
 	}
-	public void createUserAsync(String username, String password, int subscriberIdent) {
-		//TODO
+	public void createUserAsync(String username, String password, GenesisClientEventSubscriber subscriber) {
+		Thread thread = new Thread(() -> {
+			try {
+				login(username, password);
+			}
+			catch (GenesisServerException gse) {
+				subscriber.receiveException(gse);
+			}
+		}, "");
+		thread.setDaemon(true);
+		thread.start();
 	}
 	
 	public void updateUser(String currentUsername, String currentPassword, String updatedUsername, String updatedPassword)
@@ -294,8 +363,19 @@ public class GenesisClient {
 				throw new GenesisServerException("The response contained an unexpected status code: " + response.getStatus());
 		}
 	}
-	public void updateUserAsync(String currentUsername, String currentPassword, String updatedUsername, String updatedPassword, int subscriberIdent) {
-		//TODO
+	public void updateUserAsync(String currentUsername, String currentPassword, String updatedUsername, String updatedPassword,
+			GenesisClientEventSubscriber subscriber) {
+		Thread thread = new Thread(() -> {
+			try {
+				updateUser(currentUsername, currentPassword, updatedUsername, updatedPassword);
+				subscriber.receiveUpdateUserSuccessful();
+			}
+			catch (GenesisServerException gse) {
+				subscriber.receiveException(gse);
+			}
+		}, "updateUserAsync");
+		thread.setDaemon(true);
+		thread.start();
 	}
 	
 	public void verifyUser(String username, String password) throws GenesisServerException {
@@ -317,8 +397,17 @@ public class GenesisClient {
 				throw new GenesisServerException("The response contained an unexpected status code: " + response.getStatus());
 		}
 	}
-	public void verifyUserAsync(String username, String password, int subscriberIdent) {
-		//TODO
+	public void verifyUserAsync(String username, String password, GenesisClientEventSubscriber subscriber) {
+		Thread thread = new Thread(() -> {
+			try {
+				login(username, password);
+			}
+			catch (GenesisServerException gse) {
+				subscriber.receiveException(gse);
+			}
+		}, "");
+		thread.setDaemon(true);
+		thread.start();
 	}
 	
 	public GameList listGames(boolean complete, String username) throws GenesisServerException {
@@ -348,8 +437,18 @@ public class GenesisClient {
 		
 		return gameList;
 	}
-	public void listGamesAsync(boolean complete, String username, int subscriberIdent) {
-		//TODO
+	public void listGamesAsync(boolean complete, String username, GenesisClientEventSubscriber subscriber) {
+		Thread thread = new Thread(() -> {
+			try {
+				GameList gameList = listGames(complete, username);
+				subscriber.receiveListGamesAnswer(gameList);
+			}
+			catch (GenesisServerException gse) {
+				subscriber.receiveException(gse);
+			}
+		}, "listGamesAsync");
+		thread.setDaemon(true);
+		thread.start();
 	}
 	
 	public MoveList listMoves(int gameId, String username, int numMoves) throws GenesisServerException {
@@ -386,8 +485,18 @@ public class GenesisClient {
 		
 		return moveList;
 	}
-	public void listMovesAsync(int gameId, String username, int numMoves, int subscriberIdent) {
-		//TODO
+	public void listMovesAsync(int gameId, String username, int numMoves, GenesisClientEventSubscriber subscriber) {
+		Thread thread = new Thread(() -> {
+			try {
+				MoveList moveList = listMoves(gameId, username, numMoves);
+				subscriber.receiveListMovesAnswer(moveList);
+			}
+			catch (GenesisServerException gse) {
+				subscriber.receiveException(gse);
+			}
+		}, "listMovesAsync");
+		thread.setDaemon(true);
+		thread.start();
 	}
 	
 	public void registerSubscriber(GenesisClientEventSubscriber subscriber) {
