@@ -1,5 +1,6 @@
 package net.jfabricationgames.genesis_project.connection;
 
+import net.jfabricationgames.genesis_project.connection.exception.ServerCommunicationException;
 import net.jfabricationgames.genesis_project.game.Game;
 import net.jfabricationgames.genesis_project_server.game.GameList;
 import net.jfabricationgames.genesis_project_server.game.MoveList;

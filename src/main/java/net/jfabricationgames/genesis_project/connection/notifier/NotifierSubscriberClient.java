@@ -18,7 +18,7 @@ public class NotifierSubscriberClient {
 	
 	private static final Logger LOGGER = LogManager.getLogger(NotifierSubscriberClient.class);
 	
-	private static final String CONFIG_RESOURCE_FILE = "client_config.properties";
+	private static final String CONFIG_RESOURCE_FILE = "config/notifier_service.config";
 	
 	/**
 	 * The string that the service will send to request a name from the user.
@@ -73,6 +73,7 @@ public class NotifierSubscriberClient {
 		
 		subscribeToNotifierService();
 		startNotificationListener();
+		LOGGER.info("NotifierSubscriberClient started");
 	}
 	
 	@Override
@@ -195,8 +196,7 @@ public class NotifierSubscriberClient {
 			catch (IOException ioe) {
 				ioe.printStackTrace();
 				//if the name can't be send the program can't go on
-				LOGGER.fatal("failed to send username to service. ending programm");
-				System.exit(1);
+				LOGGER.fatal("failed to send username to service. service will not be working correctly");
 			}
 		}
 		else {

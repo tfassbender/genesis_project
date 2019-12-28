@@ -1,6 +1,6 @@
-package net.jfabricationgames.genesis_project.connection;
+package net.jfabricationgames.genesis_project.connection.exception;
 
-public class ServerCommunicationException extends Exception {
+public class ServerCommunicationException extends GenesisServerException {
 	
 	private static final long serialVersionUID = -5143887259017244585L;
 	

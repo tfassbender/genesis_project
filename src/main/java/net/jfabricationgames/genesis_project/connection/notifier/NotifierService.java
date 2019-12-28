@@ -33,11 +33,13 @@ public class NotifierService {
 	
 	private NotifierService(String username) throws IOException {
 		loadConfiguration();
+		new NotifierSubscriberClient(username, this);
+		LOGGER.info("NotifierService started");
 	}
 	
-	public static synchronized NotifierService startNotifierService(Player player) throws IOException {
+	public static synchronized NotifierService startNotifierService(String username) throws IOException {
 		if (instance == null) {
-			username = USERNAME_PREFIX + player.getUser().getUsername();
+			username = USERNAME_PREFIX + username;
 			instance = new NotifierService(username);
 			return instance;
 		}
@@ -45,12 +47,15 @@ public class NotifierService {
 			throw new IllegalStateException("The NotifierService has already been initialized");
 		}
 	}
-	public static NotifierService getInstance() {
+	public static synchronized NotifierService getInstance() {
 		if (instance == null) {
 			throw new IllegalStateException(
 					"The NotifierService has not yet been initialized (use startNotifierService(Player) method to initialize)");
 		}
 		return instance;
+	}
+	public static synchronized boolean isStarted() {
+		return instance != null;
 	}
 	
 	private void loadConfiguration() throws IOException {

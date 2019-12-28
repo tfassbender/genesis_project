@@ -32,7 +32,8 @@ import net.jfabricationgames.genesis_project.move.IMove;
 public class Game {
 	
 	//final id for json serialization
-	private final int id = SerializationIdGenerator.getNextId();
+	//TODO change to game id (id in database)
+	private int id = SerializationIdGenerator.getNextId();
 	
 	private List<Player> players;
 	private transient String localPlayerName;
