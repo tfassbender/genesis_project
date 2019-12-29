@@ -1,30 +1,45 @@
 package net.jfabricationgames.genesis_project.user;
 
 import java.util.List;
-import java.util.Optional;
 
-public abstract class UserManager {
+public class UserManager {
 	
-	private static List<User> users;
+	private List<String> usersOnline;
 	
-	private static String localUsername;
+	private String localUsername;
 	
-	public static User getLocalUser() {
-		Optional<User> user = users.stream().filter((u) -> u.getUsername().equals(localUsername)).findFirst();
-		return user.orElse(null);
+	private static UserManager instance;
+	
+	private UserManager(String username) {
+		this.localUsername = username;
 	}
 	
-	public static List<User> getUsers() {
-		return users;
+	public static synchronized UserManager startUserManager(String username) throws IllegalStateException {
+		if (instance == null) {
+			instance = new UserManager(username);
+			return instance;
+		}
+		else {
+			throw new IllegalStateException("The UserManager has already been initialized");
+		}
 	}
-	public static void setUsers(List<User> users) {
-		UserManager.users = users;
+	public static synchronized UserManager getInstance() {
+		if (instance != null) {
+			return instance;
+		}
+		else {
+			throw new IllegalStateException("The UserManager has not yet been initialized");
+		}
+	}
+	public static synchronized boolean isInitialized() {
+		return instance != null;
 	}
 	
-	public static String getLocalUsername() {
+	public List<String> getUsersOnline() {
+		return usersOnline;
+	}
+	
+	public String getLocalUsername() {
 		return localUsername;
-	}
-	public static void setLocalUsername(String localUsername) {
-		UserManager.localUsername = localUsername;
 	}
 }

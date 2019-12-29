@@ -77,7 +77,7 @@ public class NotifierService {
 	 */
 	public Response informPlayers(String message, List<Player> players) {
 		//map the players to their usernames with the default prefix for the notifier service
-		List<String> usernames = players.stream().map(p -> NotifierService.USERNAME_PREFIX + p.getUser().getUsername()).collect(Collectors.toList());
+		List<String> usernames = players.stream().map(p -> NotifierService.USERNAME_PREFIX + p.getUsername()).collect(Collectors.toList());
 		Notification notification = new Notification(message, username, usernames);
 		return sendNotifierRequest("notify", "POST", Entity.entity(notification, MediaType.APPLICATION_JSON));
 	}

@@ -43,7 +43,7 @@ public class PlayerInfo {
 	}
 	
 	private void initializeValues(Player player) {
-		name = player.getUser().getUsername();
+		name = player.getUsername();
 		points = player.getPointManager().getPoints();
 		planets = player.getGame().getBoard().getPlayersPlanets(player).size();
 		alliances = player.getAllianceManager().getAlliances().size();

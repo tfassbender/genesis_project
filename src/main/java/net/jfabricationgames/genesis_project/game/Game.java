@@ -281,7 +281,7 @@ public class Game {
 		return players;
 	}
 	public Player getLocalPlayer() {
-		Optional<Player> local = players.stream().filter(p -> p.getUser().getUsername().equals(localPlayerName)).findFirst();
+		Optional<Player> local = players.stream().filter(p -> p.getUsername().equals(localPlayerName)).findFirst();
 		return local.orElseThrow(() -> new IllegalStateException("No local player found."));
 	}
 	

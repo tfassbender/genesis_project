@@ -25,7 +25,7 @@ public class PlayerScore implements Comparable<PlayerScore> {
 	
 	@Override
 	public String toString() {
-		return String.format("%3d - %s", score, player.getUser().getUsername());
+		return String.format("%3d - %s", score, player.getUsername());
 	}
 	
 	public Player getPlayer() {

@@ -22,7 +22,6 @@ import net.jfabricationgames.genesis_project.game.TurnGoal;
 import net.jfabricationgames.genesis_project.move.IMove;
 import net.jfabricationgames.genesis_project.move.MoveBuilder;
 import net.jfabricationgames.genesis_project.move.MoveType;
-import net.jfabricationgames.genesis_project.user.User;
 
 class TurnManagerTest {
 	
@@ -30,7 +29,7 @@ class TurnManagerTest {
 		Game game = mock(Game.class);
 		List<Player> players = new ArrayList<Player>(2);
 		for (int i = 0; i < 2; i++) {
-			Player player = new Player(new User("Player" + (i + 1)), PlayerClass.ENCOR);
+			Player player = new Player("Player" + (i + 1), PlayerClass.ENCOR);
 			players.add(player);
 		}
 		when(game.getPlayers()).thenReturn(players);
@@ -61,7 +60,7 @@ class TurnManagerTest {
 		//using random state 42 MINE_TRAIDING_POST is the first TurnGoal
 		turnManager.chooseRandomTurnGoals(TurnGoal.values(), random);
 		turnManager.nextTurn();//start the first turn
-
+		
 		Game game = mock(Game.class);
 		Player player1 = mock(Player.class);
 		IPointManager pointManager = new PointManager(player1);
