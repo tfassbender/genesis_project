@@ -57,6 +57,8 @@ public class NotifierSubscriberClient {
 	
 	private NotifierService notifierService;
 	
+	private Thread notificationListenerThread;
+	
 	/**
 	 * Create a new client that loads the configurations (host, port and username), creates the connection and subscribes to the notification service.
 	 * 
@@ -122,7 +124,10 @@ public class NotifierSubscriberClient {
 	 * Create an start a notification listener to handle messages from the service.
 	 */
 	private void startNotificationListener() {
-		Thread notificationListenerThread = new Thread(() -> {
+		if (notificationListenerThread != null && notificationListenerThread.isAlive()) {
+			throw new IllegalStateException("A notification listener thread has already been started");
+		}
+		notificationListenerThread = new Thread(() -> {
 			int available = 0;
 			StringBuilder sb = new StringBuilder();
 			while (!Thread.currentThread().isInterrupted()) {
@@ -153,7 +158,22 @@ public class NotifierSubscriberClient {
 		}, "notification_listener_thread");
 		
 		//start the listener thread
+		notificationListenerThread.setDaemon(true);
 		notificationListenerThread.start();
+	}
+	
+	/**
+	 * Stop this subscriber and close the connection.
+	 */
+	public void closeConnection() throws IOException {
+		if (notificationListenerThread != null) {
+			notificationListenerThread.interrupt();
+			socket.close();
+			notificationListenerThread = null;
+		}
+		else {
+			throw new IllegalStateException("The notification listener thread has either not yet been started or was already closed");
+		}
 	}
 	
 	/**
