@@ -21,6 +21,7 @@ import net.jfabricationgames.genesis_project.manager.AllianceManagerCompositum;
 import net.jfabricationgames.genesis_project.manager.GamePointManager;
 import net.jfabricationgames.genesis_project.manager.IAllianceManager;
 import net.jfabricationgames.genesis_project.manager.IBuildingManager;
+import net.jfabricationgames.genesis_project.manager.IGamePointManager;
 import net.jfabricationgames.genesis_project.manager.IResearchManager;
 import net.jfabricationgames.genesis_project.manager.IResourceManager;
 import net.jfabricationgames.genesis_project.manager.ITurnManager;
@@ -44,7 +45,7 @@ public class Game {
 	private ITurnManager turnManager;
 	private IResearchManager researchManager;
 	private IAllianceManager allianceManager;
-	private GamePointManager pointManager;
+	private IGamePointManager pointManager;
 	
 	private ObservableList<PlayerInfo> playerInfoList;
 	
@@ -302,7 +303,7 @@ public class Game {
 	public IAllianceManager getAllianceManager() {
 		return allianceManager;
 	}
-	public GamePointManager getPointManager() {
+	public IGamePointManager getPointManager() {
 		return pointManager;
 	}
 	

@@ -15,7 +15,7 @@ import net.jfabricationgames.genesis_project.game.Game;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.PlayerScore;
 
-public class GamePointManager {
+public class GamePointManager implements IGamePointManager {
 	
 	private ObservableList<PlayerScore> scoreList;
 	
@@ -32,15 +32,18 @@ public class GamePointManager {
 		scoreList = FXCollections.observableArrayList(scores);
 	}
 	
+	@Override
 	public void setScore(Player player, int newScore) {
 		Optional<PlayerScore> score = scoreList.stream().filter(p -> p.getPlayer().equals(player)).findFirst();
 		score.ifPresent(s -> s.setScore(newScore));
 		Collections.sort(scoreList);
 	}
+	@Override
 	public ObservableList<PlayerScore> getScoreList() {
 		return scoreList;
 	}
 	
+	@Override
 	public int getPosition(Player player) {
 		int position = -1;
 		for (int i = 0; i < scoreList.size(); i++) {
@@ -51,10 +54,12 @@ public class GamePointManager {
 		return position;
 	}
 	
+	@Override
 	@JsonGetter("scoreList")
 	public List<PlayerScore> getScoreListAsArrayList() {
 		return new ArrayList<PlayerScore>(scoreList);
 	}
+	@Override
 	@JsonSetter("scoreList")
 	public void setScoreListFromList(List<PlayerScore> scoreList) {
 		this.scoreList = FXCollections.observableArrayList(scoreList);
