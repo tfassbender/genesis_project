@@ -61,7 +61,7 @@ public class GameManager implements NotificationMessageListener {
 			//send an update to the server
 			try {
 				client.updateGame(game);
-				client.setMove(move, gameId, move.getPlayer().getUsername());
+				client.setMove(move, gameId, move.getPlayer());
 			}
 			catch (GenesisServerException e) {
 				e.printStackTrace();

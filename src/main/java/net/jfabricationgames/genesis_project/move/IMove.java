@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import net.jfabricationgames.genesis_project.game.AllianceBonus;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.Field;
-import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
 import net.jfabricationgames.genesis_project.game.Technology;
@@ -17,11 +16,8 @@ import net.jfabricationgames.genesis_project.game.Technology;
 @JsonSubTypes({@JsonSubTypes.Type(value = Move.class, name = "Move")})
 public interface IMove {
 	
-	public void execute();
-	public boolean isExecutable();
-	
 	public MoveType getType();
-	public Player getPlayer();
+	public String getPlayer();
 	
 	public Field getField();
 	public Building getBuilding();

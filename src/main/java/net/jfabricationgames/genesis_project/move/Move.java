@@ -7,18 +7,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.jfabricationgames.genesis_project.game.AllianceBonus;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.Field;
-import net.jfabricationgames.genesis_project.game.Game;
-import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
 import net.jfabricationgames.genesis_project.game.Technology;
 
 public class Move implements IMove {
 	
-	private Game game;
-	
 	private MoveType type;
-	private Player player;
+	private String player;
 	private Field field;
 	private Building building;
 	private ResearchArea researchArea;
@@ -38,10 +34,8 @@ public class Move implements IMove {
 		
 	}
 	
-	protected Move(Game game, MoveType type, Player player, Field field, Building building, ResearchArea researchArea,
-			ResearchResources researchResources, Technology technology, List<Field> alliancePlanets, List<Field> satelliteFields,
-			AllianceBonus allianceBonus, int allianceBonusIndex) {
-		this.game = game;
+	protected Move(MoveType type, String player, Field field, Building building, ResearchArea researchArea, ResearchResources researchResources,
+			Technology technology, List<Field> alliancePlanets, List<Field> satelliteFields, AllianceBonus allianceBonus, int allianceBonusIndex) {
 		this.type = type;
 		this.player = player;
 		this.field = field;
@@ -57,23 +51,12 @@ public class Move implements IMove {
 	}
 	
 	@Override
-	public void execute() {
-		game.executeMove(this);
-	}
-	
-	@Override
-	@JsonIgnore
-	public boolean isExecutable() {
-		return game.isMoveExecutable(this);
-	}
-	
-	@Override
 	public MoveType getType() {
 		return type;
 	}
 	
 	@Override
-	public Player getPlayer() {
+	public String getPlayer() {
 		return player;
 	}
 	

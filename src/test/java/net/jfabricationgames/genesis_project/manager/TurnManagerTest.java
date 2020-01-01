@@ -2,6 +2,7 @@ package net.jfabricationgames.genesis_project.manager;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -22,11 +23,15 @@ import net.jfabricationgames.genesis_project.game.TurnGoal;
 import net.jfabricationgames.genesis_project.move.IMove;
 import net.jfabricationgames.genesis_project.move.MoveBuilder;
 import net.jfabricationgames.genesis_project.move.MoveType;
+import net.jfabricationgames.genesis_project.testUtils.ConstantsInitializerUtil;
 
 class TurnManagerTest {
 	
 	private TurnManager getTurnManager() {
 		Game game = mock(Game.class);
+		return getTurnManager(game);
+	}
+	private TurnManager getTurnManager(Game game) {
 		List<Player> players = new ArrayList<Player>(2);
 		for (int i = 0; i < 2; i++) {
 			Player player = new Player("Player" + (i + 1), PlayerClass.ENCOR);
@@ -39,6 +44,7 @@ class TurnManagerTest {
 	
 	@Test
 	public void testChooseRandomOrder() {
+		ConstantsInitializerUtil.initAll();
 		TurnManager turnManager = getTurnManager();
 		//test if it's really random by executing it many times
 		turnManager.chooseRandomTurnGoals();
@@ -54,34 +60,37 @@ class TurnManagerTest {
 	
 	@Test
 	public void testReceiveTurnGoalPoints() {
-		TurnManager turnManager = getTurnManager();
+		ConstantsInitializerUtil.initAll();
+		Game game = mock(Game.class);
+		TurnManager turnManager = getTurnManager(game);
 		
 		Random random = new Random(42);
 		//using random state 42 MINE_TRAIDING_POST is the first TurnGoal
 		turnManager.chooseRandomTurnGoals(TurnGoal.values(), random);
 		turnManager.nextTurn();//start the first turn
 		
-		Game game = mock(Game.class);
 		Player player1 = mock(Player.class);
+		when(player1.getUsername()).thenReturn("Player1");
 		IPointManager pointManager = new PointManager(player1);
 		GamePointManager gamePointManager = mock(GamePointManager.class);
 		when(game.getPointManager()).thenReturn(gamePointManager);
+		when(game.getPlayer(any(String.class))).thenReturn(player1);
 		when(player1.getPointManager()).thenReturn(pointManager);
 		when(player1.getGame()).thenReturn(game);
 		
 		//create moves
 		IMove buildColony;
 		IMove buildMine;
-		MoveBuilder builder = new MoveBuilder(game);
+		MoveBuilder builder = new MoveBuilder();
 		builder.setType(MoveType.BUILD);
-		builder.setPlayer(player1);
+		builder.setPlayer(player1.getUsername());
 		builder.setBuilding(Building.COLONY);
 		builder.setField(new Field(new Position(0, 0), Planet.GRAY, 0));
 		buildColony = builder.build();
 		
-		builder = new MoveBuilder(game);
+		builder = new MoveBuilder();
 		builder.setType(MoveType.BUILD);
-		builder.setPlayer(player1);
+		builder.setPlayer(player1.getUsername());
 		builder.setBuilding(Building.MINE);
 		builder.setField(new Field(new Position(0, 0), Planet.GRAY, 0));
 		buildMine = builder.build();

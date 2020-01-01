@@ -94,7 +94,7 @@ public class TurnManager implements ITurnManager {
 		//TODO implement technology bonus, ...
 		
 		totalPoints += turnGoalPoints;
-		Player player = move.getPlayer();
+		Player player = game.getPlayer(move.getPlayer());
 		player.getPointManager().addPoints(totalPoints);
 	}
 	

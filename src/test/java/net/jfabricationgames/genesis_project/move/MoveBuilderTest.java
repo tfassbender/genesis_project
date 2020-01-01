@@ -3,28 +3,23 @@ package net.jfabricationgames.genesis_project.move;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
 import org.junit.jupiter.api.Test;
 
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.Field;
-import net.jfabricationgames.genesis_project.game.Game;
 import net.jfabricationgames.genesis_project.game.Player;
 
 class MoveBuilderTest {
 	
 	private MoveBuilder getMoveBuilder() {
-		Game game = mock(Game.class);
-		MoveBuilder builder = new MoveBuilder(game);
+		MoveBuilder builder = new MoveBuilder();
 		return builder;
 	}
 	
-	@Test
 	public void testMoveBuilder() {
 		getMoveBuilder();//works without exceptions
-		assertThrows(NullPointerException.class, () -> new MoveBuilder(null));
 	}
 	
 	@Test
@@ -76,13 +71,13 @@ class MoveBuilderTest {
 		Building building = Building.LABORATORY;
 		
 		builder.setType(type);
-		builder.setPlayer(player);
+		builder.setPlayer(player.getUsername());
 		builder.setField(field);
 		builder.setBuilding(building);
 		IMove buildMove = builder.build();
 		
 		assertEquals(type, buildMove.getType());
-		assertEquals(player, buildMove.getPlayer());
+		assertEquals(player.getUsername(), buildMove.getPlayer());
 		assertEquals(field, buildMove.getField());
 		assertEquals(building, buildMove.getBuilding());
 		assertNull(buildMove.getResearchArea());

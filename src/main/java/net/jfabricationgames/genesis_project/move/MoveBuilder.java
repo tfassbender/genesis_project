@@ -1,13 +1,10 @@
 package net.jfabricationgames.genesis_project.move;
 
 import java.util.List;
-import java.util.Objects;
 
 import net.jfabricationgames.genesis_project.game.AllianceBonus;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.Field;
-import net.jfabricationgames.genesis_project.game.Game;
-import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
 import net.jfabricationgames.genesis_project.game.Technology;
@@ -17,10 +14,8 @@ import net.jfabricationgames.genesis_project.game.Technology;
  */
 public class MoveBuilder {
 	
-	private Game game;
-	
 	private MoveType type;
-	private Player player;
+	private String player;
 	private Field field;
 	private Building building;
 	private ResearchArea researchArea;
@@ -31,16 +26,15 @@ public class MoveBuilder {
 	private AllianceBonus allianceBonus;
 	private int allianceBonusIndex;
 	
-	public MoveBuilder(Game game) {
-		Objects.requireNonNull(game, "The game object mussn't be null.");
-		this.game = game;
+	public MoveBuilder() {
+		
 	}
 	
 	/**
 	 * Build and return the move that was constructed.
 	 */
 	public IMove build() throws IllegalStateException {
-		IMove move = new Move(game, type, player, field, building, researchArea, researchResources, technology, alliancePlanets, satelliteFields,
+		IMove move = new Move(type, player, field, building, researchArea, researchResources, technology, alliancePlanets, satelliteFields,
 				allianceBonus, allianceBonusIndex);
 		return move;
 	}
@@ -70,10 +64,10 @@ public class MoveBuilder {
 		return this;
 	}
 	
-	public Player getPlayer() {
+	public String getPlayer() {
 		return player;
 	}
-	public MoveBuilder setPlayer(Player player) {
+	public MoveBuilder setPlayer(String player) {
 		this.player = player;
 		return this;
 	}
