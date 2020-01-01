@@ -258,6 +258,26 @@ public class Game {
 		return moveExecutable;
 	}
 	
+	/**
+	 * Merge the new game (that was loaded from the server) into this game.
+	 */
+	public void merge(Game game) {
+		//override players
+		players = game.getPlayers();
+		//override board and managers
+		board = game.getBoard();
+		turnManager = game.getTurnManager();
+		researchManager = game.getResearchManager();
+		allianceManager = game.getAllianceManager();
+		pointManager = game.getPointManager();
+		//clear and refill the player info list
+		playerInfoList.clear();
+		playerInfoList.addAll(players.stream().map(p -> new PlayerInfo(p)).collect(Collectors.toList()));
+		
+		//TODO update the complete UI
+		//gameFrameController.updateAll();
+	}
+	
 	private void updatePlayerInfo() {
 		List<PlayerInfo> newPlayerInfo = players.stream().map(p -> new PlayerInfo(p)).collect(Collectors.toList());
 		playerInfoList.clear();

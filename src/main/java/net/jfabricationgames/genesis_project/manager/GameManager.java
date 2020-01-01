@@ -97,7 +97,9 @@ public class GameManager implements NotificationMessageListener {
 	 * Merge the updated game from the server into the local game
 	 */
 	private void mergeGame(Game game) {
-		//TODO
+		testGameId(game.getId());
+		Game local = games.get(game.getId());
+		local.merge(game);
 	}
 	/**
 	 * Request the last move from the server to update the move list
