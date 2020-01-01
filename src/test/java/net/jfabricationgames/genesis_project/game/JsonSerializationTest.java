@@ -67,10 +67,9 @@ class JsonSerializationTest {
 			
 			//test some of the values
 			//Player1 is included
-			assertTrue(deserialized.getPlayers().stream().map(p -> p.getUser().getUsername()).filter(name -> name.equals("Player1")).findAny()
-					.isPresent());
+			assertTrue(deserialized.getPlayers().stream().map(p -> p.getUsername()).filter(name -> name.equals("Player1")).findAny().isPresent());
 			//Player1 has some resources (CompleteResources(10, 10, 10, 5, 5, 2))
-			Player player1 = deserialized.getPlayers().stream().filter(p -> p.getUser().getUsername().equals("Player1")).findFirst().get();
+			Player player1 = deserialized.getPlayers().stream().filter(p -> p.getUsername().equals("Player1")).findFirst().get();
 			assertEquals(10, player1.getResourceManager().getResourcesC());
 			assertEquals(5, player1.getResourceManager().getResearchPoints());
 			assertEquals(2, player1.getResourceManager().getFTL());
@@ -84,7 +83,7 @@ class JsonSerializationTest {
 			//there is a genesis planet with a city of player1 in field (1,1)
 			PlayerBuilding building = deserialized.getBoard().getField(1, 1).getBuildings()[1];
 			assertEquals(Building.CITY, building.getBuilding());
-			assertEquals("Player1", building.getPlayer().getUser().getUsername());
+			assertEquals("Player1", building.getPlayer().getUsername());
 		}
 		catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -146,10 +145,10 @@ class JsonSerializationTest {
 	public void testSerializeMove() throws IOException {
 		Game game = GameCreationUtil.createGame();
 		
-		IMove buildMove = new MoveBuilder(game).setField(game.getBoard().getCenterField()).setPlayer(game.getPlayers().get(0))
+		IMove buildMove = new MoveBuilder().setField(game.getBoard().getCenterField()).setPlayer(game.getPlayers().get(0).getUsername())
 				.setBuilding(Building.COLONY).setType(MoveType.BUILD).build();
-		IMove researchMove = new MoveBuilder(game).setResearchArea(ResearchArea.WEAPON).setType(MoveType.RESEARCH).build();
-		IMove passingMove = new MoveBuilder(game).setType(MoveType.PASS).build();
+		IMove researchMove = new MoveBuilder().setResearchArea(ResearchArea.WEAPON).setType(MoveType.RESEARCH).build();
+		IMove passingMove = new MoveBuilder().setType(MoveType.PASS).build();
 		
 		try {
 			String serializedBuildMove = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(buildMove);
@@ -162,7 +161,7 @@ class JsonSerializationTest {
 			
 			assertEquals(MoveType.BUILD, deserializedBuildMove.getType());
 			assertEquals(Building.COLONY, deserializedBuildMove.getBuilding());
-			assertEquals(game.getPlayers().get(0).getUser().getUsername(), deserializedBuildMove.getPlayer().getUser().getUsername());
+			assertEquals(game.getPlayers().get(0).getUsername(), deserializedBuildMove.getPlayer());
 			assertFalse(deserializedBuildMove.isPassing());
 			
 			assertEquals(MoveType.RESEARCH, deserializedResearchMove.getType());

@@ -18,7 +18,6 @@ import net.jfabricationgames.genesis_project.manager.PointManager;
 import net.jfabricationgames.genesis_project.manager.ResearchManager;
 import net.jfabricationgames.genesis_project.manager.ResourceManager;
 import net.jfabricationgames.genesis_project.manager.TechnologyManager;
-import net.jfabricationgames.genesis_project.user.User;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Player {
@@ -26,7 +25,7 @@ public class Player {
 	//final id for json serialization
 	private final int id = SerializationIdGenerator.getNextId();
 	
-	private User user;
+	private String username;
 	
 	private IPointManager pointManager;
 	private IResourceManager resourceManager;
@@ -47,11 +46,11 @@ public class Player {
 		
 	}
 	
-	public Player(User user) {
-		this(user, null);
+	public Player(String username) {
+		this(username, null);
 	}
-	public Player(User user, PlayerClass playerClass) {
-		this.user = user;
+	public Player(String username, PlayerClass playerClass) {
+		this.username = username;
 		this.playerClass = playerClass;
 		pointManager = new PointManager(this);
 		resourceManager = new ResourceManager(this);
@@ -63,13 +62,13 @@ public class Player {
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(user.getUsername());
+		return Objects.hash(username);
 	}
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Player) {
 			Player p = (Player) obj;
-			return p.user.getUsername().equals(this.getUser().getUsername());
+			return p.getUsername().equals(this.getUsername());
 		}
 		else {
 			return super.equals(obj);
@@ -77,11 +76,11 @@ public class Player {
 	}
 	@Override
 	public String toString() {
-		return user.getUsername();
+		return getUsername();
 	}
 	
-	public User getUser() {
-		return user;
+	public String getUsername() {
+		return username;
 	}
 	
 	public IPointManager getPointManager() {

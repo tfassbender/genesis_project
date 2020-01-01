@@ -14,28 +14,15 @@ import net.jfabricationgames.genesis_project.game.Game;
 class MoveTest {
 	
 	@Test
-	public void testExecuteMove() {
-		Game game = mock(Game.class);
-		when(game.isMoveExecutable(any(IMove.class))).thenReturn(true);
-		MoveBuilder builder = new MoveBuilder(game);
-		//constructs an empty move
-		IMove move = builder.build();
-		
-		move.execute();
-		
-		verify(game, times(1)).executeMove(any(IMove.class));
-	}
-	
-	@Test
 	public void testIsExecutable() {
 		Game game = mock(Game.class);
 		when(game.isMoveExecutable(any(IMove.class))).thenReturn(true);
-		MoveBuilder builder = new MoveBuilder(game);
+		MoveBuilder builder = new MoveBuilder();
 		//constructs an empty move
 		IMove move = builder.build();
 		
 		//as specified in the mock to move is executable
-		assertTrue(move.isExecutable());
+		assertTrue(game.isMoveExecutable(move));
 		verify(game, times(1)).isMoveExecutable(any(IMove.class));
 	}
 }

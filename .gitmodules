@@ -1,0 +1,3 @@
+[submodule "genesis_project_server"]
+	path = genesis_project_server
+	url = pi@jfabricationgames.ddns.net:/home/pi/git/genesis_project_server.git

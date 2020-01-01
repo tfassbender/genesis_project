@@ -39,8 +39,7 @@ class TurnGoalTest {
 	@Test
 	public void testAllianceTurnGoal() {
 		Player player = mock(Player.class);
-		Game game = getInitializedGame(player);
-		IMove move = MoveCreaterUtil.getAllianceMove(game, player, new Field[0], new Field[0], null, 0);
+		IMove move = MoveCreaterUtil.getAllianceMove(player.getUsername(), new Field[0], new Field[0], null, 0);
 		
 		assertEquals(5, TurnGoal.ALLIANCE.getPointsForMove(move));
 	}
@@ -48,7 +47,7 @@ class TurnGoalTest {
 	public void testColonyTurnGoal() {
 		Player player = mock(Player.class);
 		Game game = getInitializedGame(player);
-		IMove move = MoveCreaterUtil.getBuildingMove(game, player, Building.COLONY, 0, 0);
+		IMove move = MoveCreaterUtil.getBuildingMove(game.getBoard(), player.getUsername(), Building.COLONY, 0, 0);
 		
 		assertEquals(2, TurnGoal.COLONY.getPointsForMove(move));
 	}
@@ -56,9 +55,9 @@ class TurnGoalTest {
 	public void testGenesisPlanetTurnGoal() {
 		Player player = mock(Player.class);
 		Game game = getInitializedGame(player);
-		IMove move = MoveCreaterUtil.getBuildingMove(game, player, Building.COLONY, 1, 1);
-		IMove move2 = MoveCreaterUtil.getBuildingMove(game, player, Building.TRADING_POST, 1, 1);
-		IMove move3 = MoveCreaterUtil.getBuildingMove(game, player, Building.COLONY, 0, 0);
+		IMove move = MoveCreaterUtil.getBuildingMove(game.getBoard(), player.getUsername(), Building.COLONY, 1, 1);
+		IMove move2 = MoveCreaterUtil.getBuildingMove(game.getBoard(), player.getUsername(), Building.TRADING_POST, 1, 1);
+		IMove move3 = MoveCreaterUtil.getBuildingMove(game.getBoard(), player.getUsername(), Building.COLONY, 0, 0);
 		
 		assertEquals(2, TurnGoal.GENESIS_PLANET.getPointsForMove(move));
 		assertEquals(2, TurnGoal.GENESIS_PLANET.getPointsForMove(move2));
@@ -68,9 +67,9 @@ class TurnGoalTest {
 	public void testGovernmentCityTurnGoal() {
 		Player player = mock(Player.class);
 		Game game = getInitializedGame(player);
-		IMove move = MoveCreaterUtil.getBuildingMove(game, player, Building.CITY, 1, 1);
-		IMove move2 = MoveCreaterUtil.getBuildingMove(game, player, Building.GOVERNMENT, 1, 1);
-		IMove move3 = MoveCreaterUtil.getBuildingMove(game, player, Building.COLONY, 1, 1);
+		IMove move = MoveCreaterUtil.getBuildingMove(game.getBoard(), player.getUsername(), Building.CITY, 1, 1);
+		IMove move2 = MoveCreaterUtil.getBuildingMove(game.getBoard(), player.getUsername(), Building.GOVERNMENT, 1, 1);
+		IMove move3 = MoveCreaterUtil.getBuildingMove(game.getBoard(), player.getUsername(), Building.COLONY, 1, 1);
 		
 		assertEquals(5, TurnGoal.GOVERNMENT_CITY.getPointsForMove(move));
 		assertEquals(5, TurnGoal.GOVERNMENT_CITY.getPointsForMove(move2));
@@ -80,9 +79,9 @@ class TurnGoalTest {
 	public void testLaboratoryResearchCenterTurnGoal() {
 		Player player = mock(Player.class);
 		Game game = getInitializedGame(player);
-		IMove move = MoveCreaterUtil.getBuildingMove(game, player, Building.LABORATORY, 1, 1);
-		IMove move2 = MoveCreaterUtil.getBuildingMove(game, player, Building.RESEARCH_CENTER, 1, 1);
-		IMove move3 = MoveCreaterUtil.getBuildingMove(game, player, Building.COLONY, 1, 1);
+		IMove move = MoveCreaterUtil.getBuildingMove(game.getBoard(), player.getUsername(), Building.LABORATORY, 1, 1);
+		IMove move2 = MoveCreaterUtil.getBuildingMove(game.getBoard(), player.getUsername(), Building.RESEARCH_CENTER, 1, 1);
+		IMove move3 = MoveCreaterUtil.getBuildingMove(game.getBoard(), player.getUsername(), Building.COLONY, 1, 1);
 		
 		assertEquals(3, TurnGoal.LABORATORY_RESEARCH_CENTER.getPointsForMove(move));
 		assertEquals(3, TurnGoal.LABORATORY_RESEARCH_CENTER.getPointsForMove(move2));
@@ -92,9 +91,9 @@ class TurnGoalTest {
 	public void testMineTradingPostTurnGoal() {
 		Player player = mock(Player.class);
 		Game game = getInitializedGame(player);
-		IMove move = MoveCreaterUtil.getBuildingMove(game, player, Building.TRADING_POST, 1, 1);
-		IMove move2 = MoveCreaterUtil.getBuildingMove(game, player, Building.MINE, 1, 1);
-		IMove move3 = MoveCreaterUtil.getBuildingMove(game, player, Building.COLONY, 1, 1);
+		IMove move = MoveCreaterUtil.getBuildingMove(game.getBoard(), player.getUsername(), Building.TRADING_POST, 1, 1);
+		IMove move2 = MoveCreaterUtil.getBuildingMove(game.getBoard(), player.getUsername(), Building.MINE, 1, 1);
+		IMove move3 = MoveCreaterUtil.getBuildingMove(game.getBoard(), player.getUsername(), Building.COLONY, 1, 1);
 		
 		assertEquals(3, TurnGoal.MINE_TRADING_POST.getPointsForMove(move));
 		assertEquals(3, TurnGoal.MINE_TRADING_POST.getPointsForMove(move2));
@@ -104,9 +103,11 @@ class TurnGoalTest {
 	public void testNewPlanetsTurnGoal() {
 		Player player = mock(Player.class);
 		Player player2 = mock(Player.class);
+		when(player.getUsername()).thenReturn("Player1");
+		when(player.getUsername()).thenReturn("Player2");
 		Game game = getInitializedGame(player);
-		IMove move = MoveCreaterUtil.getBuildingMove(game, player2, Building.COLONY, 1, 1);
-		IMove move2 = MoveCreaterUtil.getBuildingMove(game, player, Building.COLONY, 1, 1);
+		IMove move = MoveCreaterUtil.getBuildingMove(game.getBoard(), player2.getUsername(), Building.COLONY, 1, 1);
+		IMove move2 = MoveCreaterUtil.getBuildingMove(game.getBoard(), player.getUsername(), Building.COLONY, 1, 1);
 		
 		assertEquals(2, TurnGoal.NEW_PLANETS.getPointsForMove(move));
 		assertEquals(0, TurnGoal.NEW_PLANETS.getPointsForMove(move2));
@@ -115,9 +116,11 @@ class TurnGoalTest {
 	public void testNeighborsTurnGoal() {
 		Player player = mock(Player.class);
 		Player player2 = mock(Player.class);
+		when(player.getUsername()).thenReturn("Player1");
+		when(player.getUsername()).thenReturn("Player2");
 		Game game = getInitializedGame(player);
-		IMove move = MoveCreaterUtil.getBuildingMove(game, player2, Building.COLONY, 1, 1);
-		IMove move2 = MoveCreaterUtil.getBuildingMove(game, player, Building.COLONY, 1, 1);
+		IMove move = MoveCreaterUtil.getBuildingMove(game.getBoard(), player2.getUsername(), Building.COLONY, 1, 1);
+		IMove move2 = MoveCreaterUtil.getBuildingMove(game.getBoard(), player.getUsername(), Building.COLONY, 1, 1);
 		
 		assertEquals(3, TurnGoal.NEIGHBORS.getPointsForMove(move));
 		assertEquals(0, TurnGoal.NEIGHBORS.getPointsForMove(move2));

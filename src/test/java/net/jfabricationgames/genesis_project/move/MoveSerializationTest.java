@@ -51,8 +51,8 @@ class MoveSerializationTest {
 	
 	@Test
 	public void testBuildMove() throws IOException {
-		IMove move = new MoveBuilder(game).setPlayer(game.getPlayers().get(0)).setType(MoveType.BUILD).setField(game.getBoard().getField(3, 1))
-				.setBuilding(Building.COLONY).build();
+		IMove move = new MoveBuilder().setPlayer(game.getPlayers().get(0).getUsername()).setType(MoveType.BUILD)
+				.setField(game.getBoard().getField(3, 1)).setBuilding(Building.COLONY).build();
 		
 		String serialized = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(move);
 		IMove deserialized = mapper.readerFor(IMove.class).readValue(serialized);
@@ -67,7 +67,8 @@ class MoveSerializationTest {
 	
 	@Test
 	public void testResearchMove() throws IOException {
-		IMove move = new MoveBuilder(game).setPlayer(game.getPlayers().get(0)).setType(MoveType.RESEARCH).setResearchArea(ResearchArea.FTL).build();
+		IMove move = new MoveBuilder().setPlayer(game.getPlayers().get(0).getUsername()).setType(MoveType.RESEARCH).setResearchArea(ResearchArea.FTL)
+				.build();
 		
 		String serialized = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(move);
 		IMove deserialized = mapper.readerFor(IMove.class).readValue(serialized);
@@ -81,8 +82,8 @@ class MoveSerializationTest {
 	
 	@Test
 	public void testResearchResourcesMove() throws IOException {
-		IMove move = new MoveBuilder(game).setPlayer(game.getPlayers().get(0)).setType(MoveType.RESEARCH_RESOURCES).setResearchArea(ResearchArea.FTL)
-				.setResearchResources(new ResearchResources(2, 2, 2, 0)).build();
+		IMove move = new MoveBuilder().setPlayer(game.getPlayers().get(0).getUsername()).setType(MoveType.RESEARCH_RESOURCES)
+				.setResearchArea(ResearchArea.FTL).setResearchResources(new ResearchResources(2, 2, 2, 0)).build();
 		
 		String serialized = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(move);
 		IMove deserialized = mapper.readerFor(IMove.class).readValue(serialized);
@@ -102,8 +103,8 @@ class MoveSerializationTest {
 	public void testAllianceMove() throws IOException {
 		//for the planets and satellite fields see AllianceManagerTest
 		Map<Board.Position, Field> fields = game.getBoard().getFields();
-		IMove move = new MoveBuilder(game).setPlayer(game.getPlayers().get(0)).setType(MoveType.ALLIANCE).setAllianceBonus(AllianceBonus.POINTS)
-				.setAllianceBonusIndex(0)
+		IMove move = new MoveBuilder().setPlayer(game.getPlayers().get(0).getUsername()).setType(MoveType.ALLIANCE)
+				.setAllianceBonus(AllianceBonus.POINTS).setAllianceBonusIndex(0)
 				.setAlliancePlanets(
 						Arrays.asList(new Field[] {fields.get(new Position(0, 0)), fields.get(new Position(1, 1)), fields.get(new Position(0, 3))}))
 				.setSatelliteFields(Arrays.asList(new Field[] {fields.get(new Position(0, 1)), fields.get(new Position(0, 2))})).build();
@@ -121,7 +122,7 @@ class MoveSerializationTest {
 	
 	@Test
 	public void testPassMove() throws IOException {
-		IMove move = new MoveBuilder(game).setPlayer(game.getPlayers().get(0)).setType(MoveType.PASS).build();
+		IMove move = new MoveBuilder().setPlayer(game.getPlayers().get(0).getUsername()).setType(MoveType.PASS).build();
 		
 		String serialized = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(move);
 		IMove deserialized = mapper.readerFor(IMove.class).readValue(serialized);

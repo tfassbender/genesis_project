@@ -18,7 +18,6 @@ import net.jfabricationgames.genesis_project.game.PlayerClass;
 import net.jfabricationgames.genesis_project.game.TurnGoal;
 import net.jfabricationgames.genesis_project.manager.ITurnManager;
 import net.jfabricationgames.genesis_project.manager.TurnManager;
-import net.jfabricationgames.genesis_project.user.User;
 
 public class GameCreationUtil {
 	
@@ -32,13 +31,13 @@ public class GameCreationUtil {
 		List<Player> players = new ArrayList<Player>(4);
 		PlayerClass[] classes = new PlayerClass[] {PlayerClass.ENCOR, PlayerClass.YGDRACK};
 		for (int i = 0; i < 2; i++) {
-			Player player = new Player(new User("Player" + (i + 1)), classes[i]);
+			Player player = new Player("Player" + (i + 1), classes[i]);
 			players.add(player);
 		}
 		//add some resources for the player
 		players.get(0).getResourceManager().addResources(new CompleteResources(10, 10, 10, 5, 5, 2));
 		//create the game with the first player in the list as local player
-		Game game = new Game(players, players.get(0).getUser().getUsername());
+		Game game = new Game(42, players, players.get(0).getUsername());
 		//Game turns: [MINE_TRADING_POST, ALLIANCE, GOVERNMENT_CITY, LABORATORY_RESEARCH_CENTER, NEW_PLANETS, NEIGHBORS, GENESIS_PLANET, COLONY]
 		((TurnManager) game.getTurnManager()).chooseRandomTurnGoals(TurnGoal.values(), new Random(42));
 		game.getTurnManager().nextTurn();

@@ -14,7 +14,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import net.jfabricationgames.genesis_project.game.Game;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.PlayerScore;
-import net.jfabricationgames.genesis_project.manager.GamePointManager;
+import net.jfabricationgames.genesis_project.manager.IGamePointManager;
 import net.jfabricationgames.genesis_project.manager.IPointManager;
 import net.jfabricationgames.genesis_project.manager.ITurnManager;
 
@@ -91,7 +91,7 @@ public class GameOverviewPaneController implements Initializable {
 	
 	private void bindPlayerOrderLists() {
 		ITurnManager turnManager = game.getTurnManager();
-		GamePointManager pointManager = game.getPointManager();
+		IGamePointManager pointManager = game.getPointManager();
 		
 		listGameOverviewPoints.setItems(pointManager.getScoreList());
 		listGameOverviewPlayerOrder.setItems(turnManager.getCurrentTurnPlayerOrder());

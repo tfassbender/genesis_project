@@ -29,7 +29,6 @@ public enum TurnGoal {
 	 * Calculate the points for a move in the turn this goal is active (without checking whether the move is valid).
 	 */
 	public int getPointsForMove(IMove move) {
-		Player player = move.getPlayer();
 		MoveType type = move.getType();
 		Building building = move.getBuilding();
 		Field field = move.getField();
@@ -59,7 +58,7 @@ public enum TurnGoal {
 				fieldBuildings = field.getBuildings();
 				boolean neighbor = false;
 				for (PlayerBuilding playerBuilding : fieldBuildings) {
-					neighbor |= (playerBuilding != null && !playerBuilding.getPlayer().equals(player));
+					neighbor |= (playerBuilding != null && !playerBuilding.getPlayer().getUsername().equals(move.getPlayer()));
 				}
 				pointMove = type == MoveType.BUILD && building == Building.COLONY && neighbor;
 				break;
@@ -67,7 +66,7 @@ public enum TurnGoal {
 				fieldBuildings = field.getBuildings();
 				boolean newPlanet = true;
 				for (PlayerBuilding playerBuilding : fieldBuildings) {
-					newPlanet &= (playerBuilding == null || !playerBuilding.getPlayer().equals(player));
+					newPlanet &= (playerBuilding == null || !playerBuilding.getPlayer().getUsername().equals(move.getPlayer()));
 				}
 				pointMove = type == MoveType.BUILD && building == Building.COLONY && newPlanet;
 				break;
