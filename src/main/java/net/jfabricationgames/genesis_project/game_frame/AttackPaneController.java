@@ -37,6 +37,13 @@ public class AttackPaneController implements Initializable {
 	@FXML
 	private Button buttonAttackCommit;
 	
+	@SuppressWarnings("unused")
+	private int gameId;
+	
+	public AttackPaneController(int gameId) {
+		this.gameId = gameId;
+	}
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		GuiUtils.loadImageToView("basic/attack_card.png", true, imageViewAttackCard);

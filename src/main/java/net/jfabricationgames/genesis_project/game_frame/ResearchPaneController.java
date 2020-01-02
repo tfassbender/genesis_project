@@ -17,11 +17,12 @@ import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import net.jfabricationgames.genesis_project.game.Constants;
-import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
 import net.jfabricationgames.genesis_project.game.Resource;
+import net.jfabricationgames.genesis_project.manager.GameManager;
 import net.jfabricationgames.genesis_project.manager.IResearchManager;
+import net.jfabricationgames.genesis_project.manager.IResourceManager;
 
 public class ResearchPaneController implements Initializable {
 	
@@ -199,12 +200,10 @@ public class ResearchPaneController implements Initializable {
 	@FXML
 	private Label labelResearchPossibleStateWeapon;
 	
-	private IResearchManager globalResearchManager;
-	private Player player;
+	private int gameId;
 	
-	public ResearchPaneController(IResearchManager globalResearchManager, Player player) {
-		this.globalResearchManager = globalResearchManager;
-		this.player = player;
+	public ResearchPaneController(int gameId) {
+		this.gameId = gameId;
 	}
 	
 	@Override
@@ -215,7 +214,7 @@ public class ResearchPaneController implements Initializable {
 		bindIncreaseStateButtonsDisabledProperties();
 		bindResourcesNeededLabels();
 		bindReachableStateLabels();
-
+		
 		addResourceAddingListeners();
 		initializeResourceSpinners();
 		initializeResearchAreaComboBox();
@@ -224,18 +223,21 @@ public class ResearchPaneController implements Initializable {
 	}
 	
 	private void bindStateLabels() {
-		IResearchManager researchManager = player.getResearchManager();
+		GameManager gameManager = GameManager.getInstance();
+		IResearchManager researchManager = gameManager.getResearchManager(gameId, gameManager.getLocalPlayer());
 		labelResearchStateMine.textProperty().bind(Bindings.convert(researchManager.getStateProperty(ResearchArea.MINES)));
 		labelResearchStateEconomy.textProperty().bind(Bindings.convert(researchManager.getStateProperty(ResearchArea.ECONOMY)));
 		labelResearchStateFtl.textProperty().bind(Bindings.convert(researchManager.getStateProperty(ResearchArea.FTL)));
 		labelResearchStateResearch.textProperty().bind(Bindings.convert(researchManager.getStateProperty(ResearchArea.RESEARCH)));
 		labelResearchStateMilitary.textProperty().bind(Bindings.convert(researchManager.getStateProperty(ResearchArea.MILITARY)));
 		
-		labelResearchStateWeapon.textProperty().bind(Bindings.convert(globalResearchManager.getStateProperty(ResearchArea.WEAPON)));
+		labelResearchStateWeapon.textProperty().bind(Bindings.convert(gameManager.getResearchManager(gameId).getStateProperty(ResearchArea.WEAPON)));
 	}
 	
 	private void bindIncreaseStateButtonsDisabledProperties() {
-		BooleanBinding researchPointsAvailable = player.getResourceManager().getResearchPointsProperty()
+		GameManager gameManager = GameManager.getInstance();
+		IResourceManager resourceManager = gameManager.getResourceManager(gameId, gameManager.getLocalPlayer());
+		BooleanBinding researchPointsAvailable = resourceManager.getResearchPointsProperty()
 				.greaterThanOrEqualTo(Constants.getInstance().RESEARCH_POINTS_FOR_STATE_INCREASE);
 		
 		buttonResearchPromotionMines.disableProperty().bind(researchPointsAvailable.and(stateAccessible(ResearchArea.MINES)).not());
@@ -247,15 +249,17 @@ public class ResearchPaneController implements Initializable {
 	}
 	
 	private BooleanBinding stateAccessible(ResearchArea area) {
-		IResearchManager researchManager = player.getResearchManager();
-		BooleanBinding promotionEnabled = globalResearchManager.getMaxReachableStateProperty(ResearchArea.MINES)
+		GameManager gameManager = GameManager.getInstance();
+		IResearchManager researchManager = gameManager.getResearchManager(gameId, gameManager.getLocalPlayer());
+		BooleanBinding promotionEnabled = gameManager.getResearchManager(gameId).getMaxReachableStateProperty(ResearchArea.MINES)
 				.greaterThanOrEqualTo(researchManager.getStateProperty(ResearchArea.MINES).add(1));
 		
 		return promotionEnabled;
 	}
 	
 	private void bindResourcesNeededLabels() {
-		IResearchManager researchManager = player.getResearchManager();
+		GameManager gameManager = GameManager.getInstance();
+		IResearchManager researchManager = gameManager.getResearchManager(gameId, gameManager.getLocalPlayer());
 		labelResearchResourcesMines.textProperty().bind(new SimpleStringProperty(
 				researchManager.getResearchResourcesNeededLeftProperties(ResearchArea.MINES).getValue().getShortenedDescription()));
 		labelResearchResourcesEconomy.textProperty().bind(new SimpleStringProperty(
@@ -271,7 +275,8 @@ public class ResearchPaneController implements Initializable {
 	}
 	
 	private void bindReachableStateLabels() {
-		IResearchManager researchManager = player.getResearchManager();
+		GameManager gameManager = GameManager.getInstance();
+		IResearchManager researchManager = gameManager.getResearchManager(gameId, gameManager.getLocalPlayer());
 		labelResearchPossibleStateMines.textProperty().bind(Bindings.convert(researchManager.getMaxReachableStateProperty(ResearchArea.MINES)));
 		labelResearchPossibleStateEconomy.textProperty().bind(Bindings.convert(researchManager.getMaxReachableStateProperty(ResearchArea.ECONOMY)));
 		labelResearchPossibleStateFtl.textProperty().bind(Bindings.convert(researchManager.getMaxReachableStateProperty(ResearchArea.FTL)));
@@ -303,7 +308,8 @@ public class ResearchPaneController implements Initializable {
 	}
 	
 	private void addResourceAddingListeners() {
-		IResearchManager researchManager = player.getResearchManager();
+		GameManager gameManager = GameManager.getInstance();
+		IResearchManager researchManager = gameManager.getResearchManager(gameId, gameManager.getLocalPlayer());
 		comboBoxResearchAddResourcesSelectArea.valueProperty().addListener((observer, oldVal, newVal) -> updateResourceAdding());
 		for (ResearchArea area : ResearchArea.values()) {
 			researchManager.getResearchResourcesNeededLeftProperties(area).addListener((observer, oldVal, newVal) -> updateResourceAdding());
@@ -311,7 +317,8 @@ public class ResearchPaneController implements Initializable {
 	}
 	
 	private void updateResourceAdding() {
-		IResearchManager researchManager = player.getResearchManager();
+		GameManager gameManager = GameManager.getInstance();
+		IResearchManager researchManager = gameManager.getResearchManager(gameId, gameManager.getLocalPlayer());
 		ResearchArea area = comboBoxResearchAddResourcesSelectArea.getValue();
 		int nextResouceNeedingState = researchManager.getNextResourceNeedingState(area);
 		
@@ -344,7 +351,8 @@ public class ResearchPaneController implements Initializable {
 	}
 	
 	private void updateAddResourcesButtonState() {
-		IResearchManager researchManager = player.getResearchManager();
+		GameManager gameManager = GameManager.getInstance();
+		IResearchManager researchManager = gameManager.getResearchManager(gameId, gameManager.getLocalPlayer());
 		ResearchArea area = comboBoxResearchAddResourcesSelectArea.getValue();
 		//enable the button
 		boolean enableAdding = false;

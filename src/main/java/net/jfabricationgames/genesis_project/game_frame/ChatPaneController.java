@@ -18,6 +18,13 @@ public class ChatPaneController implements Initializable {
 	@FXML
 	private TextArea textAreaChat;
 	
+	@SuppressWarnings("unused")
+	private int gameId;
+	
+	public ChatPaneController(int gameId) {
+		this.gameId = gameId;
+	}
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// TODO Auto-generated method stub

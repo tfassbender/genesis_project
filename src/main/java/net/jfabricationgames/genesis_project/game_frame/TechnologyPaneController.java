@@ -10,8 +10,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.Technology;
+import net.jfabricationgames.genesis_project.manager.GameManager;
 import net.jfabricationgames.genesis_project.manager.ITechnologyManager;
 
 public class TechnologyPaneController implements Initializable {
@@ -72,13 +72,13 @@ public class TechnologyPaneController implements Initializable {
 	private final String crossImagePath = "basic/cross.png";
 	private final String hookImagePath = "basic/hook.png";
 	
-	private Player player;
+	private int gameId;
 	
 	private Map<Technology, ImageView> exploredImageMap = new HashMap<Technology, ImageView>();
 	private Map<Technology, Button> exploreButtons = new HashMap<Technology, Button>();
 	
-	public TechnologyPaneController(Player player) {
-		this.player = player;
+	public TechnologyPaneController(int gameId) {
+		this.gameId = gameId;
 	}
 	
 	@Override
@@ -123,7 +123,8 @@ public class TechnologyPaneController implements Initializable {
 		Image crossImage = GuiUtils.loadImage(crossImagePath, true);
 		Image hookImage = GuiUtils.loadImage(hookImagePath, true);
 		
-		ITechnologyManager technologyManager = player.getTechnologyManager();
+		GameManager gameManager = GameManager.getInstance();
+		ITechnologyManager technologyManager = gameManager.getTechnologyManager(gameId, gameManager.getLocalPlayer());
 		
 		for (Technology technology : Technology.values()) {
 			ImageView imageView = exploredImageMap.get(technology);
@@ -143,7 +144,8 @@ public class TechnologyPaneController implements Initializable {
 	 * Enables all exploration buttons of technologies that the player has not yet explored.
 	 */
 	public void enableExploreButtons() {
-		ITechnologyManager technologyManager = player.getTechnologyManager();
+		GameManager gameManager = GameManager.getInstance();
+		ITechnologyManager technologyManager = gameManager.getTechnologyManager(gameId, gameManager.getLocalPlayer());
 		
 		for (Technology technology : Technology.values()) {
 			if (!technologyManager.isTechnologyExplored(technology)) {

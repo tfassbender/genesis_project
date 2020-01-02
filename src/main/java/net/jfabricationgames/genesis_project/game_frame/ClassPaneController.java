@@ -17,8 +17,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import net.jfabricationgames.genesis_project.game.Building;
-import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.PlayerClass;
+import net.jfabricationgames.genesis_project.manager.GameManager;
 import net.jfabricationgames.genesis_project.manager.IBuildingManager;
 import net.jfabricationgames.genesis_project.manager.IPointManager;
 import net.jfabricationgames.genesis_project.manager.IResourceManager;
@@ -64,17 +64,16 @@ public class ClassPaneController implements Initializable {
 	@FXML
 	private Pane panelGameClassClassEffectCover;
 	
-	private Player player;
-	private PlayerClass playerClass;
+	private int gameId;
 	
-	public ClassPaneController(Player player) {
-		this.player = player;
-		playerClass = player.getPlayerClass();
+	public ClassPaneController(int gameId) {
+		this.gameId = gameId;
+		
 	}
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		GuiUtils.loadImageToView(playerClass.getClassPaneImagePath(), true, imageViewGameClassBackground);
+		GuiUtils.loadImageToView(getPlayerClass().getClassPaneImagePath(), true, imageViewGameClassBackground);
 		
 		bindResourceLabels();
 		bindPointLabel();
@@ -85,7 +84,8 @@ public class ClassPaneController implements Initializable {
 	}
 	
 	private void bindResourceLabels() {
-		IResourceManager resourceManager = player.getResourceManager();
+		GameManager gameManager = GameManager.getInstance();
+		IResourceManager resourceManager = gameManager.getResourceManager(gameId, gameManager.getLocalPlayer());
 		labelGameClassCarbon.textProperty().bind(Bindings.convert(resourceManager.getResourcesCProperty()));
 		labelGameClassSilicium.textProperty().bind(Bindings.convert(resourceManager.getResourcesSiProperty()));
 		labelGameClassFerum.textProperty().bind(Bindings.convert(resourceManager.getResourcesFeProperty()));
@@ -95,12 +95,14 @@ public class ClassPaneController implements Initializable {
 	}
 	
 	private void bindPointLabel() {
-		IPointManager pointManager = player.getPointManager();
+		GameManager gameManager = GameManager.getInstance();
+		IPointManager pointManager = gameManager.getPointManager(gameId, gameManager.getLocalPlayer());
 		labelGameClassPoints.textProperty().bind(Bindings.convert(pointManager.getPointsProperty()));
 	}
 	
 	private void bindBuildingLabels() {
-		IBuildingManager buildingManager = player.getBuildingManager();
+		GameManager gameManager = GameManager.getInstance();
+		IBuildingManager buildingManager = gameManager.getBuildingManager(gameId, gameManager.getLocalPlayer());
 		labelGameClassColonyBuildings.textProperty().bind(Bindings.convert(buildingManager.getNumBuildingsLeftProperty(Building.COLONY)));
 		labelGameClassMineBuildings.textProperty().bind(Bindings.convert(buildingManager.getNumBuildingsLeftProperty(Building.MINE)));
 		labelGameClassTraidingPostBuildings.textProperty().bind(Bindings.convert(buildingManager.getNumBuildingsLeftProperty(Building.TRADING_POST)));
@@ -117,20 +119,19 @@ public class ClassPaneController implements Initializable {
 	private void addSpecialAbilityExplenations() {
 		Tooltip tooltipClassEffect = new Tooltip();
 		Tooltip tooltipGovernmentEffect = new Tooltip();
-		tooltipClassEffect.setText(player.getPlayerClass().getClassEffectDescription());
-		tooltipGovernmentEffect.setText(player.getPlayerClass().getGovernmentEffectDescription());
+		tooltipClassEffect.setText(getPlayerClass().getClassEffectDescription());
+		tooltipGovernmentEffect.setText(getPlayerClass().getGovernmentEffectDescription());
 		
 		Tooltip.install(panelGameClassClassEffectCover, tooltipClassEffect);
 		Tooltip.install(panelGameClassGovermentEffectCover, tooltipGovernmentEffect);
 	}
 	
 	private void addSpecialAbilityMoveContextMenus() {
-		if (player.getPlayerClass().isClassAbilityMove()) {
-			addContextMenu("Spezialfähigkeit: " + player.getPlayerClass().getClassEffectName(), panelGameClassClassEffectCover,
-					e -> executeClassAbilityMove());
+		if (getPlayerClass().isClassAbilityMove()) {
+			addContextMenu("Spezialfähigkeit: " + getPlayerClass().getClassEffectName(), panelGameClassClassEffectCover, e -> executeClassAbilityMove());
 		}
-		if (player.getPlayerClass().isGovernmentAbilityMove()) {
-			addContextMenu("Spezialfähigkeit: " + player.getPlayerClass().getGovernmentEffectName(), panelGameClassGovermentEffectCover,
+		if (getPlayerClass().isGovernmentAbilityMove()) {
+			addContextMenu("Spezialfähigkeit: " + getPlayerClass().getGovernmentEffectName(), panelGameClassGovermentEffectCover,
 					e -> executeGovernmentAbilityMove());
 		}
 	}
@@ -158,5 +159,10 @@ public class ClassPaneController implements Initializable {
 				contextMenu.hide();
 			}
 		});
+	}
+	
+	private PlayerClass getPlayerClass() {
+		GameManager gameManager = GameManager.getInstance();
+		return gameManager.getPlayerClass(gameId, gameManager.getLocalPlayer());
 	}
 }

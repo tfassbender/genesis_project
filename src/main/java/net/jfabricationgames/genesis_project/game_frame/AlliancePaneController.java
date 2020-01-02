@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
@@ -21,15 +24,19 @@ import net.jfabricationgames.genesis_project.game.Alliance;
 import net.jfabricationgames.genesis_project.game.AllianceBonus;
 import net.jfabricationgames.genesis_project.game.AllianceBuilder;
 import net.jfabricationgames.genesis_project.game.Constants;
+import net.jfabricationgames.genesis_project.game.DescriptionTexts;
 import net.jfabricationgames.genesis_project.game.Field;
-import net.jfabricationgames.genesis_project.game.Game;
-import net.jfabricationgames.genesis_project.game.Player;
+import net.jfabricationgames.genesis_project.manager.GameManager;
 import net.jfabricationgames.genesis_project.manager.IAllianceManager;
 import net.jfabricationgames.genesis_project.move.IMove;
+import net.jfabricationgames.genesis_project.move.InvalidMoveException;
 import net.jfabricationgames.genesis_project.move.MoveBuilder;
 import net.jfabricationgames.genesis_project.move.MoveType;
+import net.jfabricationgames.genesis_project.user.UserManager;
 
 public class AlliancePaneController implements Initializable {
+	
+	private static final Logger LOGGER = LogManager.getLogger(AlliancePaneController.class);
 	
 	@FXML
 	private ImageView imageAllianceBonusMilitaryRange1;
@@ -147,13 +154,13 @@ public class AlliancePaneController implements Initializable {
 	private final String crossImagePath = "basic/cross.png";
 	private final String hookImagePath = "basic/hook.png";
 	
-	private Player player;
+	private int gameId;
 	
 	private Map<AllianceBonus, ImageView[]> exploredImageMap = new HashMap<AllianceBonus, ImageView[]>();
 	private Map<AllianceBonus, Button[]> exploreButtons = new HashMap<AllianceBonus, Button[]>();
 	
-	public AlliancePaneController(Player player) {
-		this.player = player;
+	public AlliancePaneController(int gameId) {
+		this.gameId = gameId;
 	}
 	
 	@Override
@@ -211,7 +218,8 @@ public class AlliancePaneController implements Initializable {
 		Image crossImage = GuiUtils.loadImage(crossImagePath, true);
 		Image hookImage = GuiUtils.loadImage(hookImagePath, true);
 		
-		IAllianceManager allianceManager = player.getAllianceManager();
+		GameManager gameManager = GameManager.getInstance();
+		IAllianceManager allianceManager = gameManager.getAllianceManager(gameId, gameManager.getLocalPlayer());
 		
 		for (AllianceBonus bonus : AllianceBonus.values()) {
 			if (bonus != AllianceBonus.ANY) {
@@ -232,7 +240,8 @@ public class AlliancePaneController implements Initializable {
 	}
 	
 	private void bindAllianceBuilderProperties() {
-		IAllianceManager allianceManager = player.getAllianceManager();
+		GameManager gameManager = GameManager.getInstance();
+		IAllianceManager allianceManager = gameManager.getAllianceManager(gameId, gameManager.getLocalPlayer());
 		AllianceBuilder allianceBuilder = allianceManager.getAllianceBuilder();
 		
 		//set list items
@@ -268,7 +277,8 @@ public class AlliancePaneController implements Initializable {
 	
 	private void addPurchaseButtonFunctions() {
 		//get the AllianceBuilder of this player to manage creating the alliances and enabling/disabling the buttons
-		IAllianceManager allianceManager = player.getAllianceManager();
+		GameManager gameManager = GameManager.getInstance();
+		IAllianceManager allianceManager = gameManager.getAllianceManager(gameId, gameManager.getLocalPlayer());
 		AllianceBuilder allianceBuilder = allianceManager.getAllianceBuilder();
 		
 		for (Entry<AllianceBonus, Button[]> entry : exploreButtons.entrySet()) {
@@ -301,9 +311,8 @@ public class AlliancePaneController implements Initializable {
 	}
 	
 	private void createAlliance(AllianceBonus bonus, int bonusIndex) {
-		Game game = player.getGame();
-		
-		IAllianceManager allianceManager = player.getAllianceManager();
+		GameManager gameManager = GameManager.getInstance();
+		IAllianceManager allianceManager = gameManager.getAllianceManager(gameId, gameManager.getLocalPlayer());
 		AllianceBuilder allianceBuilder = allianceManager.getAllianceBuilder();
 		
 		allianceBuilder.setBonus(bonus);
@@ -311,7 +320,7 @@ public class AlliancePaneController implements Initializable {
 		Alliance alliance = allianceBuilder.build();
 		
 		MoveBuilder builder = new MoveBuilder();
-		builder.setPlayer(player.getUsername());
+		builder.setPlayer(UserManager.getInstance().getLocalUsername());
 		builder.setType(MoveType.ALLIANCE);
 		builder.setAllianceBonus(bonus);
 		builder.setAllianceBonusIndex(bonusIndex);
@@ -319,8 +328,14 @@ public class AlliancePaneController implements Initializable {
 		builder.setSatelliteFields(alliance.getConnectingSatellites());
 		
 		IMove move = builder.build();
-		if (game.isMoveExecutable(move)) {
-			game.executeMove(move);
+		if (gameManager.isMoveExecutable(gameId, move)) {
+			try {
+				gameManager.executeMove(gameId, move);
+			}
+			catch (IllegalArgumentException | InvalidMoveException e) {
+				LOGGER.error("Error in move execution", e);
+				DialogUtils.showExceptionDialog("Move execution error", DescriptionTexts.getInstance().ERROR_TEXT_MOVE_EXECUTION, e, true);
+			}
 			updateExploredImages();
 			allianceBuilder.clear();
 		}
@@ -342,7 +357,8 @@ public class AlliancePaneController implements Initializable {
 	}
 	
 	private void addDeleteButtonFunctions() {
-		IAllianceManager allianceManager = player.getAllianceManager();
+		GameManager gameManager = GameManager.getInstance();
+		IAllianceManager allianceManager = gameManager.getAllianceManager(gameId, gameManager.getLocalPlayer());
 		AllianceBuilder allianceBuilder = allianceManager.getAllianceBuilder();
 		
 		buttonAllianceDeletePlanet.setOnAction(e -> {

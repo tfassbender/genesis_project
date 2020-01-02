@@ -14,7 +14,6 @@ import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import net.jfabricationgames.genesis_project.game.Game;
 
 public class GameFrameController implements Initializable {
 	
@@ -62,37 +61,37 @@ public class GameFrameController implements Initializable {
 	private CostOverviewPaneController costOverviewPaneController;
 	private ChatPaneController chatPaneController;
 	
-	private Game game;
+	private int gameId;
 	
-	public GameFrameController(Game game) {
-		this.game = game;
+	public GameFrameController(int gameId) {
+		this.gameId = gameId;
 	}
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		boardPaneController = new BoardPaneController(game, game.getBoard());
+		boardPaneController = new BoardPaneController(gameId);
 		insertPane("BoardPane.fxml", anchorBoardPane, boardPaneController, null);
-		classPaneController = new ClassPaneController(game.getLocalPlayer());
+		classPaneController = new ClassPaneController(gameId);
 		insertPane("ClassPane.fxml", anchorClassPane, classPaneController, null);
-		researchPaneController = new ResearchPaneController(game.getResearchManager(), game.getLocalPlayer());
+		researchPaneController = new ResearchPaneController(gameId);
 		insertPane("ResearchPane.fxml", anchorResearchPane, researchPaneController, null);
-		technologyPaneController = new TechnologyPaneController(game.getLocalPlayer());
+		technologyPaneController = new TechnologyPaneController(gameId);
 		insertPane("TechnologyPane.fxml", anchorTechnologyPane, technologyPaneController, null);
-		alliancePaneController = new AlliancePaneController(game.getLocalPlayer());
+		alliancePaneController = new AlliancePaneController(gameId);
 		insertPane("AlliancePane.fxml", anchorAlliancePanel, alliancePaneController, null);
-		turnPaneController = new TurnPaneController(game.getTurnManager());
+		turnPaneController = new TurnPaneController(gameId);
 		insertPane("TurnPane.fxml", anchorTurnPane, turnPaneController, null);
-		planetInfoPaneController = new PlanetInfoPaneController(game);
+		planetInfoPaneController = new PlanetInfoPaneController(gameId);
 		insertPane("PlanetInfoPane.fxml", anchorPlanetInfoPane, planetInfoPaneController, null);
-		planingToolPaneController = new PlaningToolPaneController(game.getLocalPlayer());
+		planingToolPaneController = new PlaningToolPaneController(gameId);
 		insertPane("PlaningToolPane.fxml", anchorPlaningToolPane, planingToolPaneController, null);
-		attackPaneController = new AttackPaneController();
+		attackPaneController = new AttackPaneController(gameId);
 		insertPane("AttackPane.fxml", anchorAttackPane, attackPaneController, null);
-		gameOverviewPaneController = new GameOverviewPaneController(game, game.getLocalPlayer());
+		gameOverviewPaneController = new GameOverviewPaneController(gameId);
 		insertPane("GameOverviewPane.fxml", anchorGameOverviewPane, gameOverviewPaneController, null);
-		costOverviewPaneController = new CostOverviewPaneController(game, game.getLocalPlayer());
+		costOverviewPaneController = new CostOverviewPaneController(gameId);
 		insertPane("CostOverviewPane.fxml", anchorCostOverviewPane, costOverviewPaneController, null);
-		chatPaneController = new ChatPaneController();
+		chatPaneController = new ChatPaneController(gameId);
 		insertPane("ChatPane.fxml", anchorChatPane, chatPaneController, null);
 	}
 	

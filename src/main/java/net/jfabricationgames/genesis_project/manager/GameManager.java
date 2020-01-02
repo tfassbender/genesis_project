@@ -9,17 +9,22 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javafx.collections.ObservableList;
 import net.jfabricationgames.genesis_project.connection.AbstractGenesisClientEventSubscriber;
 import net.jfabricationgames.genesis_project.connection.GenesisClient;
 import net.jfabricationgames.genesis_project.connection.exception.GenesisServerException;
 import net.jfabricationgames.genesis_project.connection.notifier.NotificationMessageListener;
 import net.jfabricationgames.genesis_project.connection.notifier.NotifierService;
+import net.jfabricationgames.genesis_project.game.Board;
 import net.jfabricationgames.genesis_project.game.DescriptionTexts;
 import net.jfabricationgames.genesis_project.game.Game;
 import net.jfabricationgames.genesis_project.game.Player;
+import net.jfabricationgames.genesis_project.game.PlayerClass;
 import net.jfabricationgames.genesis_project.game_frame.DialogUtils;
+import net.jfabricationgames.genesis_project.game_frame.PlayerInfo;
 import net.jfabricationgames.genesis_project.move.IMove;
 import net.jfabricationgames.genesis_project.move.InvalidMoveException;
+import net.jfabricationgames.genesis_project.user.UserManager;
 import net.jfabricationgames.genesis_project_server.game.MoveList;
 
 public class GameManager implements NotificationMessageListener {
@@ -43,9 +48,16 @@ public class GameManager implements NotificationMessageListener {
 		LOGGER.info("GameManager started successfully");
 	}
 	
-	public static synchronized GameManager getInstance() throws IOException {
+	public static synchronized GameManager getInstance() throws IllegalStateException {
 		if (instance == null) {
-			instance = new GameManager();
+			try {
+				instance = new GameManager();
+			}
+			catch (IOException ioe) {
+				LOGGER.error("GameManager instance couldn't be created", ioe);
+				//cover with a RuntimeException to not need the exception management in every call
+				throw new IllegalStateException("GameManager instance couldn't be created", ioe);
+			}
 		}
 		return instance;
 	}
@@ -75,6 +87,13 @@ public class GameManager implements NotificationMessageListener {
 		else {
 			throw new InvalidMoveException("The given move can not be executed");
 		}
+	}
+	
+	public boolean isMoveExecutable(int gameId, IMove move) {
+		LOGGER.debug("testing move {}", move);
+		testGameId(gameId);
+		Game game = games.get(gameId);
+		return game.isMoveExecutable(move);
 	}
 	
 	/**
@@ -124,9 +143,20 @@ public class GameManager implements NotificationMessageListener {
 		//TODO
 	}
 	
+	/**
+	 * Handle an exception from the GenesisClient (by logging and showing in a dialog).
+	 */
 	private void handleGenesisClientException(GenesisServerException ex) {
 		LOGGER.error("An error occured while trying to get the updated game from the database", ex);
 		DialogUtils.showExceptionDialog("Server error", DescriptionTexts.getInstance().ERROR_TEXT_GENESIS_SERVER_EXCEPTION, ex, false);
+	}
+	
+	/**
+	 * Get the local player's name
+	 */
+	public String getLocalPlayer() {
+		//added this method to simplify the code a bit
+		return UserManager.getInstance().getLocalUsername();
 	}
 	
 	@Override
@@ -183,6 +213,16 @@ public class GameManager implements NotificationMessageListener {
 		return new GamePointManagerProxy(games.get(gameId).getPointManager());
 	}
 	
+	public Board getBoard(int gameId) throws IllegalArgumentException {
+		testGameId(gameId);
+		return games.get(gameId).getBoard();
+	}
+	
+	public ObservableList<PlayerInfo> getPlayerInfoList(int gameId) {
+		testGameId(gameId);
+		return games.get(gameId).getPlayerInfoList();
+	}
+	
 	//-----------------------
 	// Player manager proxys
 	//-----------------------
@@ -204,6 +244,10 @@ public class GameManager implements NotificationMessageListener {
 	}
 	public IAllianceManager getAllianceManager(int gameId, String username) throws IllegalArgumentException {
 		return new AllianceManagerProxy(getPlayer(gameId, username).getAllianceManager());
+	}
+	
+	public PlayerClass getPlayerClass(int gameId, String username) throws IllegalArgumentException {
+		return getPlayer(gameId, username).getPlayerClass();
 	}
 	
 	private Player getPlayer(int gameId, String username) {

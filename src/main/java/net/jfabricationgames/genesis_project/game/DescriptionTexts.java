@@ -27,4 +27,5 @@ public class DescriptionTexts {
 	public Map<PlayerClass, String> GOVERNMENT_EFFECT_DESCRIPTIONS;
 	
 	public String ERROR_TEXT_GENESIS_SERVER_EXCEPTION;
+	public String ERROR_TEXT_MOVE_EXECUTION;
 }

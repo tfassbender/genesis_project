@@ -31,7 +31,7 @@ public class GameFrameApplication extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		game = GameCreationUtil.createGame();
-		controller = new GameFrameController(game);
+		controller = new GameFrameController(game.getId());
 		game.setGameFrameController(controller);
 		try {
 			URL fxmlUrl = getClass().getResource("/net/jfabricationgames/genesis_project/game_frame/GameFrame.fxml");
@@ -55,6 +55,7 @@ public class GameFrameApplication extends Application {
 	@SuppressWarnings("unused")
 	private void increaseResourcesAfter5Seconds_testsBindings() {
 		Platform.runLater(new Runnable() {
+			
 			@Override
 			public void run() {
 				try {
