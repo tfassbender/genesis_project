@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -154,6 +155,9 @@ public class AlliancePaneController implements Initializable {
 	private final String crossImagePath = "basic/cross.png";
 	private final String hookImagePath = "basic/hook.png";
 	
+	private BooleanProperty allianceMarkPlanetsBound;
+	private BooleanProperty allianceMarkSpaceFieldsBound;
+	
 	private int gameId;
 	
 	private Map<AllianceBonus, ImageView[]> exploredImageMap = new HashMap<AllianceBonus, ImageView[]>();
@@ -171,6 +175,35 @@ public class AlliancePaneController implements Initializable {
 		bindAllianceBuilderProperties();
 		addPurchaseButtonFunctions();
 		addDeleteButtonFunctions();
+	}
+	
+	public void updateAll() {
+		unbindAll();
+		
+		updateExploredImages();
+		bindAllianceBuilderProperties();
+		addPurchaseButtonFunctions();
+		addDeleteButtonFunctions();
+	}
+	
+	private void unbindAll() {
+		checkboxAllianceMarkPlanets.selectedProperty().unbindBidirectional(allianceMarkPlanetsBound);
+		checkboxAllianceMarkSpaceFields.selectedProperty().unbindBidirectional(allianceMarkSpaceFieldsBound);
+		
+		labelAllianceNumPlanets.textProperty().unbind();
+		labelAllianceNumNeighbourPlanets.textProperty().unbind();
+		labelAllianceBuildings.textProperty().unbind();
+		labelAllianceNeighbourBuildings.textProperty().unbind();
+		labelAllianceMainBuilding.textProperty().unbind();
+		
+		for (Entry<AllianceBonus, Button[]> entry : exploreButtons.entrySet()) {
+			Button[] buttons = entry.getValue();
+			for (int i = 0; i < buttons.length; i++) {
+				buttons[i].disableProperty().unbind();
+			}
+		}
+		
+		buttonPurchaseAllianceBonusAny.disableProperty().unbind();
 	}
 	
 	private void addAllianceCardImages() {
@@ -248,8 +281,10 @@ public class AlliancePaneController implements Initializable {
 		listAlliancePlanetFields.setItems(allianceBuilder.getPlanets());
 		listAllianceSpaceFields.setItems(allianceBuilder.getConnectingSatellites());
 		//bind checkboxes bidirectional
-		checkboxAllianceMarkPlanets.selectedProperty().bindBidirectional(allianceBuilder.getMarkPlanetFieldsProperty());
-		checkboxAllianceMarkSpaceFields.selectedProperty().bindBidirectional(allianceBuilder.getMarkSatelliteFieldsProperty());
+		allianceMarkPlanetsBound = allianceBuilder.getMarkPlanetFieldsProperty();
+		allianceMarkSpaceFieldsBound = allianceBuilder.getMarkSatelliteFieldsProperty();
+		checkboxAllianceMarkPlanets.selectedProperty().bindBidirectional(allianceMarkPlanetsBound);
+		checkboxAllianceMarkSpaceFields.selectedProperty().bindBidirectional(allianceMarkSpaceFieldsBound);
 		
 		//bind the text labels using StringBindings from IntegerProperties
 		labelAllianceNumPlanets.textProperty()

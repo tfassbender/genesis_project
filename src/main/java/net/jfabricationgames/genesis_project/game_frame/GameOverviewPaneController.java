@@ -87,6 +87,20 @@ public class GameOverviewPaneController implements Initializable {
 		addTableContent();
 	}
 	
+	public void updateAll() {
+		unbindAll();
+		
+		bindPlayerOrderLists();
+		bindLabels();
+		addTableContent();
+	}
+	
+	private void unbindAll() {
+		labelGameOverviewPlayerPoints.textProperty().unbind();
+		labelGameOverviewPlayerPosition.textProperty().unbind();
+		labelGameOverviewPlayersTurn.textProperty().unbind();
+	}
+	
 	private void bindPlayerOrderLists() {
 		GameManager gameManager = GameManager.getInstance();
 		ITurnManager turnManager = gameManager.getTurnManager(gameId);

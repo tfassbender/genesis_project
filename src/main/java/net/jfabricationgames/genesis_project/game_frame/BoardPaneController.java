@@ -38,6 +38,10 @@ public class BoardPaneController implements Initializable {
 		buildField();
 	}
 	
+	public void updateAll() {
+		buildField();
+	}
+	
 	/**
 	 * Add all planet and building images to the field.
 	 */
@@ -59,7 +63,7 @@ public class BoardPaneController implements Initializable {
 					anchorPaneFields.getChildren().add(fieldLayout);
 					//relocate the field to it's position
 					int[] boardPosition = position.getBoardLocation();
-					if (boardPosition != null) {//TODO maybe remove if-condition after testing (?)
+					if (boardPosition != null) {
 						fieldLayout.relocate(boardPosition[0], boardPosition[1]);
 					}
 				}

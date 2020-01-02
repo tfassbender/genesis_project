@@ -53,6 +53,10 @@ public class TurnPaneController implements Initializable {
 		initializeTurnLabels();
 		updateTurnImages();
 	}
+
+	public void updateAll() {
+		//nothing to do here *flies away*
+	}
 	
 	private void initializeTurnLabels() {
 		GameManager gameManager = GameManager.getInstance();

@@ -30,4 +30,8 @@ public class ChatPaneController implements Initializable {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public void updateAll() {
+		//nothing to do here *flies away*
+	}
 }

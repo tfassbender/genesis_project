@@ -95,6 +95,24 @@ public class GameFrameController implements Initializable {
 		insertPane("ChatPane.fxml", anchorChatPane, chatPaneController, null);
 	}
 	
+	/**
+	 * Update the complete UI (after a new game object was loaded from the server)
+	 */
+	public void updateAll() {
+		boardPaneController.updateAll();
+		classPaneController.updateAll();
+		researchPaneController.updateAll();
+		technologyPaneController.updateAll();
+		alliancePaneController.updateAll();
+		turnPaneController.updateAll();
+		planetInfoPaneController.updateAll();
+		planingToolPaneController.updateAll();
+		attackPaneController.updateAll();
+		gameOverviewPaneController.updateAll();
+		costOverviewPaneController.updateAll();
+		chatPaneController.updateAll();
+	}
+	
 	private void addIcon() {
 		String iconPath = "net/jfabricationgames/genesis_project/images/basic/icon.png";
 		stage.getIcons().add(new Image(iconPath));

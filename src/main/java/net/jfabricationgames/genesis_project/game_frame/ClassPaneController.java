@@ -83,6 +83,33 @@ public class ClassPaneController implements Initializable {
 		addSpecialAbilityMoveContextMenus();
 	}
 	
+	public void updateAll() {
+		unbindAll();
+		
+		bindResourceLabels();
+		bindPointLabel();
+		bindBuildingLabels();
+	}
+	
+	private void unbindAll() {
+		labelGameClassCarbon.textProperty().unbind();
+		labelGameClassSilicium.textProperty().unbind();
+		labelGameClassFerum.textProperty().unbind();
+		labelGameClassResearchPoints.textProperty().unbind();
+		labelGameClassScientists.textProperty().unbind();
+		labelGameClassFTL.textProperty().unbind();
+		labelGameClassPoints.textProperty().unbind();
+		labelGameClassColonyBuildings.textProperty().unbind();
+		labelGameClassMineBuildings.textProperty().unbind();
+		labelGameClassTraidingPostBuildings.textProperty().unbind();
+		labelGameClassLaboratoryBuildings.textProperty().unbind();
+		labelGameClassGovermentBuildings.textProperty().unbind();
+		labelGameClassCityBuildings.textProperty().unbind();
+		labelGameClassResearchStationBuildings.textProperty().unbind();
+		labelGameClassDroneBuildings.textProperty().unbind();
+		labelGameClassSpaceStationBuildings.textProperty().unbind();
+	}
+	
 	private void bindResourceLabels() {
 		GameManager gameManager = GameManager.getInstance();
 		IResourceManager resourceManager = gameManager.getResourceManager(gameId, gameManager.getLocalPlayer());
@@ -128,7 +155,8 @@ public class ClassPaneController implements Initializable {
 	
 	private void addSpecialAbilityMoveContextMenus() {
 		if (getPlayerClass().isClassAbilityMove()) {
-			addContextMenu("Spezialfähigkeit: " + getPlayerClass().getClassEffectName(), panelGameClassClassEffectCover, e -> executeClassAbilityMove());
+			addContextMenu("Spezialfähigkeit: " + getPlayerClass().getClassEffectName(), panelGameClassClassEffectCover,
+					e -> executeClassAbilityMove());
 		}
 		if (getPlayerClass().isGovernmentAbilityMove()) {
 			addContextMenu("Spezialfähigkeit: " + getPlayerClass().getGovernmentEffectName(), panelGameClassGovermentEffectCover,

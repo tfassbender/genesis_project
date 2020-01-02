@@ -71,6 +71,10 @@ public class PlaningToolPaneController implements Initializable {
 	public PlaningToolPaneController(int gameId) {
 		this.gameId = gameId;
 	}
+
+	public void updateAll() {
+		//changes here have to be only made by the player and not by updated games
+	}
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {

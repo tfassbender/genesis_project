@@ -274,8 +274,7 @@ public class Game {
 		playerInfoList.clear();
 		playerInfoList.addAll(players.stream().map(p -> new PlayerInfo(p)).collect(Collectors.toList()));
 		
-		//TODO update the complete UI
-		//gameFrameController.updateAll();
+		gameFrameController.updateAll();
 	}
 	
 	private void updatePlayerInfo() {

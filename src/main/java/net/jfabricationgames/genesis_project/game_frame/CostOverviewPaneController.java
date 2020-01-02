@@ -77,6 +77,11 @@ public class CostOverviewPaneController implements Initializable {
 		bindTotalEarningLabels();
 	}
 	
+	public void updateAll() {
+		addTableContent();
+		bindTotalEarningLabels();
+	}
+	
 	private void addTableContent() {
 		ObservableList<BuildingInfo> buildingInfos = BuildingInfo.forAllBuildings();
 		

@@ -64,6 +64,10 @@ public class PlanetInfoPaneController implements Initializable {
 	public PlanetInfoPaneController(int gameId) {
 		this.gameId = gameId;
 	}
+
+	public void updateAll() {
+		//nothing to do here *flies away*
+	}
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {

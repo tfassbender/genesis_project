@@ -222,6 +222,47 @@ public class ResearchPaneController implements Initializable {
 		//TODO add research state descriptions
 	}
 	
+	public void updateAll() {
+		unbindAll();
+		
+		bindStateLabels();
+		bindIncreaseStateButtonsDisabledProperties();
+		bindResourcesNeededLabels();
+		bindReachableStateLabels();
+		
+		addResourceAddingListeners();
+		updateResourceAdding();
+		updateAddResourcesButtonState();
+	}
+	
+	private void unbindAll() {
+		labelResearchStateMine.textProperty().unbind();
+		labelResearchStateEconomy.textProperty().unbind();
+		labelResearchStateFtl.textProperty().unbind();
+		labelResearchStateResearch.textProperty().unbind();
+		labelResearchStateMilitary.textProperty().unbind();
+		
+		labelResearchStateWeapon.textProperty().unbind();
+		buttonResearchPromotionMines.disableProperty().unbind();
+		buttonResearchPromotionEconomy.disableProperty().unbind();
+		buttonResearchPromotionFtl.disableProperty().unbind();
+		buttonResearchPromotionResearch.disableProperty().unbind();
+		buttonResearchPromotionMilitary.disableProperty().unbind();
+		buttonResearchPromotionWeapon.disableProperty().unbind();
+		labelResearchResourcesMines.textProperty().unbind();
+		labelResearchResourcesEconomy.textProperty().unbind();
+		labelResearchResourcesFtl.textProperty().unbind();
+		labelResearchResourcesResearch.textProperty().unbind();
+		labelResearchResourcesMilitary.textProperty().unbind();
+		labelResearchResourcesWeapon.textProperty().unbind();
+		labelResearchPossibleStateMines.textProperty().unbind();
+		labelResearchPossibleStateEconomy.textProperty().unbind();
+		labelResearchPossibleStateFtl.textProperty().unbind();
+		labelResearchPossibleStateResearch.textProperty().unbind();
+		labelResearchPossibleStateMilitary.textProperty().unbind();
+		labelResearchPossibleStateWeapon.textProperty().unbind();
+	}
+	
 	private void bindStateLabels() {
 		GameManager gameManager = GameManager.getInstance();
 		IResearchManager researchManager = gameManager.getResearchManager(gameId, gameManager.getLocalPlayer());

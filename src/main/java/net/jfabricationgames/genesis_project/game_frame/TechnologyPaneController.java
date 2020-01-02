@@ -87,6 +87,10 @@ public class TechnologyPaneController implements Initializable {
 		initializeExploredMap();
 		updateExploredImages();
 	}
+
+	public void updateAll() {
+		updateExploredImages();
+	}
 	
 	private void addTechnologyCardImages() {
 		GuiUtils.loadImageToView("cards/tech/tech_colonie_points.png", true, imageTechnologyColoniePoints);

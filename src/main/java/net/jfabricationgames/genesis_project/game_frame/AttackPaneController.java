@@ -50,6 +50,10 @@ public class AttackPaneController implements Initializable {
 		
 		setAttack(null);
 	}
+
+	public void updateAll() {
+		//nothing to do here *flies away*
+	}
 	
 	public void setAttack(Attack attack) {
 		if (attack != null) {
