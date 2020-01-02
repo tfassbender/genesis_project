@@ -16,7 +16,6 @@ import net.jfabricationgames.genesis_project.game.Planet;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.PlayerBuilding;
 import net.jfabricationgames.genesis_project.game.PlayerClass;
-import net.jfabricationgames.genesis_project.user.User;
 
 public class PlanetInfoPaneController implements Initializable {
 	
@@ -72,7 +71,7 @@ public class PlanetInfoPaneController implements Initializable {
 		
 		//set a field for testing TODO delete after tests
 		Field field = new Field(new Position(1, 1), Planet.GENESIS, 4);
-		Player player = new Player(new User("Player1"), PlayerClass.YGDRACK);
+		Player player = new Player("Player1", PlayerClass.YGDRACK);
 		field.build(new PlayerBuilding(Building.MINE, player), 0);
 		field.build(new PlayerBuilding(Building.COLONY, player), 1);
 		field.build(new PlayerBuilding(Building.LABORATORY, player), 2);

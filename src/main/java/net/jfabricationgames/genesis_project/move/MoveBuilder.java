@@ -1,13 +1,10 @@
 package net.jfabricationgames.genesis_project.move;
 
 import java.util.List;
-import java.util.Objects;
 
 import net.jfabricationgames.genesis_project.game.AllianceBonus;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.Field;
-import net.jfabricationgames.genesis_project.game.Game;
-import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
 import net.jfabricationgames.genesis_project.game.Technology;
@@ -17,10 +14,8 @@ import net.jfabricationgames.genesis_project.game.Technology;
  */
 public class MoveBuilder {
 	
-	private Game game;
-	
 	private MoveType type;
-	private Player player;
+	private String player;
 	private Field field;
 	private Building building;
 	private ResearchArea researchArea;
@@ -30,19 +25,17 @@ public class MoveBuilder {
 	private List<Field> satelliteFields;
 	private AllianceBonus allianceBonus;
 	private int allianceBonusIndex;
-	private boolean pass;
 	
-	public MoveBuilder(Game game) {
-		Objects.requireNonNull(game, "The game object mussn't be null.");
-		this.game = game;
+	public MoveBuilder() {
+		
 	}
 	
 	/**
 	 * Build and return the move that was constructed.
 	 */
 	public IMove build() throws IllegalStateException {
-		IMove move = new Move(game, type, player, field, building, researchArea, researchResources, technology, alliancePlanets, satelliteFields,
-				allianceBonus, allianceBonusIndex, pass);
+		IMove move = new Move(type, player, field, building, researchArea, researchResources, technology, alliancePlanets, satelliteFields,
+				allianceBonus, allianceBonusIndex);
 		return move;
 	}
 	
@@ -61,90 +54,97 @@ public class MoveBuilder {
 		satelliteFields = null;
 		allianceBonus = null;
 		allianceBonusIndex = -1;
-		pass = false;
 	}
 	
 	public MoveType getType() {
 		return type;
 	}
-	public void setType(MoveType type) {
+	public MoveBuilder setType(MoveType type) {
 		this.type = type;
+		return this;
 	}
 	
-	public Player getPlayer() {
+	public String getPlayer() {
 		return player;
 	}
-	public void setPlayer(Player player) {
+	public MoveBuilder setPlayer(String player) {
 		this.player = player;
+		return this;
 	}
 	
 	public Field getField() {
 		return field;
 	}
-	public void setField(Field field) {
+	public MoveBuilder setField(Field field) {
 		this.field = field;
+		return this;
 	}
 	
 	public Building getBuilding() {
 		return building;
 	}
-	public void setBuilding(Building building) {
+	public MoveBuilder setBuilding(Building building) {
 		this.building = building;
+		return this;
 	}
 	
 	public ResearchArea getResearchArea() {
 		return researchArea;
 	}
-	public void setResearchArea(ResearchArea researchArea) {
+	public MoveBuilder setResearchArea(ResearchArea researchArea) {
 		this.researchArea = researchArea;
+		return this;
 	}
 	
 	public ResearchResources getResearchResources() {
 		return researchResources;
 	}
-	public void setResearchResources(ResearchResources researchResources) {
+	public MoveBuilder setResearchResources(ResearchResources researchResources) {
 		this.researchResources = researchResources;
+		return this;
 	}
 	
 	public Technology getTechnology() {
 		return technology;
 	}
-	public void setTechnology(Technology technology) {
+	public MoveBuilder setTechnology(Technology technology) {
 		this.technology = technology;
+		return this;
 	}
 	
 	public List<Field> getAlliancePlanets() {
 		return alliancePlanets;
 	}
-	public void setAlliancePlanets(List<Field> alliancePlanets) {
+	public MoveBuilder setAlliancePlanets(List<Field> alliancePlanets) {
 		this.alliancePlanets = alliancePlanets;
+		return this;
 	}
 	
 	public List<Field> getSatelliteFields() {
 		return satelliteFields;
 	}
-	public void setSatelliteFields(List<Field> satelliteFields) {
+	public MoveBuilder setSatelliteFields(List<Field> satelliteFields) {
 		this.satelliteFields = satelliteFields;
+		return this;
 	}
 	
 	public AllianceBonus getAllianceBonus() {
 		return allianceBonus;
 	}
-	public void setAllianceBonus(AllianceBonus allianceBonus) {
+	public MoveBuilder setAllianceBonus(AllianceBonus allianceBonus) {
 		this.allianceBonus = allianceBonus;
+		return this;
 	}
 	
 	public int getAllianceBonusIndex() {
 		return allianceBonusIndex;
 	}
-	public void setAllianceBonusIndex(int allianceBonusIndex) {
+	public MoveBuilder setAllianceBonusIndex(int allianceBonusIndex) {
 		this.allianceBonusIndex = allianceBonusIndex;
+		return this;
 	}
 	
 	public boolean isPass() {
-		return pass;
-	}
-	public void setPass(boolean pass) {
-		this.pass = pass;
+		return type == MoveType.PASS;
 	}
 }

@@ -3,6 +3,9 @@ package net.jfabricationgames.genesis_project.manager;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -13,12 +16,22 @@ import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
 import net.jfabricationgames.genesis_project.game.Resource;
+import net.jfabricationgames.genesis_project.json.deserializer.CustomIntegerPropertyDeserializer;
+import net.jfabricationgames.genesis_project.json.deserializer.CustomObjectPropertyResearchResourcesDeserializer;
+import net.jfabricationgames.genesis_project.json.serializer.CustomIntegerPropertySerializer;
+import net.jfabricationgames.genesis_project.json.serializer.CustomObjectPropertyResearchResourcesSerializer;
 
 public class ResearchManager implements IResearchManager {
 	
+	@JsonSerialize(contentUsing = CustomIntegerPropertySerializer.class)
+	@JsonDeserialize(contentUsing = CustomIntegerPropertyDeserializer.class)
 	private Map<ResearchArea, IntegerProperty> researchStates;
 	private Map<ResearchArea, Map<Integer, ResearchResources>> researchResourcesAdded;
+	@JsonSerialize(contentUsing = CustomIntegerPropertySerializer.class)
+	@JsonDeserialize(contentUsing = CustomIntegerPropertyDeserializer.class)
 	private Map<ResearchArea, IntegerProperty> maxReachableState;
+	@JsonSerialize(contentUsing = CustomObjectPropertyResearchResourcesSerializer.class)
+	@JsonDeserialize(contentUsing = CustomObjectPropertyResearchResourcesDeserializer.class)
 	private Map<ResearchArea, ObjectProperty<ResearchResources>> researchResourcesNeededLeftProperties;
 	
 	private int playersInGame;
@@ -27,17 +40,28 @@ public class ResearchManager implements IResearchManager {
 	
 	private static final double EPSILON = 1e-2;//for rounding values because of the double epsilon
 	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public ResearchManager() {
+		
+	}
+	
 	public ResearchManager(Player player) {
 		this(player, -1);
 	}
 	public ResearchManager(Player player, int playersInGame) {
 		this.player = player;
 		this.playersInGame = playersInGame;
-		initResearchResourcesAdded();
-		if (Constants.STARTING_RESEARCH_STATES != null) {
+		if (player == null) {
+			//only for global research manager
+			initResearchResourcesAdded();
+		}
+		if (Constants.getInstance().STARTING_RESEARCH_STATES != null) {
 			if (player != null) {
 				researchStates = new HashMap<ResearchArea, IntegerProperty>();
-				for (Map.Entry<ResearchArea, Integer> startStates : Constants.STARTING_RESEARCH_STATES.get(player.getPlayerClass()).entrySet()) {
+				for (Map.Entry<ResearchArea, Integer> startStates : Constants.getInstance().STARTING_RESEARCH_STATES.get(player.getPlayerClass()).entrySet()) {
 					IntegerProperty property = new SimpleIntegerProperty(this, "researchState_" + startStates.getKey().name());
 					property.set(startStates.getValue().intValue());
 					researchStates.put(startStates.getKey(), property);
@@ -52,7 +76,7 @@ public class ResearchManager implements IResearchManager {
 		else {
 			throw new IllegalStateException("The field STARTING_RESEARCH_STATES in the class Constants has not been initialized.");
 		}
-		if (Constants.RESEARCH_RESOURCES == null) {
+		if (Constants.getInstance().RESEARCH_RESOURCES == null) {
 			throw new IllegalStateException("The field RESEARCH_RESOURCES in the class Constants has not been inizialized.");
 		}
 		
@@ -60,15 +84,18 @@ public class ResearchManager implements IResearchManager {
 		maxReachableState = new HashMap<ResearchArea, IntegerProperty>();
 		for (ResearchArea area : ResearchArea.values()) {
 			IntegerProperty property = new SimpleIntegerProperty(this, "maxResearchStateAccessible_" + area.name());
-			property.set(Constants.MAX_RESEARCH_STATE_DEFAULT);
+			property.set(Constants.getInstance().MAX_RESEARCH_STATE_DEFAULT);
 			maxReachableState.put(area, property);
 		}
 		
-		researchResourcesNeededLeftProperties = new HashMap<ResearchArea, ObjectProperty<ResearchResources>>();
-		for (ResearchArea area : ResearchArea.values()) {
-			ObjectProperty<ResearchResources> property = new SimpleObjectProperty<>(this, "researchResourcesNeededLeft_" + area.name());
-			property.set(new ResearchResources());
-			researchResourcesNeededLeftProperties.put(area, property);
+		if (player == null) {
+			//only for global research manager
+			researchResourcesNeededLeftProperties = new HashMap<ResearchArea, ObjectProperty<ResearchResources>>();
+			for (ResearchArea area : ResearchArea.values()) {
+				ObjectProperty<ResearchResources> property = new SimpleObjectProperty<>(this, "researchResourcesNeededLeft_" + area.name());
+				property.set(new ResearchResources());
+				researchResourcesNeededLeftProperties.put(area, property);
+			}
 		}
 	}
 	/**
@@ -96,10 +123,10 @@ public class ResearchManager implements IResearchManager {
 			int nextResourceNeedingState = getNextResourceNeedingState(area);
 			if (nextResourceNeedingState == -1) {
 				if (area == ResearchArea.WEAPON) {
-					property.set(Constants.MAX_RESEARCH_STATE_WEAPON);
+					property.set(Constants.getInstance().MAX_RESEARCH_STATE_WEAPON);
 				}
 				else {
-					property.set(Constants.MAX_RESEARCH_STATE_DEFAULT);
+					property.set(Constants.getInstance().MAX_RESEARCH_STATE_DEFAULT);
 				}
 			}
 			else {
@@ -129,8 +156,8 @@ public class ResearchManager implements IResearchManager {
 	@Override
 	public void increaseState(ResearchArea area) {
 		int currentState = getState(area);
-		if (currentState < Constants.MAX_RESEARCH_STATE_DEFAULT
-				|| (area == ResearchArea.WEAPON && currentState < Constants.MAX_RESEARCH_STATE_WEAPON)) {
+		if (currentState < Constants.getInstance().MAX_RESEARCH_STATE_DEFAULT
+				|| (area == ResearchArea.WEAPON && currentState < Constants.getInstance().MAX_RESEARCH_STATE_WEAPON)) {
 			
 			IntegerProperty researchState = researchStates.get(area);
 			researchState.set(currentState + 1);
@@ -142,9 +169,9 @@ public class ResearchManager implements IResearchManager {
 	
 	@Override
 	public boolean isStateAccessible(ResearchArea area, int state) {
-		int maximumState = Constants.MAX_RESEARCH_STATE_DEFAULT;
+		int maximumState = Constants.getInstance().MAX_RESEARCH_STATE_DEFAULT;
 		if (area == ResearchArea.WEAPON) {
-			maximumState = Constants.MAX_RESEARCH_STATE_WEAPON;
+			maximumState = Constants.getInstance().MAX_RESEARCH_STATE_WEAPON;
 		}
 		
 		if (state < 0 || state > maximumState) {
@@ -162,10 +189,10 @@ public class ResearchManager implements IResearchManager {
 	@Override
 	public int getNextResourceNeedingState(ResearchArea area) {
 		int nextResourceNeedingState = -1;
-		int maxResearchState = Constants.MAX_RESEARCH_STATE_DEFAULT;
+		int maxResearchState = Constants.getInstance().MAX_RESEARCH_STATE_DEFAULT;
 		
 		if (area == ResearchArea.WEAPON) {
-			maxResearchState = Constants.MAX_RESEARCH_STATE_WEAPON;
+			maxResearchState = Constants.getInstance().MAX_RESEARCH_STATE_WEAPON;
 		}
 		
 		for (int i = 1; i < maxResearchState + 1; i++) {
@@ -179,7 +206,7 @@ public class ResearchManager implements IResearchManager {
 	
 	@Override
 	public ResearchResources getResearchResourcesNeededTotal(ResearchArea area, int state) {
-		Map<Resource, Double> resources = Constants.RESEARCH_RESOURCES.get(area).get(state);
+		Map<Resource, Double> resources = Constants.getInstance().RESEARCH_RESOURCES.get(area).get(state);
 		if (resources != null) {
 			ResearchResources researchResources = new ResearchResources();
 			for (Resource resource : ResearchResources.RESEARCH_RESOURCES) {
@@ -266,8 +293,11 @@ public class ResearchManager implements IResearchManager {
 			Game game = player.getGame();
 			if (game != null) {
 				playersInGame = game.getPlayers().size();
-				updateMaxReachableState();
-				updateResearchResourcesNeededLeftProperties();
+				if (player == null) {
+					//only update the states if it's a global manager (others will fail to update)
+					updateMaxReachableState();
+					updateResearchResourcesNeededLeftProperties();
+				}
 			}
 			else {
 				throw new IllegalStateException("The field 'playersInGame' has not yet been set.");
@@ -275,7 +305,7 @@ public class ResearchManager implements IResearchManager {
 		}
 		return playersInGame;
 	}
-
+	
 	@Override
 	public int getDroneAdditionalDefense() {
 		int additionalDefense = 0;

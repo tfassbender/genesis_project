@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.annotations.VisibleForTesting;
 
 import javafx.beans.property.BooleanProperty;
@@ -24,22 +26,34 @@ import net.jfabricationgames.genesis_project.game.Planet;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.PlayerBuilding;
 import net.jfabricationgames.genesis_project.game.Resource;
+import net.jfabricationgames.genesis_project.json.deserializer.CustomBooleanPropertyArrayDeserializer;
+import net.jfabricationgames.genesis_project.json.serializer.CustomBooleanPropertyArraySerializer;
 
 public class AllianceManager implements IAllianceManager {
 	
 	private List<Alliance> alliances;
 	
+	@JsonSerialize(contentUsing = CustomBooleanPropertyArraySerializer.class)
+	@JsonDeserialize(contentUsing = CustomBooleanPropertyArrayDeserializer.class)
 	private Map<AllianceBonus, BooleanProperty[]> bonusesTaken;
 	
 	private Player player;
 	
 	private AllianceBuilder builder;
 	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public AllianceManager() {
+		
+	}
+	
 	public AllianceManager(Player player) {
 		this.player = player;
 		alliances = new ArrayList<Alliance>(3);
 		if (player != null) {
-			builder = new AllianceBuilder(player);			
+			builder = new AllianceBuilder(player);
 		}
 		initializeBonusesTaken();
 	}
@@ -47,7 +61,7 @@ public class AllianceManager implements IAllianceManager {
 	private void initializeBonusesTaken() {
 		bonusesTaken = new HashMap<AllianceBonus, BooleanProperty[]>();
 		for (AllianceBonus bonus : AllianceBonus.values()) {
-			BooleanProperty[] properties = new BooleanProperty[Constants.ALLIANCE_BONUS_COPIES];
+			BooleanProperty[] properties = new BooleanProperty[Constants.getInstance().ALLIANCE_BONUS_COPIES];
 			for (int i = 0; i < properties.length; i++) {
 				properties[i] = new SimpleBooleanProperty(this, "allianceBonusTaken_" + bonus.name(), false);
 			}
@@ -125,10 +139,10 @@ public class AllianceManager implements IAllianceManager {
 		
 		boolean allianceValid = true;
 		
-		allianceValid &= numPlanets >= Constants.ALLIANCE_MIN_PLANETS;
-		allianceValid &= numOpponentPlanets >= Constants.ALLIANCE_MIN_PLANETS_OTHER_PLAYERS;
-		allianceValid &= numPlayerBuildings >= Constants.ALLIANCE_MIN_BUILDINGS;
-		allianceValid &= numOpponentBuildings >= Constants.ALLIANCE_MIN_BUILDINGS_OTHER_PLAYERS;
+		allianceValid &= numPlanets >= Constants.getInstance().ALLIANCE_MIN_PLANETS;
+		allianceValid &= numOpponentPlanets >= Constants.getInstance().ALLIANCE_MIN_PLANETS_OTHER_PLAYERS;
+		allianceValid &= numPlayerBuildings >= Constants.getInstance().ALLIANCE_MIN_BUILDINGS;
+		allianceValid &= numOpponentBuildings >= Constants.getInstance().ALLIANCE_MIN_BUILDINGS_OTHER_PLAYERS;
 		allianceValid &= govermentOrCityIncluded;
 		allianceValid &= allPlanetsValid;
 		allianceValid &= satelliteFieldsValid;
@@ -143,9 +157,9 @@ public class AllianceManager implements IAllianceManager {
 	@Override
 	public boolean isAllianceBonusTaken(AllianceBonus bonus, int bonusIndex) {
 		Objects.requireNonNull(bonus, "The bonus mussn't be null.");
-		if (bonusIndex < 0 || bonusIndex > Constants.ALLIANCE_BONUS_COPIES - 1) {
-			throw new IllegalArgumentException(
-					"The bonus index must be between 0 and " + (Constants.ALLIANCE_BONUS_COPIES - 1) + " (inclusive); not " + bonusIndex);
+		if (bonusIndex < 0 || bonusIndex > Constants.getInstance().ALLIANCE_BONUS_COPIES - 1) {
+			throw new IllegalArgumentException("The bonus index must be between 0 and " + (Constants.getInstance().ALLIANCE_BONUS_COPIES - 1)
+					+ " (inclusive); not " + bonusIndex);
 		}
 		//bonuses taken are managed in the global alliance manager (composite implementation)
 		if (getPlayer() == null) {
@@ -158,15 +172,15 @@ public class AllianceManager implements IAllianceManager {
 	@Override
 	public void setAllianceBonusTaken(AllianceBonus bonus, int bonusIndex, boolean taken) {
 		Objects.requireNonNull(bonus, "The bonus mussn't be null.");
-		if (bonusIndex < 0 || bonusIndex > Constants.ALLIANCE_BONUS_COPIES - 1) {
-			throw new IllegalArgumentException(
-					"The bonus index must be between 0 and " + (Constants.ALLIANCE_BONUS_COPIES - 1) + " (inclusive); not " + bonusIndex);
+		if (bonusIndex < 0 || bonusIndex > Constants.getInstance().ALLIANCE_BONUS_COPIES - 1) {
+			throw new IllegalArgumentException("The bonus index must be between 0 and " + (Constants.getInstance().ALLIANCE_BONUS_COPIES - 1)
+					+ " (inclusive); not " + bonusIndex);
 		}
 		//bonuses taken are managed in the global alliance manager (composite implementation)
 		if (getPlayer() == null) {
 			//the any bonus can never be taken (one can take it but it still remains there)
 			if (bonus != AllianceBonus.ANY) {
-				bonusesTaken.get(bonus)[bonusIndex].set(taken);				
+				bonusesTaken.get(bonus)[bonusIndex].set(taken);
 			}
 		}
 		else {
@@ -176,9 +190,9 @@ public class AllianceManager implements IAllianceManager {
 	@Override
 	public BooleanProperty getAllianceBonusTakenProperty(AllianceBonus bonus, int bonusIndex) {
 		Objects.requireNonNull(bonus, "The bonus mussn't be null.");
-		if (bonusIndex < 0 || bonusIndex > Constants.ALLIANCE_BONUS_COPIES - 1) {
-			throw new IllegalArgumentException(
-					"The bonus index must be between 0 and " + (Constants.ALLIANCE_BONUS_COPIES - 1) + " (inclusive); not " + bonusIndex);
+		if (bonusIndex < 0 || bonusIndex > Constants.getInstance().ALLIANCE_BONUS_COPIES - 1) {
+			throw new IllegalArgumentException("The bonus index must be between 0 and " + (Constants.getInstance().ALLIANCE_BONUS_COPIES - 1)
+					+ " (inclusive); not " + bonusIndex);
 		}
 		//bonuses taken are managed in the global alliance manager (composite implementation)
 		if (getPlayer() == null) {

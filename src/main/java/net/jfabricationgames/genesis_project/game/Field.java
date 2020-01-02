@@ -8,14 +8,23 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.annotations.VisibleForTesting;
 
 public class Field {
 	
 	private Board.Position position;
 	private Planet planet;
-	private final PlayerBuilding[] buildings;
-	private final List<PlayerBuilding> spaceBuildings;
+	private PlayerBuilding[] buildings;
+	private List<PlayerBuilding> spaceBuildings;
+	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public Field() {
+		
+	}
 	
 	public Field(Board.Position position, Planet planet, int players) {
 		this.position = position;
@@ -26,7 +35,7 @@ public class Field {
 		}
 		else {
 			//normal planets have a fixed number of buildings
-			buildings = new PlayerBuilding[Constants.BUILDINGS_PER_PLANET];
+			buildings = new PlayerBuilding[Constants.getInstance().BUILDINGS_PER_PLANET];
 		}
 		spaceBuildings = new ArrayList<PlayerBuilding>();
 	}
@@ -120,6 +129,7 @@ public class Field {
 		}
 	}
 	
+	@JsonIgnore
 	public boolean isPlanetField() {
 		return planet != null;
 	}
@@ -129,6 +139,7 @@ public class Field {
 	 * 
 	 * @return Returns true if the field has any content that is to be displayed.
 	 */
+	@JsonIgnore
 	public boolean isDisplayed() {
 		return isPlanetField() || !getSpaceBuildings().isEmpty();
 	}
@@ -224,5 +235,27 @@ public class Field {
 		List<PlayerBuilding> otherPlayerBuildings = Arrays.asList(buildings).stream()
 				.filter(building -> building != null && !building.getPlayer().equals(player)).collect(Collectors.toList());
 		return otherPlayerBuildings;
+	}
+	
+	/**
+	 * Check whether the planet contains at least one building of the player.
+	 */
+	public boolean containsPlayersBuildings(PlayerClass playerClass) {
+		boolean containsBuilding = false;
+		for (PlayerBuilding building : buildings) {
+			containsBuilding |= building != null && building.getPlayer().getPlayerClass().equals(playerClass);
+		}
+		return containsBuilding;
+	}
+	
+	/**
+	 * Check whether the planet contains at least one building of any other player.
+	 */
+	public boolean containsOtherPlayersBuildings(PlayerClass playerClass) {
+		boolean containsBuilding = false;
+		for (PlayerBuilding building : buildings) {
+			containsBuilding |= building != null && !building.getPlayer().getPlayerClass().equals(playerClass);
+		}
+		return containsBuilding;
 	}
 }

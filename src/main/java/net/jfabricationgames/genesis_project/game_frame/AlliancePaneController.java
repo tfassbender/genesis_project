@@ -9,7 +9,6 @@ import java.util.ResourceBundle;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -245,13 +244,13 @@ public class AlliancePaneController implements Initializable {
 		
 		//bind the text labels using StringBindings from IntegerProperties
 		labelAllianceNumPlanets.textProperty()
-				.bind(Bindings.concat(allianceBuilder.getNumPlanetsProperty().asString(), " / " + Constants.ALLIANCE_MIN_PLANETS));
-		labelAllianceNumNeighbourPlanets.textProperty().bind(
-				Bindings.concat(allianceBuilder.getNumNeighbourPlanetsProperty().asString(), " / " + Constants.ALLIANCE_MIN_PLANETS_OTHER_PLAYERS));
+				.bind(Bindings.concat(allianceBuilder.getNumPlanetsProperty().asString(), " / " + Constants.getInstance().ALLIANCE_MIN_PLANETS));
+		labelAllianceNumNeighbourPlanets.textProperty().bind(Bindings.concat(allianceBuilder.getNumNeighbourPlanetsProperty().asString(),
+				" / " + Constants.getInstance().ALLIANCE_MIN_PLANETS_OTHER_PLAYERS));
 		labelAllianceBuildings.textProperty()
-				.bind(Bindings.concat(allianceBuilder.getNumBuildingsProperty(), " / " + Constants.ALLIANCE_MIN_BUILDINGS));
+				.bind(Bindings.concat(allianceBuilder.getNumBuildingsProperty(), " / " + Constants.getInstance().ALLIANCE_MIN_BUILDINGS));
 		labelAllianceNeighbourBuildings.textProperty().bind(Bindings.concat(allianceBuilder.getNumNeighbourBuildingsProperty().asString(),
-				" / " + Constants.ALLIANCE_MIN_BUILDINGS_OTHER_PLAYERS));
+				" / " + Constants.getInstance().ALLIANCE_MIN_BUILDINGS_OTHER_PLAYERS));
 		labelAllianceMainBuilding.textProperty().bind(Bindings.concat(allianceBuilder.getNumMainBuildingsProperty().asString(), " / 1"));
 		
 		//use a listener because the translation would be difficult
@@ -288,14 +287,10 @@ public class AlliancePaneController implements Initializable {
 		//set the ANY AllianceBonus actions and property
 		BooleanBinding allBonusesTaken = null;
 		for (AllianceBonus bonus : AllianceBonus.values()) {
-			for (int i = 0; i < 2; i++) {
-				if (allBonusesTaken == null) {
-					//first has to be initiated (could probably be done better...)
-					allBonusesTaken = new SimpleBooleanProperty(true).and(allianceManager.getAllianceBonusTakenProperty(bonus, i));
-				}
-				else {
-					//bind all other bonuses
-					allBonusesTaken = allBonusesTaken.and(allianceManager.getAllianceBonusTakenProperty(bonus, i));
+			for (int i = 0; i < Constants.getInstance().ALLIANCE_BONUS_COPIES; i++) {
+				if (!allianceManager.isAllianceBonusTaken(bonus, i)) {
+					Button button = exploreButtons.get(bonus)[i];
+					button.setDisable(false);
 				}
 			}
 		}
@@ -315,8 +310,8 @@ public class AlliancePaneController implements Initializable {
 		allianceBuilder.setBonusIndex(bonusIndex);
 		Alliance alliance = allianceBuilder.build();
 		
-		MoveBuilder builder = new MoveBuilder(game);
-		builder.setPlayer(player);
+		MoveBuilder builder = new MoveBuilder();
+		builder.setPlayer(player.getUsername());
 		builder.setType(MoveType.ALLIANCE);
 		builder.setAllianceBonus(bonus);
 		builder.setAllianceBonusIndex(bonusIndex);
@@ -331,6 +326,18 @@ public class AlliancePaneController implements Initializable {
 		}
 		else {
 			throw new IllegalStateException("The move can't be executed");
+		}
+	}
+	
+	/**
+	 * Disable all explore buttons.
+	 */
+	public void disableExploreButtons() {
+		for (AllianceBonus bonus : AllianceBonus.values()) {
+			for (int i = 0; i < Constants.getInstance().ALLIANCE_BONUS_COPIES; i++) {
+				Button button = exploreButtons.get(bonus)[i];
+				button.setDisable(true);
+			}
 		}
 	}
 	

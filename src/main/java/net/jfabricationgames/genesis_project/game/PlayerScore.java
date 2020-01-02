@@ -5,6 +5,14 @@ public class PlayerScore implements Comparable<PlayerScore> {
 	private Player player;
 	private int score;
 	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public PlayerScore() {
+		
+	}
+	
 	public PlayerScore(Player player, int score) {
 		this.player = player;
 		this.score = score;
@@ -17,7 +25,7 @@ public class PlayerScore implements Comparable<PlayerScore> {
 	
 	@Override
 	public String toString() {
-		return String.format("%3d - %s", score, player.getUser().getUsername());
+		return String.format("%3d - %s", score, player.getUsername());
 	}
 	
 	public Player getPlayer() {

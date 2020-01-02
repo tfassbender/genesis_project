@@ -56,7 +56,7 @@ public class TurnPaneController implements Initializable {
 	private void initializeTurnLabels() {
 		Label[] labels = new Label[] {labelTurnName1, labelTurnName2, labelTurnName3, labelTurnName4, labelTurnName5, labelTurnName6};
 		
-		for (int i = 0; i < Constants.TURNS_PLAYED; i++) {
+		for (int i = 0; i < Constants.getInstance().TURNS_PLAYED; i++) {
 			Label label = labels[i];
 			label.setText(turnManager.getTurnGoals().get(i).getName());
 		}
@@ -70,7 +70,7 @@ public class TurnPaneController implements Initializable {
 			images[i].setImage(image);
 			images[i].setCache(true);
 		}
-		for (int i = turnManager.getTurn() - 1; i < Constants.TURNS_PLAYED; i++) {
+		for (int i = turnManager.getTurn() - 1; i < Constants.getInstance().TURNS_PLAYED; i++) {
 			String imagePath = turnManager.getTurnGoals().get(i).getImagePath();
 			Image image = GuiUtils.loadImage(imagePath, true);
 			images[i].setImage(image);

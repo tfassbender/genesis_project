@@ -1,6 +1,13 @@
 package net.jfabricationgames.genesis_project.game;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -9,26 +16,55 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import net.jfabricationgames.genesis_project.json.deserializer.CustomBooleanPropertyDeserializer;
+import net.jfabricationgames.genesis_project.json.deserializer.CustomIntegerPropertyDeserializer;
+import net.jfabricationgames.genesis_project.json.serializer.CustomBooleanPropertySerializer;
+import net.jfabricationgames.genesis_project.json.serializer.CustomIntegerPropertySerializer;
 
 public class AllianceBuilder {
 	
 	private Player player;
 	
+	//Custom serialization for observable lists via customized getter and setter methods
 	private ObservableList<Field> planets;
 	private ObservableList<Field> connectingSatellites;
 	private AllianceBonus bonus;
 	private int bonusIndex;
 	
+	@JsonSerialize(using = CustomIntegerPropertySerializer.class)
+	@JsonDeserialize(using = CustomIntegerPropertyDeserializer.class)
 	private IntegerProperty numPlanets;
+	@JsonSerialize(using = CustomIntegerPropertySerializer.class)
+	@JsonDeserialize(using = CustomIntegerPropertyDeserializer.class)
 	private IntegerProperty numNeighbourPlanets;
+	@JsonSerialize(using = CustomIntegerPropertySerializer.class)
+	@JsonDeserialize(using = CustomIntegerPropertyDeserializer.class)
 	private IntegerProperty numBuildings;
+	@JsonSerialize(using = CustomIntegerPropertySerializer.class)
+	@JsonDeserialize(using = CustomIntegerPropertyDeserializer.class)
 	private IntegerProperty numNeighbourBuildings;
+	@JsonSerialize(using = CustomIntegerPropertySerializer.class)
+	@JsonDeserialize(using = CustomIntegerPropertyDeserializer.class)
 	private IntegerProperty numMainBuildings;
+	@JsonSerialize(using = CustomBooleanPropertySerializer.class)
+	@JsonDeserialize(using = CustomBooleanPropertyDeserializer.class)
 	private BooleanProperty allianceValid;
 	
 	//these properties only tell the PlanetLayout whether the fields shall be marked
+	@JsonSerialize(using = CustomBooleanPropertySerializer.class)
+	@JsonDeserialize(using = CustomBooleanPropertyDeserializer.class)
 	private BooleanProperty markPlanetFields;
+	@JsonSerialize(using = CustomBooleanPropertySerializer.class)
+	@JsonDeserialize(using = CustomBooleanPropertyDeserializer.class)
 	private BooleanProperty markSatelliteFields;
+	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public AllianceBuilder() {
+		
+	}
 	
 	public AllianceBuilder(Player player) {
 		Objects.requireNonNull(player, "The AllianceBuilder needs a Player object different from null");
@@ -52,7 +88,7 @@ public class AllianceBuilder {
 	
 	public Alliance build() {
 		if (player.getAllianceManager().isAllianceValid(planets, connectingSatellites, bonus, bonusIndex)) {
-			return new Alliance(planets, connectingSatellites, bonus);			
+			return new Alliance(planets, connectingSatellites, bonus);
 		}
 		else {
 			throw new IllegalStateException("The alliance can't be built because it's not valid.");
@@ -158,5 +194,22 @@ public class AllianceBuilder {
 	}
 	public BooleanProperty getMarkSatelliteFieldsProperty() {
 		return markSatelliteFields;
+	}
+	
+	@JsonGetter("planets")
+	public List<Field> getPlanetsAsList() {
+		return new ArrayList<>(planets);
+	}
+	@JsonSetter("planets")
+	public void setPlanets(List<Field> planets) {
+		this.planets = FXCollections.observableArrayList(planets);
+	}
+	@JsonGetter("connectingSatellites")
+	public List<Field> getConnectingSatellitesAsList() {
+		return new ArrayList<>(connectingSatellites);
+	}
+	@JsonSetter("connectingSatellites")
+	public void setConnectingSatellites(List<Field> connectingSatellites) {
+		this.connectingSatellites = FXCollections.observableArrayList(connectingSatellites);
 	}
 }

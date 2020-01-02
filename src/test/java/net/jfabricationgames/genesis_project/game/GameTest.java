@@ -34,9 +34,9 @@ class GameTest {
 		player.getResourceManager().setResourcesTertiary(4);
 		
 		//valid moves
-		IMove buildColony = MoveCreaterUtil.getBuildingMove(game, player, Building.COLONY, 4, 2);//costs 3, 3, 0; build on space 3
-		IMove buildResearchCenter = MoveCreaterUtil.getBuildingMove(game, player, Building.RESEARCH_CENTER, 0, 3);//costs 5 5 2; build on space 2
-		IMove buildMine = MoveCreaterUtil.getBuildingMove(game, player, Building.MINE, 5, 0);//2 2 0
+		IMove buildColony = MoveCreaterUtil.getBuildingMove(game.getBoard(), player.getUsername(), Building.COLONY, 4, 2);//costs 3, 3, 0; build on space 3
+		IMove buildResearchCenter = MoveCreaterUtil.getBuildingMove(game.getBoard(), player.getUsername(), Building.RESEARCH_CENTER, 0, 3);//costs 5 5 2; build on space 2
+		IMove buildMine = MoveCreaterUtil.getBuildingMove(game.getBoard(), player.getUsername(), Building.MINE, 5, 0);//2 2 0
 		
 		game.executeMove(buildColony);
 		//resources taken
@@ -79,8 +79,8 @@ class GameTest {
 		Field[] satellites1 = new Field[] {fields.get(new Position(0, 1)), fields.get(new Position(0, 2))};
 		Field[] planets2 = new Field[] {fields.get(new Position(0, 0)), fields.get(new Position(1, 1)), fields.get(new Position(2, 0))};
 		Field[] satellites2 = new Field[] {fields.get(new Position(1, 0))};
-		IMove allianceMove1 = MoveCreaterUtil.getAllianceMove(game, player, planets1, satellites1, AllianceBonus.MILITARY_RANGE, 0);
-		IMove allianceMove2 = MoveCreaterUtil.getAllianceMove(game, player, planets2, satellites2, AllianceBonus.POINTS, 0);
+		IMove allianceMove1 = MoveCreaterUtil.getAllianceMove(player.getUsername(), planets1, satellites1, AllianceBonus.MILITARY_RANGE, 0);
+		IMove allianceMove2 = MoveCreaterUtil.getAllianceMove(player.getUsername(), planets2, satellites2, AllianceBonus.POINTS, 0);
 		
 		game.executeMove(allianceMove1);
 		//new alliance created
@@ -127,9 +127,9 @@ class GameTest {
 		resourceManager.setResearchPoints(17);
 		
 		//valid moves
-		IMove researchMoveMines = MoveCreaterUtil.getResearchMove(game, player, ResearchArea.MINES);
-		IMove researchMoveEconomy = MoveCreaterUtil.getResearchMove(game, player, ResearchArea.ECONOMY);
-		IMove researchMoveWeapon = MoveCreaterUtil.getResearchMove(game, player, ResearchArea.WEAPON);
+		IMove researchMoveMines = MoveCreaterUtil.getResearchMove(player.getUsername(), ResearchArea.MINES);
+		IMove researchMoveEconomy = MoveCreaterUtil.getResearchMove(player.getUsername(), ResearchArea.ECONOMY);
+		IMove researchMoveWeapon = MoveCreaterUtil.getResearchMove(player.getUsername(), ResearchArea.WEAPON);
 		
 		game.executeMove(researchMoveMines);
 		skipPlayersTurn(game);
@@ -157,8 +157,10 @@ class GameTest {
 		resourceManager.addResources(new ResearchResources(9, 7, 6, 2));
 		
 		//valid moves
-		IMove researchResourcesMove = MoveCreaterUtil.getResearchResourcesMove(game, player, ResearchArea.FTL, new ResearchResources(2, 2, 2, 0));
-		IMove researchResourcesMove2 = MoveCreaterUtil.getResearchResourcesMove(game, player, ResearchArea.FTL, new ResearchResources(4, 4, 4, 0));
+		IMove researchResourcesMove = MoveCreaterUtil.getResearchResourcesMove(player.getUsername(), ResearchArea.FTL,
+				new ResearchResources(2, 2, 2, 0));
+		IMove researchResourcesMove2 = MoveCreaterUtil.getResearchResourcesMove(player.getUsername(), ResearchArea.FTL,
+				new ResearchResources(4, 4, 4, 0));
 		
 		game.executeMove(researchResourcesMove);
 		assertTrue(game.getResearchManager().isStateAccessible(ResearchArea.FTL, 2));
@@ -185,7 +187,7 @@ class GameTest {
 		Game game = GameCreationUtil.createGame();
 		Player player = game.getPlayers().get(0);
 		
-		IMove pass = MoveCreaterUtil.getPassMove(game, player);
+		IMove pass = MoveCreaterUtil.getPassMove(player.getUsername());
 		
 		//check the state before the execution
 		assertTrue(game.getTurnManager().getPlayerOrder().contains(player));
@@ -209,16 +211,18 @@ class GameTest {
 		player.getResourceManager().setResourcesTertiary(4);
 		
 		//valid moves
-		IMove buildColony = MoveCreaterUtil.getBuildingMove(game, player, Building.COLONY, 4, 2);
-		IMove buildResearchCenter = MoveCreaterUtil.getBuildingMove(game, player, Building.RESEARCH_CENTER, 0, 3);
-		IMove buildMine = MoveCreaterUtil.getBuildingMove(game, player, Building.MINE, 5, 0);
+		IMove buildColony = MoveCreaterUtil.getBuildingMove(game.getBoard(), player.getUsername(), Building.COLONY, 4, 2);
+		IMove buildResearchCenter = MoveCreaterUtil.getBuildingMove(game.getBoard(), player.getUsername(), Building.RESEARCH_CENTER, 0, 3);
+		IMove buildMine = MoveCreaterUtil.getBuildingMove(game.getBoard(), player.getUsername(), Building.MINE, 5, 0);
 		
 		//illegal moves
-		IMove buildColonySpaceField = MoveCreaterUtil.getBuildingMove(game, player, Building.COLONY, 1, 0);
-		IMove buildResearchCenterWithoutLaboratory = MoveCreaterUtil.getBuildingMove(game, player, Building.RESEARCH_CENTER, 2, 3);
-		IMove buildResearchCenterNotEnoughResources = MoveCreaterUtil.getBuildingMove(game, player, Building.RESEARCH_CENTER, 2, 0);
-		IMove buildGovernmentNoMoreBuildingsLeft = MoveCreaterUtil.getBuildingMove(game, player, Building.GOVERNMENT, 0, 3);
-		IMove buildColonyNotTheActivePlayer = MoveCreaterUtil.getBuildingMove(game, player2, Building.COLONY, 2, 3);
+		IMove buildColonySpaceField = MoveCreaterUtil.getBuildingMove(game.getBoard(), player.getUsername(), Building.COLONY, 1, 0);
+		IMove buildResearchCenterWithoutLaboratory = MoveCreaterUtil.getBuildingMove(game.getBoard(), player.getUsername(), Building.RESEARCH_CENTER,
+				2, 3);
+		IMove buildResearchCenterNotEnoughResources = MoveCreaterUtil.getBuildingMove(game.getBoard(), player.getUsername(), Building.RESEARCH_CENTER,
+				2, 0);
+		IMove buildGovernmentNoMoreBuildingsLeft = MoveCreaterUtil.getBuildingMove(game.getBoard(), player.getUsername(), Building.GOVERNMENT, 0, 3);
+		IMove buildColonyNotTheActivePlayer = MoveCreaterUtil.getBuildingMove(game.getBoard(), player2.getUsername(), Building.COLONY, 2, 3);
 		
 		assertTrue(game.isMoveExecutable(buildColony));
 		assertTrue(game.isMoveExecutable(buildResearchCenter));
@@ -246,8 +250,8 @@ class GameTest {
 		Field[] satellites1 = new Field[] {fields.get(new Position(0, 1)), fields.get(new Position(0, 2))};
 		Field[] planets2 = new Field[] {fields.get(new Position(0, 0)), fields.get(new Position(1, 1)), fields.get(new Position(2, 0))};
 		Field[] satellites2 = new Field[] {fields.get(new Position(1, 0))};
-		IMove allianceMove1 = MoveCreaterUtil.getAllianceMove(game, player, planets1, satellites1, AllianceBonus.MILITARY_RANGE, 0);
-		IMove allianceMove2 = MoveCreaterUtil.getAllianceMove(game, player, planets2, satellites2, AllianceBonus.POINTS, 0);
+		IMove allianceMove1 = MoveCreaterUtil.getAllianceMove(player.getUsername(), planets1, satellites1, AllianceBonus.MILITARY_RANGE, 0);
+		IMove allianceMove2 = MoveCreaterUtil.getAllianceMove(player.getUsername(), planets2, satellites2, AllianceBonus.POINTS, 0);
 		
 		//illegal moves
 		Field[] planets3 = new Field[] {fields.get(new Position(1, 1)), fields.get(new Position(0, 3)), fields.get(new Position(2, 0))};//valid
@@ -256,9 +260,9 @@ class GameTest {
 		Field[] satellites4 = new Field[] {fields.get(new Position(2, 1)), fields.get(new Position(3, 0))};//more than needed but possible
 		Field[] planets5 = new Field[] {fields.get(new Position(0, 0)), fields.get(new Position(1, 1)), fields.get(new Position(2, 0))};//valid
 		Field[] satellites5 = new Field[] {fields.get(new Position(1, 0))};//valid
-		IMove allianceMove3 = MoveCreaterUtil.getAllianceMove(game, player, planets3, satellites3, AllianceBonus.PRIMARY_RESOURCES, 0);
-		IMove allianceMove4 = MoveCreaterUtil.getAllianceMove(game, player, planets4, satellites4, AllianceBonus.SCIENTISTS, 0);
-		IMove allianceMove5 = MoveCreaterUtil.getAllianceMove(game, player, planets5, satellites5, null, 0);//alliance possible but no bonus chosen
+		IMove allianceMove3 = MoveCreaterUtil.getAllianceMove(player.getUsername(), planets3, satellites3, AllianceBonus.PRIMARY_RESOURCES, 0);
+		IMove allianceMove4 = MoveCreaterUtil.getAllianceMove(player.getUsername(), planets4, satellites4, AllianceBonus.SCIENTISTS, 0);
+		IMove allianceMove5 = MoveCreaterUtil.getAllianceMove(player.getUsername(), planets5, satellites5, null, 0);//alliance possible but no bonus chosen
 		
 		assertTrue(game.isMoveExecutable(allianceMove1));
 		assertTrue(game.isMoveExecutable(allianceMove2));
@@ -276,15 +280,15 @@ class GameTest {
 		resourceManager.setResearchPoints(5);
 		
 		//valid moves
-		IMove researchMoveMines = MoveCreaterUtil.getResearchMove(game, player, ResearchArea.MINES);
-		IMove researchMoveEconomy = MoveCreaterUtil.getResearchMove(game, player, ResearchArea.ECONOMY);
-		IMove researchMoveWeapon = MoveCreaterUtil.getResearchMove(game, player, ResearchArea.WEAPON);
+		IMove researchMoveMines = MoveCreaterUtil.getResearchMove(player.getUsername(), ResearchArea.MINES);
+		IMove researchMoveEconomy = MoveCreaterUtil.getResearchMove(player.getUsername(), ResearchArea.ECONOMY);
+		IMove researchMoveWeapon = MoveCreaterUtil.getResearchMove(player.getUsername(), ResearchArea.WEAPON);
 		
 		//invalid moves
 		//increase the military state because state 2 is not accessible
 		IResearchManager researchManager = player.getResearchManager();
 		researchManager.increaseState(ResearchArea.MILITARY);
-		IMove researchMoveMilitary = MoveCreaterUtil.getResearchMove(game, player, ResearchArea.MILITARY);
+		IMove researchMoveMilitary = MoveCreaterUtil.getResearchMove(player.getUsername(), ResearchArea.MILITARY);
 		
 		assertTrue(game.isMoveExecutable(researchMoveMines));
 		assertTrue(game.isMoveExecutable(researchMoveEconomy));
@@ -292,6 +296,13 @@ class GameTest {
 		
 		assertFalse(game.isMoveExecutable(researchMoveMilitary));
 		
+		//after adding the resources the military research becomes possible
+		IMove addMilitaryResources = MoveCreaterUtil.getResearchResourcesMove(player.getUsername(), ResearchArea.MILITARY,
+				new ResearchResources(2, 2, 2, 0));
+		game.executeMove(addMilitaryResources);
+		assertTrue(game.isMoveExecutable(researchMoveMilitary));
+		
+		//after resetting the research points there are no more researches possible 
 		resourceManager.setResearchPoints(0);
 		assertFalse(game.isMoveExecutable(researchMoveMines));
 	}
@@ -304,13 +315,15 @@ class GameTest {
 		resourceManager.addResources(new ResearchResources(5, 5, 5, 2));
 		
 		//valid moves
-		IMove researchResourcesMove = MoveCreaterUtil.getResearchResourcesMove(game, player, ResearchArea.FTL, new ResearchResources(2, 2, 2, 0));
+		IMove researchResourcesMove = MoveCreaterUtil.getResearchResourcesMove(player.getUsername(), ResearchArea.FTL,
+				new ResearchResources(2, 2, 2, 0));
 		
 		//invalid moves
-		IMove researchResourcesMoveToManyResources = MoveCreaterUtil.getResearchResourcesMove(game, player, ResearchArea.FTL,
+		IMove researchResourcesMoveToManyResources = MoveCreaterUtil.getResearchResourcesMove(player.getUsername(), ResearchArea.FTL,
 				new ResearchResources(5, 5, 5, 0));
-		IMove researchResourcesMoveEmpty = MoveCreaterUtil.getResearchResourcesMove(game, player, ResearchArea.MILITARY, new ResearchResources());
-		IMove researchResourcesMoveNoResourcesNeeded = MoveCreaterUtil.getResearchResourcesMove(game, player, ResearchArea.MINES,
+		IMove researchResourcesMoveEmpty = MoveCreaterUtil.getResearchResourcesMove(player.getUsername(), ResearchArea.MILITARY,
+				new ResearchResources());
+		IMove researchResourcesMoveNoResourcesNeeded = MoveCreaterUtil.getResearchResourcesMove(player.getUsername(), ResearchArea.MINES,
 				new ResearchResources(2, 2, 2, 0));
 		
 		assertTrue(game.isMoveExecutable(researchResourcesMove));
@@ -326,8 +339,8 @@ class GameTest {
 		Player player = game.getPlayers().get(0);
 		Player player2 = game.getPlayers().get(1);
 		
-		IMove pass = MoveCreaterUtil.getPassMove(game, player);
-		IMove pass2 = MoveCreaterUtil.getPassMove(game, player2);
+		IMove pass = MoveCreaterUtil.getPassMove(player.getUsername());
+		IMove pass2 = MoveCreaterUtil.getPassMove(player2.getUsername());
 		
 		//passing is always executable as long as it's the players turn
 		assertTrue(game.isMoveExecutable(pass));

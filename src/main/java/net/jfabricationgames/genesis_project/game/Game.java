@@ -1,18 +1,27 @@
 package net.jfabricationgames.genesis_project.game;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import net.jfabricationgames.genesis_project.game_frame.GameFrameController;
 import net.jfabricationgames.genesis_project.game_frame.PlayerInfo;
+import net.jfabricationgames.genesis_project.json.serializer.SerializationIdGenerator;
 import net.jfabricationgames.genesis_project.manager.AllianceManagerCompositum;
 import net.jfabricationgames.genesis_project.manager.GamePointManager;
 import net.jfabricationgames.genesis_project.manager.IAllianceManager;
 import net.jfabricationgames.genesis_project.manager.IBuildingManager;
+import net.jfabricationgames.genesis_project.manager.IGamePointManager;
 import net.jfabricationgames.genesis_project.manager.IResearchManager;
 import net.jfabricationgames.genesis_project.manager.IResourceManager;
 import net.jfabricationgames.genesis_project.manager.ITurnManager;
@@ -20,7 +29,13 @@ import net.jfabricationgames.genesis_project.manager.ResearchManagerCompositum;
 import net.jfabricationgames.genesis_project.manager.TurnManager;
 import net.jfabricationgames.genesis_project.move.IMove;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "jsonSerializationId")
 public class Game {
+	
+	//final id for json serialization
+	private final int jsonSerializationId = SerializationIdGenerator.getNextId();
+	
+	private int id;
 	
 	private List<Player> players;
 	private transient String localPlayerName;
@@ -30,13 +45,23 @@ public class Game {
 	private ITurnManager turnManager;
 	private IResearchManager researchManager;
 	private IAllianceManager allianceManager;
-	private GamePointManager pointManager;
+	private IGamePointManager pointManager;
 	
 	private ObservableList<PlayerInfo> playerInfoList;
 	
+	@JsonIgnore
 	private GameFrameController gameFrameController;
 	
-	public Game(List<Player> players, String localPlayerName) {
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public Game() {
+		
+	}
+	
+	public Game(int id, List<Player> players, String localPlayerName) {
+		this.id = id;
 		this.players = players;
 		this.localPlayerName = localPlayerName;
 		this.board = new Board();
@@ -67,11 +92,12 @@ public class Game {
 	public void executeMove(IMove move) {
 		Objects.requireNonNull(move, "Can't execute a move that is null");
 		
-		Player player;
+		Player player = getPlayer(move.getPlayer());
 		ResearchArea area;
-		IResourceManager resourceManager;
+		IResourceManager localResourceManager;
+		IResearchManager localResearchManager;
 		
-		if (!turnManager.isPlayersTurn(move.getPlayer())) {
+		if (!turnManager.isPlayersTurn(player)) {
 			throw new IllegalArgumentException(
 					"It's not the players turn (move from player: " + move.getPlayer() + "; current player: " + turnManager.getActivePlayer() + ")");
 		}
@@ -80,7 +106,7 @@ public class Game {
 			case BUILD:
 				Building building = move.getBuilding();
 				Field field = move.getField();
-				IBuildingManager buildingManager = move.getPlayer().getBuildingManager();
+				IBuildingManager buildingManager = player.getBuildingManager();
 				buildingManager.build(building, field);
 				turnManager.nextMove();
 				break;
@@ -90,7 +116,7 @@ public class Game {
 				AllianceBonus bonus = move.getAllianceBonus();
 				int bonusIndex = move.getAllianceBonusIndex();
 				
-				IAllianceManager allianceManager = move.getPlayer().getAllianceManager();
+				IAllianceManager allianceManager = player.getAllianceManager();
 				allianceManager.addAlliance(planets, satellites, bonus, bonusIndex);
 				turnManager.nextMove();
 				break;
@@ -98,28 +124,27 @@ public class Game {
 				area = move.getResearchArea();
 				
 				//pay here because not everyone pays for a WEAPON increase but everyone gets the increase
-				int currentState = move.getPlayer().getResearchManager().getState(area);
+				int currentState = player.getResearchManager().getState(area);
 				int nextState = currentState + 1;
 				
-				player = move.getPlayer();
-				researchManager = player.getResearchManager();
-				resourceManager = player.getResourceManager();
-				int researchPointsNeeded = Constants.RESEARCH_POINTS_FOR_STATE_INCREASE;
-				int researchScientistsNeeded = Constants.RESEARCH_SCIENTISTS_FOR_LOW_STATE;
-				if (nextState >= Constants.RESEARCH_STATE_HIGH) {
-					researchScientistsNeeded = Constants.RESEARCH_SCIENTISTS_FOR_HIGH_STATE;
+				localResearchManager = player.getResearchManager();
+				localResourceManager = player.getResourceManager();
+				int researchPointsNeeded = Constants.getInstance().RESEARCH_POINTS_FOR_STATE_INCREASE;
+				int researchScientistsNeeded = Constants.getInstance().RESEARCH_SCIENTISTS_FOR_LOW_STATE;
+				if (nextState >= Constants.getInstance().RESEARCH_STATE_HIGH) {
+					researchScientistsNeeded = Constants.getInstance().RESEARCH_SCIENTISTS_FOR_HIGH_STATE;
 				}
 				
-				resourceManager.reduceResources(Resource.RESEARCH_POINTS, researchPointsNeeded);
-				resourceManager.reduceResources(Resource.SCIENTISTS, researchScientistsNeeded);
+				localResourceManager.reduceResources(Resource.RESEARCH_POINTS, researchPointsNeeded);
+				localResourceManager.reduceResources(Resource.SCIENTISTS, researchScientistsNeeded);
 				
 				if (area == ResearchArea.WEAPON) {
 					//WEAPON upgrades are executed on the global IResearchManager (composite)
-					researchManager.increaseState(area);
+					this.researchManager.increaseState(area);
 				}
 				else {
 					//other ResearchAreas are executed locally on the player's IResearchManager
-					move.getPlayer().getResearchManager().increaseState(area);
+					localResearchManager.increaseState(area);
 				}
 				turnManager.nextMove();
 				break;
@@ -128,14 +153,12 @@ public class Game {
 				area = move.getResearchArea();
 				
 				//pay here because resources are added on the global manager that has no player references
-				player = move.getPlayer();
-				resourceManager = player.getResourceManager();
-				resourceManager.reduceResources(resources);
+				localResourceManager = player.getResourceManager();
+				localResourceManager.reduceResources(resources);
 				
-				researchManager.addResearchResources(resources, area);
+				this.researchManager.addResearchResources(resources, area);
 				break;
 			case PASS:
-				player = move.getPlayer();
 				turnManager.playerPassed(player);
 				turnManager.nextMove();
 				break;
@@ -158,13 +181,12 @@ public class Game {
 		
 		boolean moveExecutable = true;
 		
-		//it has to be the players turn for every move
-		moveExecutable &= turnManager.isPlayersTurn(move.getPlayer());
-		
 		ResearchArea area;
-		Player player;
-		IResourceManager resourceManager;
-		IResearchManager researchManager;
+		Player player = getPlayer(move.getPlayer());
+		IResourceManager localResourceManager;
+		
+		//it has to be the players turn for every move
+		moveExecutable &= turnManager.isPlayersTurn(player);
 		
 		switch (move.getType()) {
 			case BUILD:
@@ -173,11 +195,10 @@ public class Game {
 				Building building = move.getBuilding();
 				
 				//the IBuildingManager checks for the resources available
-				moveExecutable &= move.getPlayer().getBuildingManager().canBuild(building, field);
+				moveExecutable &= player.getBuildingManager().canBuild(building, field);
 				break;
 			case ALLIANCE:
 				//enough buildings, government or city included, planets, opponent's buildings, none already in an alliance of this player
-				player = move.getPlayer();
 				IAllianceManager allianceManager = player.getAllianceManager();
 				List<Field> planets = move.getAlliancePlanets();
 				List<Field> satellites = move.getSatelliteFields();
@@ -189,20 +210,19 @@ public class Game {
 			case RESEARCH:
 				//the research step has to be accessible and the player has to have the needed research points
 				area = move.getResearchArea();
-				int currentState = move.getPlayer().getResearchManager().getState(area);
+				int currentState = player.getResearchManager().getState(area);
 				int nextState = currentState + 1;
 				
-				researchManager = move.getPlayer().getResearchManager();
-				resourceManager = move.getPlayer().getResourceManager();
-				int researchPointsNeeded = Constants.RESEARCH_POINTS_FOR_STATE_INCREASE;
-				int researchScientistsNeeded = Constants.RESEARCH_SCIENTISTS_FOR_LOW_STATE;
-				if (nextState >= Constants.RESEARCH_STATE_HIGH) {
-					researchScientistsNeeded = Constants.RESEARCH_SCIENTISTS_FOR_HIGH_STATE;
+				localResourceManager = player.getResourceManager();
+				int researchPointsNeeded = Constants.getInstance().RESEARCH_POINTS_FOR_STATE_INCREASE;
+				int researchScientistsNeeded = Constants.getInstance().RESEARCH_SCIENTISTS_FOR_LOW_STATE;
+				if (nextState >= Constants.getInstance().RESEARCH_STATE_HIGH) {
+					researchScientistsNeeded = Constants.getInstance().RESEARCH_SCIENTISTS_FOR_HIGH_STATE;
 				}
 				
-				boolean stateAccessible = move.getPlayer().getResearchManager().isStateAccessible(area, nextState);
-				boolean resourcesAvialable = resourceManager.isResourceAvailable(Resource.RESEARCH_POINTS, researchPointsNeeded);
-				resourcesAvialable &= resourceManager.isResourceAvailable(Resource.SCIENTISTS, researchScientistsNeeded);
+				boolean stateAccessible = this.researchManager.isStateAccessible(area, nextState);
+				boolean resourcesAvialable = localResourceManager.isResourceAvailable(Resource.RESEARCH_POINTS, researchPointsNeeded);
+				resourcesAvialable &= localResourceManager.isResourceAvailable(Resource.SCIENTISTS, researchScientistsNeeded);
 				
 				moveExecutable &= stateAccessible & resourcesAvialable;
 				break;
@@ -210,16 +230,14 @@ public class Game {
 				//the player has to have the resources and the resources have to be needed
 				ResearchResources resourcesAdded = move.getResearchResources();
 				
-				player = move.getPlayer();
-				researchManager = player.getResearchManager();
 				moveExecutable &= player.getResourceManager().isResourcesAvailable(resourcesAdded);
 				moveExecutable &= !move.getResearchResources().isEmpty();
 				
 				area = move.getResearchArea();
-				int nextResoucesNeedingState = researchManager.getNextResourceNeedingState(area);
+				int nextResoucesNeedingState = this.researchManager.getNextResourceNeedingState(area);
 				
 				if (nextResoucesNeedingState != -1) {
-					ResearchResources neededLeft = researchManager.getResearchResourcesNeededLeft(area, nextResoucesNeedingState);
+					ResearchResources neededLeft = this.researchManager.getResearchResourcesNeededLeft(area, nextResoucesNeedingState);
 					
 					for (Resource resource : ResearchResources.RESEARCH_RESOURCES) {
 						moveExecutable &= neededLeft.getResources(resource) >= resourcesAdded.getResources(resource);
@@ -240,6 +258,26 @@ public class Game {
 		return moveExecutable;
 	}
 	
+	/**
+	 * Merge the new game (that was loaded from the server) into this game.
+	 */
+	public void merge(Game game) {
+		//override players
+		players = game.getPlayers();
+		//override board and managers
+		board = game.getBoard();
+		turnManager = game.getTurnManager();
+		researchManager = game.getResearchManager();
+		allianceManager = game.getAllianceManager();
+		pointManager = game.getPointManager();
+		//clear and refill the player info list
+		playerInfoList.clear();
+		playerInfoList.addAll(players.stream().map(p -> new PlayerInfo(p)).collect(Collectors.toList()));
+		
+		//TODO update the complete UI
+		//gameFrameController.updateAll();
+	}
+	
 	private void updatePlayerInfo() {
 		List<PlayerInfo> newPlayerInfo = players.stream().map(p -> new PlayerInfo(p)).collect(Collectors.toList());
 		playerInfoList.clear();
@@ -252,15 +290,20 @@ public class Game {
 	private void updateBoard() {
 		if (gameFrameController != null) {
 			//only if the controller is already set (will not be set in tests)
-			gameFrameController.getBoardPaneController().buildField();			
+			gameFrameController.getBoardPaneController().buildField();
 		}
+	}
+	
+	public Player getPlayer(String name) throws IllegalArgumentException {
+		return players.stream().filter(p -> p.getUsername().equals(name)).findAny()
+				.orElseThrow(() -> new IllegalArgumentException("A player with this username (" + name + ") doesn't exist in this game"));
 	}
 	
 	public List<Player> getPlayers() {
 		return players;
 	}
 	public Player getLocalPlayer() {
-		Optional<Player> local = players.stream().filter(p -> p.getUser().getUsername().equals(localPlayerName)).findFirst();
+		Optional<Player> local = players.stream().filter(p -> p.getUsername().equals(localPlayerName)).findFirst();
 		return local.orElseThrow(() -> new IllegalStateException("No local player found."));
 	}
 	
@@ -281,7 +324,7 @@ public class Game {
 	public IAllianceManager getAllianceManager() {
 		return allianceManager;
 	}
-	public GamePointManager getPointManager() {
+	public IGamePointManager getPointManager() {
 		return pointManager;
 	}
 	
@@ -290,5 +333,25 @@ public class Game {
 	}
 	public void setGameFrameController(GameFrameController gameFrameController) {
 		this.gameFrameController = gameFrameController;
+	}
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	public int getJsonSerializationId() {
+		return jsonSerializationId;
+	}
+	
+	@JsonGetter("playerInfoList")
+	public List<PlayerInfo> getPlayerInfoListAsArrayList() {
+		return new ArrayList<PlayerInfo>(playerInfoList);
+	}
+	@JsonSetter("playerInfoList")
+	public void setPlayerInfoListFromList(List<PlayerInfo> playerInfoList) {
+		this.playerInfoList = FXCollections.observableArrayList(playerInfoList);
 	}
 }

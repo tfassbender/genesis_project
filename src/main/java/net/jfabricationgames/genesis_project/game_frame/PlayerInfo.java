@@ -30,12 +30,20 @@ public class PlayerInfo {
 	private int drones;
 	private int spaceStations;
 	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public PlayerInfo() {
+		
+	}
+	
 	public PlayerInfo(Player player) {
 		initializeValues(player);
 	}
 	
 	private void initializeValues(Player player) {
-		name = player.getUser().getUsername();
+		name = player.getUsername();
 		points = player.getPointManager().getPoints();
 		planets = player.getGame().getBoard().getPlayersPlanets(player).size();
 		alliances = player.getAllianceManager().getAlliances().size();

@@ -16,6 +16,14 @@ public class AllianceManagerCompositum implements IAllianceManager {
 	
 	private AllianceManager globalAllianceManager;
 	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public AllianceManagerCompositum() {
+		
+	}
+	
 	public AllianceManagerCompositum(Game game) {
 		this.game = game;
 		globalAllianceManager = new AllianceManager(null);

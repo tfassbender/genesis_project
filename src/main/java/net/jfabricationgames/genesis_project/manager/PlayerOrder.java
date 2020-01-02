@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.annotations.VisibleForTesting;
 
 /**
@@ -16,7 +17,15 @@ public class PlayerOrder<T> {
 	private Map<Integer, T> order;//player order starting with 0
 	private Map<Integer, T> nextOrder;
 	private int move;
-	private final int players;
+	private int players;
+	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public PlayerOrder() {
+		
+	}
 	
 	public PlayerOrder(int players) {
 		order = new HashMap<Integer, T>();
@@ -174,6 +183,7 @@ public class PlayerOrder<T> {
 	 * 
 	 * @return Returns true if all players have passed.
 	 */
+	@JsonIgnore
 	public boolean isTurnEnd() {
 		return nextOrder.size() == players;
 	}

@@ -220,11 +220,11 @@ public class PlanetLayout extends Region {
 	}
 	
 	private IMove buildMove(Building building) {
-		MoveBuilder builder = new MoveBuilder(game);
+		MoveBuilder builder = new MoveBuilder();
 		builder.setType(MoveType.BUILD);
 		builder.setBuilding(building);
 		builder.setField(field);
-		builder.setPlayer(game.getLocalPlayer());
+		builder.setPlayer(game.getLocalPlayer().getUsername());
 		IMove move = builder.build();
 		
 		return move;

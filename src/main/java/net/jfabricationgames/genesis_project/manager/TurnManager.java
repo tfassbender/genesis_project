@@ -1,9 +1,13 @@
 package net.jfabricationgames.genesis_project.manager;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.google.common.annotations.VisibleForTesting;
 
 import javafx.beans.property.ObjectProperty;
@@ -28,6 +32,14 @@ public class TurnManager implements ITurnManager {
 	private ObjectProperty<Player> currentPlayer;
 	
 	private Game game;
+	
+	/**
+	 * DO NOT USE - empty constructor for json deserialization
+	 */
+	@Deprecated
+	public TurnManager() {
+		
+	}
 	
 	public TurnManager(Game game) {
 		this.game = game;
@@ -82,7 +94,7 @@ public class TurnManager implements ITurnManager {
 		//TODO implement technology bonus, ...
 		
 		totalPoints += turnGoalPoints;
-		Player player = move.getPlayer();
+		Player player = game.getPlayer(move.getPlayer());
 		player.getPointManager().addPoints(totalPoints);
 	}
 	
@@ -107,7 +119,7 @@ public class TurnManager implements ITurnManager {
 	
 	@Override
 	public boolean gameEnded() {
-		return turn >= Constants.TURNS_PLAYED;
+		return turn >= Constants.getInstance().TURNS_PLAYED;
 	}
 	
 	@Override
@@ -165,6 +177,7 @@ public class TurnManager implements ITurnManager {
 	}
 	
 	@Override
+	@JsonIgnore
 	public boolean isTurnEnd() {
 		return playerOrder.isTurnEnd();
 	}
@@ -172,5 +185,32 @@ public class TurnManager implements ITurnManager {
 	@Override
 	public ObjectProperty<Player> getCurrentPlayerProperty() {
 		return currentPlayer;
+	}
+	
+	@JsonGetter("currentTurnPlayerOrder")
+	public List<Player> getCurrentTurnPlayerOrderAsArrayList() {
+		return new ArrayList<Player>(currentTurnPlayerOrder);
+	}
+	@JsonSetter("currentTurnPlayerOrder")
+	public void setCurrentTurnPlayerOrderFromList(List<Player> currentTurnPlayerOrder) {
+		this.currentTurnPlayerOrder = FXCollections.observableArrayList(currentTurnPlayerOrder);
+	}
+	
+	@JsonGetter("nextTurnPlayerOrder")
+	public List<Player> getNextTurnPlayerOrderAsArrayList() {
+		return new ArrayList<Player>(nextTurnPlayerOrder);
+	}
+	@JsonSetter("nextTurnPlayerOrder")
+	public void setNextTurnPlayerOrderFromList(List<Player> nextTurnPlayerOrder) {
+		this.nextTurnPlayerOrder = FXCollections.observableArrayList(nextTurnPlayerOrder);
+	}
+	
+	@JsonGetter("currentPlayer")
+	public Player getCurrentPlayerWithoutProperty() {
+		return currentPlayer.get();
+	}
+	@JsonSetter("currentPlayer")
+	public void setCurrentPlayerWithoutProperty(Player player) {
+		this.currentPlayer = new SimpleObjectProperty<Player>(player);
 	}
 }
