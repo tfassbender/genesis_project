@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -157,6 +158,15 @@ public class GameManager implements NotificationMessageListener {
 	public String getLocalPlayer() {
 		//added this method to simplify the code a bit
 		return UserManager.getInstance().getLocalUsername();
+	}
+	
+	/**
+	 * Get a list of all players that participate in a game
+	 */
+	public List<String> getPlayers(int gameId) throws IllegalArgumentException {
+		testGameId(gameId);
+		Game game = games.get(gameId);
+		return game.getPlayers().stream().map(p -> p.getUsername()).collect(Collectors.toList());
 	}
 	
 	@Override

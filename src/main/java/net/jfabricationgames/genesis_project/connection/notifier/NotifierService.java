@@ -15,7 +15,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.jfabricationgames.genesis_project.connection.GenesisClient;
-import net.jfabricationgames.genesis_project.game.Player;
 
 public class NotifierService {
 	
@@ -93,15 +92,15 @@ public class NotifierService {
 	/**
 	 * Use the notifier service to inform other players about any changes.
 	 */
-	public Response informPlayers(String message, Player... players) {
+	public Response informPlayers(String message, String... players) {
 		return informPlayers(message, Arrays.asList(players));
 	}
 	/**
 	 * Use the notifier service to inform other players about any changes.
 	 */
-	public Response informPlayers(String message, List<Player> players) {
+	public Response informPlayers(String message, List<String> players) {
 		//map the players to their usernames with the default prefix for the notifier service
-		List<String> usernames = players.stream().map(p -> NotifierService.USERNAME_PREFIX + p.getUsername()).collect(Collectors.toList());
+		List<String> usernames = players.stream().map(p -> NotifierService.USERNAME_PREFIX + p).collect(Collectors.toList());
 		Notification notification = new Notification(message, username, usernames);
 		return sendNotifierRequest("notify", "POST", Entity.entity(notification, MediaType.APPLICATION_JSON));
 	}
