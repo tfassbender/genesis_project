@@ -9,11 +9,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import net.jfabricationgames.genesis_project.connection.AbstractGenesisClientEventSubscriber;
 import net.jfabricationgames.genesis_project.connection.GenesisClient;
 import net.jfabricationgames.genesis_project.connection.exception.AuthenticationException;
@@ -29,15 +33,15 @@ public class LoginFrameController implements Initializable {
 	public static final int PASSWORD_MIN_CHARS = 5;
 	
 	@FXML
-	private TextField textAreaName;
+	private TextField textFieldName;
 	@FXML
 	private PasswordField passwordField;
 	@FXML
 	private Button buttonLogin;
 	@FXML
 	private Button buttonNewAccount;
-    @FXML
-    private Label labelLoading;
+	@FXML
+	private Label labelLoading;
 	
 	private GenesisClient genesisClient;
 	
@@ -54,61 +58,99 @@ public class LoginFrameController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		buttonLogin.setOnAction(e -> login());
+		buttonNewAccount.setOnAction(e -> createNewUser());
+	}
+	
+	private void createNewUser() {
+		try {
+			URL fxmlUrl = getClass().getResource("/net/jfabricationgames/genesis_project/main_menu/SignUpFrame.fxml");
+			FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl);
+			fxmlLoader.setController(new SignUpFrameController(this));
+			Parent root = fxmlLoader.load();
+			Scene scene = new Scene(root);
+			Stage stage = new Stage();
+			stage.setTitle("Benutzer erstellen - Genesis Project");
+			stage.setScene(scene);
+			stage.show();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void login() {
-		String username = textAreaName.getText();
+		String username = textFieldName.getText();
 		String password = passwordField.getText();
 		
-		//test username and password conditions
-		if (genesisClient == null) {
-			DialogUtils.showErrorDialog("Verbindungsprobleme", "Serververbindung konnte nicht hergestellt werden", "", true);
-			return;
+		if (isUsernameAndPasswordValid(username, password)) {
+			if (genesisClient == null) {
+				DialogUtils.showErrorDialog("Verbindungsprobleme", "Serververbindung konnte nicht hergestellt werden", "", true);
+				return;
+			}
+			
+			//login using an asynchron client request
+			genesisClient.verifyUserAsync(username, password, new AbstractGenesisClientEventSubscriber() {
+				
+				@Override
+				public void receiveVerifyUserSuccessful() {
+					labelLoading.setText("");
+					//TODO open main menu
+				}
+				
+				@Override
+				public void receiveException(GenesisServerException exception) {
+					labelLoading.setText("");
+					if (exception instanceof AuthenticationException) {
+						DialogUtils.showErrorDialog("Login nicht erfolgreich", "Der Benutzername oder das Passwort sind falsch", "", true);
+					}
+					else if (exception instanceof InvalidRequestException) {
+						DialogUtils.showErrorDialog("Login nicht erfolgreich", "Dieser Benutzername wurde nicht gefunden", "", true);
+					}
+					else {
+						DialogUtils.showExceptionDialog("Login nicht erfolgreich", "Unbekannter Fehler", exception, false);
+					}
+				}
+			});
+			
+			labelLoading.setText("Login wird bearteitet...");
 		}
+	}
+	
+	protected static boolean isUsernameAndPasswordValid(String username, String password) {
+		//test username and password conditions
 		if (username == null || username.length() < USERNAME_MIN_CHARS) {
 			DialogUtils.showErrorDialog("Ungültiger Name", "Der name ist zu kurz (mindestens " + USERNAME_MIN_CHARS + " Zeichen)", "", true);
-			return;
+			return false;
 		}
 		if (!isUsernameValid(username)) {
 			DialogUtils.showErrorDialog("Ungültiger Name", "Ein Benutzername darf nur die Zeichen a-z, A-Z, 0-9, _ oder - enthallten", "", true);
-			return;
+			return false;
 		}
 		if (password == null || password.length() < PASSWORD_MIN_CHARS) {
 			DialogUtils.showErrorDialog("Ungültiges Password", "Das Password ist zu kurz (mindestens " + PASSWORD_MIN_CHARS + " Zeichen)", "", true);
-			return;
+			return false;
 		}
-		
-		//login using an asynchron client request
-		genesisClient.verifyUserAsync(username, password, new AbstractGenesisClientEventSubscriber() {
-			
-			@Override
-			public void receiveVerifyUserSuccessful() {
-				labelLoading.setText("");
-				//TODO open main menu
-			}
-			
-			@Override
-			public void receiveException(GenesisServerException exception) {
-				labelLoading.setText("");
-				if (exception instanceof AuthenticationException) {
-					DialogUtils.showErrorDialog("Login nicht erfolgreich", "Der Benutzername oder das Passwort sind falsch", "", true);
-				}
-				else if (exception instanceof InvalidRequestException) {
-					DialogUtils.showErrorDialog("Login nicht erfolgreich", "Dieser Benutzername wurde nicht gefunden", "", true);
-				}
-				else {
-					DialogUtils.showExceptionDialog("Login nicht erfolgreich", "Unbekannter Fehler", exception, false);
-				}
-			}
-		});
-		
-		labelLoading.setText("Login wird bearteitet...");
+		return true;
 	}
 	
-	protected boolean isUsernameValid(String username) {
+	protected static boolean isUsernameValid(String username) {
 		return username.length() >= USERNAME_MIN_CHARS && Pattern.matches("[a-zA-Z0-9_-]+", username);
 	}
-	protected boolean isPasswordValid(String password) {
+	protected static boolean isPasswordValid(String password) {
 		return password.length() >= PASSWORD_MIN_CHARS;
+	}
+	
+	public void setUsername(String username) {
+		textFieldName.setText(username);
+	}
+	
+	public void setVisible(boolean visible) {
+		Stage stage = ((Stage) labelLoading.getScene().getWindow());
+		if (visible) {
+			stage.show();
+		}
+		else {
+			stage.hide();
+		}
 	}
 }

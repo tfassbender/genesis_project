@@ -24,7 +24,7 @@ public class LoginApplication extends Application {
 			FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl);
 			fxmlLoader.setController(controller);
 			Parent root = fxmlLoader.load();
-			Scene scene = new Scene(root, 400, 200);
+			Scene scene = new Scene(root);
 			primaryStage.setTitle("Login - Genesis Project");
 			primaryStage.setScene(scene);
 			primaryStage.show();
