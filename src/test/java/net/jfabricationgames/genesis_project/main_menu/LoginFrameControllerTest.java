@@ -9,17 +9,16 @@ class LoginFrameControllerTest {
 	
 	@Test
 	public void testIsUsernameValid() {
-		LoginFrameController controller = new LoginFrameController();
-		assertTrue(controller.isUsernameValid("testUser"));
-		assertTrue(controller.isUsernameValid("test_user"));
-		assertTrue(controller.isUsernameValid("test_user_42"));
-		assertTrue(controller.isUsernameValid("42_test_42"));
-		assertTrue(controller.isUsernameValid("42-test-42"));
-		assertTrue(controller.isUsernameValid("__u-s-e-r__n-a-m-e__"));
-		assertTrue(controller.isUsernameValid("_TESTTEST_"));
+		assertTrue(LoginFrameController.isUsernameValid("testUser"));
+		assertTrue(LoginFrameController.isUsernameValid("test_user"));
+		assertTrue(LoginFrameController.isUsernameValid("test_user_42"));
+		assertTrue(LoginFrameController.isUsernameValid("42_test_42"));
+		assertTrue(LoginFrameController.isUsernameValid("42-test-42"));
+		assertTrue(LoginFrameController.isUsernameValid("__u-s-e-r__n-a-m-e__"));
+		assertTrue(LoginFrameController.isUsernameValid("_TESTTEST_"));
 		
-		assertFalse(controller.isUsernameValid("42"));
-		assertFalse(controller.isUsernameValid("test/name"));
-		assertFalse(controller.isUsernameValid("%$§!$§!$"));
+		assertFalse(LoginFrameController.isUsernameValid("42"));
+		assertFalse(LoginFrameController.isUsernameValid("test/name"));
+		assertFalse(LoginFrameController.isUsernameValid("%$§!$§!$"));
 	}
 }

@@ -72,6 +72,25 @@ public class LoginFrameController implements Initializable {
 			stage.setTitle("Benutzer erstellen - Genesis Project");
 			stage.setScene(scene);
 			stage.show();
+			
+			((Stage) labelLoading.getScene().getWindow()).close();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void startMainMenu() {
+		try {
+			URL fxmlUrl = getClass().getResource("/net/jfabricationgames/genesis_project/main_menu/MainMenuFrame.fxml");
+			FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl);
+			fxmlLoader.setController(new MainMenuController());
+			Parent root = fxmlLoader.load();
+			Scene scene = new Scene(root);
+			Stage stage = new Stage();
+			stage.setTitle("Main Menü - Genesis Project");
+			stage.setScene(scene);
+			stage.show();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -94,7 +113,7 @@ public class LoginFrameController implements Initializable {
 				@Override
 				public void receiveVerifyUserSuccessful() {
 					labelLoading.setText("");
-					//TODO open main menu
+					startMainMenu();
 				}
 				
 				@Override

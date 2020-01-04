@@ -77,8 +77,8 @@ public class SignUpFrameController implements Initializable {
 				@Override
 				public void receiveCreateUserSuccessful() {
 					Platform.runLater(() -> {
-						((Stage) labelLoading.getScene().getWindow()).close();
 						loginController.setVisible(true);
+						((Stage) labelLoading.getScene().getWindow()).close();
 					});
 				}
 				
