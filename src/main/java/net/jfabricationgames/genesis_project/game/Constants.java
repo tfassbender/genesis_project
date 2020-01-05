@@ -18,9 +18,8 @@ public class Constants {
 	private static Constants instance;
 	
 	/**
-	 * DO NOT USE - empty constructor for json deserialization
+	 * Only for basic start values
 	 */
-	@Deprecated
 	public Constants() {
 		
 	}
@@ -30,6 +29,12 @@ public class Constants {
 			instance = new Constants();
 		}
 		return instance;
+	}
+	/**
+	 * Set the constants to the ones that were loaded from the server
+	 */
+	public static synchronized void setConstants(Constants constants) {
+		instance = constants;
 	}
 	
 	//basic

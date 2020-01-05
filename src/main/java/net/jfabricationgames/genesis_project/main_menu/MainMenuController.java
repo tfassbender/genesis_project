@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -109,6 +111,9 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 			}
 		});
 		
+		//load the constants from the server
+		loadConstants();
+		
 		//load some news from the server
 		loadNews();
 		
@@ -121,6 +126,40 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 		//add button functions
 		buttonCreateGame.setOnAction(e -> createGame());
 		buttonLoadGame.setOnAction(e -> loadGame());
+	}
+	
+	/**
+	 * Load the constant values from the server
+	 */
+	private void loadConstants() {
+		if (genesisClient != null) {
+			genesisClient.getConfigAsync("constants", new AbstractGenesisClientEventSubscriber() {
+				
+				@Override
+				public void receiveGetConfigAnswer(String config) {
+					LOGGER.debug("received constants");
+					ObjectMapper mapper = new ObjectMapper();
+					try {
+						//"manually" parse JSON to Object
+						Constants constants = mapper.readValue(config, Constants.class);
+						Constants.setConstants(constants);
+					}
+					catch (IOException ioe) {
+						LOGGER.error("constants configuration couldn't be parsed", ioe);
+						LOGGER.error("constants configuration couldn't be parsed. Loaded constants were:\n{}", config);
+						DialogUtils.showExceptionDialog("Fehler bei der Serververbindung",
+								"Konfigurationsdaten (Spielkonstanten) konnten nicht geladen werden", ioe, false);
+					}
+				}
+				
+				@Override
+				public void receiveException(GenesisServerException exception) {
+					LOGGER.error("dynamic content couldn't be loaded", exception);
+					DialogUtils.showExceptionDialog("Fehler bei der Serververbindung",
+							"Konfigurationsdaten (Spielkonstanten) konnten nicht geladen werden", exception, false);
+				}
+			});
+		}
 	}
 	
 	/**
