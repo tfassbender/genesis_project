@@ -63,6 +63,13 @@ public class GameManager implements NotificationMessageListener {
 		return instance;
 	}
 	
+	/**
+	 * Add a new game (that was created or loaded from the server)
+	 */ 
+	public void addGame(int gameId, Game game) {
+		games.put(gameId, game);
+	}
+	
 	public void executeMove(int gameId, IMove move) throws IllegalArgumentException, InvalidMoveException {
 		LOGGER.debug("trying to execute move {}", move);
 		testGameId(gameId);

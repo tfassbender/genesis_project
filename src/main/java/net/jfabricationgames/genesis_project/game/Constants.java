@@ -42,6 +42,7 @@ public class Constants {
 	public int RESEARCH_SCIENTISTS_FOR_HIGH_STATE = 1;
 	public int RESEARCH_STATE_HIGH = 5;//5 or above
 	public int ALLIANCE_BONUS_COPIES = 2;
+	public int MAX_PLAYERS = 6;
 	
 	//alliances
 	public int ALLIANCE_MIN_PLANETS;

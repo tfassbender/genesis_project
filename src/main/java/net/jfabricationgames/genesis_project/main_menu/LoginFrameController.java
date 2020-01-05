@@ -76,7 +76,8 @@ public class LoginFrameController implements Initializable {
 			((Stage) labelLoading.getScene().getWindow()).close();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("SignUpFrame couldn't be loaded", e);
+			DialogUtils.showExceptionDialog("Fehler", "Der SignUpFrame konnte nicht geladen werden", e, true);
 		}
 	}
 	
@@ -93,7 +94,8 @@ public class LoginFrameController implements Initializable {
 			stage.show();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("MainMenu couldn't be loaded", e);
+			DialogUtils.showExceptionDialog("Fehler", "Das Main Menü konnte nicht geladen werden", e, true);
 		}
 	}
 	
