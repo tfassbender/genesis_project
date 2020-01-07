@@ -1,6 +1,5 @@
 package net.jfabricationgames.genesis_project.game_frame;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -8,16 +7,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class GameFrameController implements Initializable {
 	
-	private final Logger LOGGER = LogManager.getLogger(getClass());
+	@SuppressWarnings("unused")
+	private static final Logger LOGGER = LogManager.getLogger(GameFrameController.class);
 	
 	@FXML
 	private AnchorPane anchorBoardPane;
@@ -69,30 +67,31 @@ public class GameFrameController implements Initializable {
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		GuiUtils guiUtils = new GuiUtils();
 		boardPaneController = new BoardPaneController(gameId);
-		insertPane("BoardPane.fxml", anchorBoardPane, boardPaneController, null);
+		guiUtils.insertPane("BoardPane.fxml", anchorBoardPane, boardPaneController, null);
 		classPaneController = new ClassPaneController(gameId);
-		insertPane("ClassPane.fxml", anchorClassPane, classPaneController, null);
+		guiUtils.insertPane("ClassPane.fxml", anchorClassPane, classPaneController, null);
 		researchPaneController = new ResearchPaneController(gameId);
-		insertPane("ResearchPane.fxml", anchorResearchPane, researchPaneController, null);
+		guiUtils.insertPane("ResearchPane.fxml", anchorResearchPane, researchPaneController, null);
 		technologyPaneController = new TechnologyPaneController(gameId);
-		insertPane("TechnologyPane.fxml", anchorTechnologyPane, technologyPaneController, null);
+		guiUtils.insertPane("TechnologyPane.fxml", anchorTechnologyPane, technologyPaneController, null);
 		alliancePaneController = new AlliancePaneController(gameId);
-		insertPane("AlliancePane.fxml", anchorAlliancePanel, alliancePaneController, null);
+		guiUtils.insertPane("AlliancePane.fxml", anchorAlliancePanel, alliancePaneController, null);
 		turnPaneController = new TurnPaneController(gameId);
-		insertPane("TurnPane.fxml", anchorTurnPane, turnPaneController, null);
+		guiUtils.insertPane("TurnPane.fxml", anchorTurnPane, turnPaneController, null);
 		planetInfoPaneController = new PlanetInfoPaneController(gameId);
-		insertPane("PlanetInfoPane.fxml", anchorPlanetInfoPane, planetInfoPaneController, null);
+		guiUtils.insertPane("PlanetInfoPane.fxml", anchorPlanetInfoPane, planetInfoPaneController, null);
 		planingToolPaneController = new PlaningToolPaneController(gameId);
-		insertPane("PlaningToolPane.fxml", anchorPlaningToolPane, planingToolPaneController, null);
+		guiUtils.insertPane("PlaningToolPane.fxml", anchorPlaningToolPane, planingToolPaneController, null);
 		attackPaneController = new AttackPaneController(gameId);
-		insertPane("AttackPane.fxml", anchorAttackPane, attackPaneController, null);
+		guiUtils.insertPane("AttackPane.fxml", anchorAttackPane, attackPaneController, null);
 		gameOverviewPaneController = new GameOverviewPaneController(gameId);
-		insertPane("GameOverviewPane.fxml", anchorGameOverviewPane, gameOverviewPaneController, null);
+		guiUtils.insertPane("GameOverviewPane.fxml", anchorGameOverviewPane, gameOverviewPaneController, null);
 		costOverviewPaneController = new CostOverviewPaneController(gameId);
-		insertPane("CostOverviewPane.fxml", anchorCostOverviewPane, costOverviewPaneController, null);
+		guiUtils.insertPane("CostOverviewPane.fxml", anchorCostOverviewPane, costOverviewPaneController, null);
 		chatPaneController = new ChatPaneController(gameId);
-		insertPane("ChatPane.fxml", anchorChatPane, chatPaneController, null);
+		guiUtils.insertPane("ChatPane.fxml", anchorChatPane, chatPaneController, null);
 	}
 	
 	/**
@@ -116,27 +115,6 @@ public class GameFrameController implements Initializable {
 	private void addIcon() {
 		String iconPath = "net/jfabricationgames/genesis_project/images/basic/icon.png";
 		stage.getIcons().add(new Image(iconPath));
-	}
-	
-	private void insertPane(String fxmlFileName, AnchorPane parent, Initializable controller, String cssFileName) {
-		try {
-			URL fxmlUrl = getClass().getResource(fxmlFileName);
-			FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl);
-			fxmlLoader.setController(controller);
-			Parent pane = fxmlLoader.load();
-			if (cssFileName != null) {
-				pane.getStylesheets().add(getClass().getResource(cssFileName).toExternalForm());
-			}
-			parent.getChildren().add(pane);
-			AnchorPane.setBottomAnchor(pane, 0d);
-			AnchorPane.setTopAnchor(pane, 0d);
-			AnchorPane.setLeftAnchor(pane, 0d);
-			AnchorPane.setRightAnchor(pane, 0d);
-		}
-		catch (IOException ioe) {
-			ioe.printStackTrace();
-			LOGGER.error("An exception occured while inserting a pane to the main frame", ioe);
-		}
 	}
 	
 	public BoardPaneController getBoardPaneController() {

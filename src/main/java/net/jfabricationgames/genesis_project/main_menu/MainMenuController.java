@@ -39,6 +39,7 @@ import net.jfabricationgames.genesis_project.game.Game;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game_frame.DialogUtils;
 import net.jfabricationgames.genesis_project.game_frame.GameFrameController;
+import net.jfabricationgames.genesis_project.game_frame.pre_game.PreGameSelectionController;
 import net.jfabricationgames.genesis_project.manager.GameManager;
 import net.jfabricationgames.genesis_project.user.UserManager;
 import net.jfabricationgames.genesis_project.user.UserStateListener;
@@ -52,6 +53,7 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 	public static final String NOTIFIER_PREFIX_GLOBAL_CHAT = "global_chat/";
 	public static final String NOTIFIER_PREFIX_GAME_INVITATION = "game_invitation/";
 	public static final String NOTIFIER_PREFIX_GAME_INVITATION_ANSWER = "invitation_answer/";
+	public static final String NOTIFIER_PREFIX_GAME_STARTED = "game_started/";
 	
 	@FXML
 	private TextArea textAreaChat;
@@ -315,8 +317,14 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 				Game game = new Game(gameId, players, UserManager.getInstance().getLocalUsername());
 				//add the game to the manager
 				GameManager.getInstance().addGame(gameId, game);
+				
 				//start the pre-game selections
 				startPreGameFrame(gameId);
+				
+				//inform all other players about the started game
+				List<String> playersInvited = new ArrayList<String>(playersAsked);
+				playersInvited.remove(UserManager.getInstance().getLocalUsername());
+				notifier.informPlayers(NOTIFIER_PREFIX + NOTIFIER_PREFIX_GAME_STARTED + gameId, playersInvited);
 			}
 			
 			@Override
@@ -333,6 +341,31 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 		});
 	}
 	
+	private void downloadGame(int gameId) {
+		genesisClient.getGameAsync(gameId, new AbstractGenesisClientEventSubscriber() {
+			
+			@Override
+			public void receiveGetGameAnswer(Game game) {
+				//add the game to the manager and start the game frame
+				GameManager.getInstance().addGame(gameId, game);
+			}
+			
+			@Override
+			public void receiveException(GenesisServerException exception) {
+				if (exception instanceof InvalidRequestException) {
+					LOGGER.error("game id was not found", exception);
+					DialogUtils.showErrorDialog("Fehler", "Spiel konnte nicht geladen werden", "Das Spiel wurde nicht in der Datenbank gefunden",
+							true);
+				}
+				else {
+					LOGGER.error("unknown error whil loading the game", exception);
+					DialogUtils.showExceptionDialog("Fehler", "Spiel konnte nicht geladen werden - Ein Unbekannter Fehler ist aufgetreten", exception,
+							true);
+				}
+			}
+		});
+	}
+	
 	/**
 	 * Start the game frame after a game was loaded
 	 */
@@ -344,7 +377,7 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 			Parent root = fxmlLoader.load();
 			Scene scene = new Scene(root);
 			Stage stage = new Stage();
-			stage.setTitle("Benutzer erstellen - Genesis Project");
+			stage.setTitle("Genesis Project");
 			stage.setScene(scene);
 			stage.show();
 			
@@ -360,7 +393,23 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 	 * Start a pre-game frame (in which the first selections are made) after all players agreed to participate
 	 */
 	private void startPreGameFrame(int gameId) {
-		//TODO add after a PreGameFrame is implemented
+		try {
+			URL fxmlUrl = getClass().getResource("/net/jfabricationgames/genesis_project/game_frame/pre_game/PreGameSelectionFrame.fxml");
+			FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl);
+			fxmlLoader.setController(new PreGameSelectionController(gameId));
+			Parent root = fxmlLoader.load();
+			Scene scene = new Scene(root);
+			Stage stage = new Stage();
+			stage.setTitle("Genesis Project");
+			stage.setScene(scene);
+			stage.show();
+			
+			((Stage) buttonLoadGame.getScene().getWindow()).close();
+		}
+		catch (Exception e) {
+			LOGGER.error("GameFrame couldn't be loaded", e);
+			DialogUtils.showExceptionDialog("Fehler", "Der (Pre-)GameFrame konnte nicht geladen werden", e, true);
+		}
 	}
 	
 	/**
@@ -416,7 +465,7 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 							textAreaChat.appendText(username + ": " + message);
 						}
 						else {
-							LOGGER.error("Received global chat message with not enough content (splot.length: {} message: {})", split.length,
+							LOGGER.error("Received global chat message with not enough content (split.length: {} message: {})", split.length,
 									notificationMessage);
 						}
 						break;
@@ -427,21 +476,36 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 							showGameInvitationDialog(invitingPlayer, participatingPlayers);
 						}
 						else {
-							LOGGER.error("Received game invitation message with not enough content (splot.length: {} message: {})", split.length,
+							LOGGER.error("Received game invitation message with not enough content (split.length: {} message: {})", split.length,
 									notificationMessage);
 						}
 						break;
-					case NOTIFIER_PREFIX_GAME_INVITATION_ANSWER: {
+					case NOTIFIER_PREFIX_GAME_INVITATION_ANSWER:
 						if (split.length >= 4) {
 							String player = split[3];
 							boolean participating = Boolean.parseBoolean(split[4]);
 							receiveInvitationAnswer(player, participating);
 						}
 						else {
-							LOGGER.error("Received invitation answer message with not enough content (splot.length: {} message: {})", split.length,
+							LOGGER.error("Received invitation answer message with not enough content (split.length: {} message: {})", split.length,
 									notificationMessage);
 						}
-					}
+					case NOTIFIER_PREFIX_GAME_STARTED:
+						if (split.length >= 3) {
+							try {
+								int gameId = Integer.parseInt(split[2]);
+								downloadGame(gameId);
+								startPreGameFrame(gameId);
+							}
+							catch (NumberFormatException nfe) {
+								LOGGER.error("Received game started message with a not parsable game id (message: {})", notificationMessage);
+							}
+						}
+						else {
+							LOGGER.error("Received game started message with not enough content (split.length: {} message: {})", split.length,
+									notificationMessage);
+						}
+						break;
 					default:
 						LOGGER.error("received an unknown notification message: {}", notificationMessage);
 						break;
@@ -485,6 +549,8 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 			// ... user chose OK -> inform the inviting player
 			notifier.informPlayers(NOTIFIER_PREFIX + NOTIFIER_PREFIX_GAME_INVITATION_ANSWER + UserManager.getInstance().getLocalUsername() + "/true",
 					invitingPlayer);
+			disableAll();
+			DialogUtils.showInfoDialog("Warte auf Mitspieler", "Warte auf Antwort der anderen Spieler", "");
 		}
 		else {
 			// ... user chose CANCEL or closed the dialog -> inform all players
