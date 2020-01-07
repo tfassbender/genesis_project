@@ -41,6 +41,7 @@ public class PlanetLayout extends Region {
 	private static final Logger LOGGER = LogManager.getLogger(PlanetLayout.class);
 	
 	private int gameId;
+	private boolean preGame;
 	//the field that is to be displayed
 	private Field field;
 	
@@ -59,8 +60,12 @@ public class PlanetLayout extends Region {
 	private static final int centerOffsetY = (int) (planetImageHeight / 3.5);
 	
 	public PlanetLayout(int gameId, Field field) {
+		this(gameId, field, false);
+	}
+	public PlanetLayout(int gameId, Field field, boolean preGame) {
 		this.gameId = gameId;
 		this.field = field;
+		this.preGame = preGame;
 		//generate and add a context menu
 		addContextMenu(this);
 		//add all content from the field as child nodes
@@ -130,23 +135,34 @@ public class PlanetLayout extends Region {
 	
 	private void addContextMenu(Node node) {
 		ContextMenu contextMenu = new ContextMenu();
-		//building menu
-		Menu buildMenu = createBuildMenu();
-		Menu allianceMenu = createAllianceMenu();
 		
-		//add menus to context menu
-		contextMenu.getItems().add(buildMenu);
-		contextMenu.getItems().add(allianceMenu);
-		
-		//show or hide the context menu
-		node.setOnMouseClicked((e) -> {
-			if (e.getButton() == MouseButton.SECONDARY) {
-				contextMenu.show(node, e.getScreenX(), e.getScreenY());
+		if (preGame) {
+			MenuItem placeBuilding = new MenuItem("Startgebäude platzieren");
+			placeBuilding.setOnAction(e -> executePlaceBuildingMove());
+			if (!canPlaceStartBuilding()) {
+				placeBuilding.setDisable(true);
 			}
-			else {
-				contextMenu.hide();
-			}
-		});
+			contextMenu.getItems().add(placeBuilding);
+		}
+		else {
+			//building menu
+			Menu buildMenu = createBuildMenu();
+			Menu allianceMenu = createAllianceMenu();
+			
+			//add menus to context menu
+			contextMenu.getItems().add(buildMenu);
+			contextMenu.getItems().add(allianceMenu);
+			
+			//show or hide the context menu
+			node.setOnMouseClicked((e) -> {
+				if (e.getButton() == MouseButton.SECONDARY) {
+					contextMenu.show(node, e.getScreenX(), e.getScreenY());
+				}
+				else {
+					contextMenu.hide();
+				}
+			});
+		}
 	}
 	
 	private Menu createBuildMenu() {
@@ -188,6 +204,14 @@ public class PlanetLayout extends Region {
 		allianceMenu.getItems().add(addToSelection);
 		allianceMenu.getItems().add(removeFromSelection);
 		return allianceMenu;
+	}
+	
+	private void executePlaceBuildingMove() {
+		// TODO Auto-generated method stub
+	}
+	private boolean canPlaceStartBuilding() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
 	private void executeBuildMove(Building building) {

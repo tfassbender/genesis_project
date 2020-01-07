@@ -26,9 +26,14 @@ public class BoardPaneController implements Initializable {
 	private AnchorPane anchorPaneFields;
 	
 	private int gameId;
+	private boolean preGame;
 	
 	public BoardPaneController(int gameId) {
+		this(gameId, false);
+	}
+	public BoardPaneController(int gameId, boolean preGame) {
 		this.gameId = gameId;
+		this.preGame = preGame;
 	}
 	
 	@Override
@@ -58,7 +63,7 @@ public class BoardPaneController implements Initializable {
 				Position position = fieldPosition.getKey();
 				Field field = fieldPosition.getValue();
 				if (field.isDisplayed() != background) {//keep the empty space fields in the background
-					PlanetLayout fieldLayout = new PlanetLayout(gameId, field);
+					PlanetLayout fieldLayout = new PlanetLayout(gameId, field, preGame);
 					//add the field to the board
 					anchorPaneFields.getChildren().add(fieldLayout);
 					//relocate the field to it's position

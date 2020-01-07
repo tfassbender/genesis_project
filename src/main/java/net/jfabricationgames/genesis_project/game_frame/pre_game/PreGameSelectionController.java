@@ -35,7 +35,7 @@ public class PreGameSelectionController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		GuiUtils guiUtils = new GuiUtils();
-		boardController = new BoardPaneController(gameId);
+		boardController = new BoardPaneController(gameId, true);
 		classSelectionController = new ClassSelectionPaneController(gameId);
 		playerInfoController = new PreGamePlayerInfoPaneController(gameId);
 		turnController = new TurnPaneController(gameId);
