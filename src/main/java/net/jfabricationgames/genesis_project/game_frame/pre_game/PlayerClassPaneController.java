@@ -2,6 +2,7 @@ package net.jfabricationgames.genesis_project.game_frame.pre_game;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -56,6 +57,8 @@ public class PlayerClassPaneController implements Initializable {
 		
 		labelClassName.setText(GuiUtils.toLeadingCapitalLetter(playerClass.name()));
 		buttonSelectClass.setOnAction(e -> selectClass());
+		
+		updateDisabledState();
 	}
 	
 	private void selectClass() {
@@ -69,5 +72,13 @@ public class PlayerClassPaneController implements Initializable {
 			LOGGER.error("Error in move execution", e);
 			DialogUtils.showExceptionDialog("Move execution error", DescriptionTexts.getInstance().ERROR_TEXT_MOVE_EXECUTION, e, true);
 		}
+	}
+	
+	public void updateDisabledState() {
+		GameManager gameManager = GameManager.getInstance();
+		Set<PlayerClass> possibleClasses = gameManager.getPlayerClassesToChoose(gameId);
+		boolean disable = !possibleClasses.contains(playerClass);
+		
+		buttonSelectClass.setDisable(disable);
 	}
 }

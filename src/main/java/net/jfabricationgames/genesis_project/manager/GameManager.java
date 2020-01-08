@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
@@ -65,7 +66,7 @@ public class GameManager implements NotificationMessageListener {
 	
 	/**
 	 * Add a new game (that was created or loaded from the server)
-	 */ 
+	 */
 	public void addGame(int gameId, Game game) {
 		games.put(gameId, game);
 	}
@@ -207,6 +208,14 @@ public class GameManager implements NotificationMessageListener {
 					break;
 			}
 		}
+	}
+	
+	/**
+	 * A set of all PlayerClasses that still can be chosen
+	 */
+	public Set<PlayerClass> getPlayerClassesToChoose(int gameId) {
+		testGameId(gameId);
+		return games.get(gameId).getPlayerClassesToChoose();
 	}
 	
 	//----------------------
