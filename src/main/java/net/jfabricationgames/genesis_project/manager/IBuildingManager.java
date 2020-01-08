@@ -21,6 +21,10 @@ public interface IBuildingManager {
 	 */
 	public void build(Building building, Field field);
 	/**
+	 * Build the given building on the field without paying because it is a start building (that is placed before the game is started).
+	 */
+	public void placeStartBuilding(Building building, Field field);
+	/**
 	 * Checks whether the building can be build on the field (also checks for resources)
 	 * 
 	 * Tested conditions are:

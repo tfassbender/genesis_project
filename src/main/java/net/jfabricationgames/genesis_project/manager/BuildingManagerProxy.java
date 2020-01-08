@@ -28,6 +28,10 @@ public class BuildingManagerProxy implements IBuildingManager {
 	public void build(Building building, Field field) {
 		throw new UnsupportedOperationException("This method is forbidden in this proxy implementation");
 	}
+	@Override
+	public void placeStartBuilding(Building building, Field field) {
+		throw new UnsupportedOperationException("This method is forbidden in this proxy implementation");
+	}
 	
 	@Override
 	public boolean canBuild(Building building, Field field) {

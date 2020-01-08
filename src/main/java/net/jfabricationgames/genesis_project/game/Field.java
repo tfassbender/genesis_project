@@ -260,4 +260,19 @@ public class Field {
 		}
 		return containsBuilding;
 	}
+	
+	public int getNumBuildings() {
+		int numBuildings = 0;
+		if (isPlanetField()) {
+			for (PlayerBuilding building : buildings) {
+				if (building != null) {
+					numBuildings++;
+				}
+			}
+		}
+		else {
+			numBuildings = spaceBuildings.size();
+		}
+		return numBuildings;
+	}
 }

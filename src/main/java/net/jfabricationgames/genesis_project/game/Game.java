@@ -1,9 +1,13 @@
 package net.jfabricationgames.genesis_project.game;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
@@ -158,6 +162,20 @@ public class Game {
 				
 				this.researchManager.addResearchResources(resources, area);
 				break;
+			case CHOOSE_CLASS:
+				PlayerClass chosenClass = move.getPlayerClass();
+				player.setPlayerClass(chosenClass);
+				
+				turnManager.nextMove();
+				break;
+			case PLACE_START_BUILDING:
+				building = move.getBuilding();
+				field = move.getField();
+				buildingManager = player.getBuildingManager();
+				buildingManager.placeStartBuilding(building, field);
+				
+				turnManager.nextMove();
+				break;
 			case PASS:
 				turnManager.playerPassed(player);
 				turnManager.nextMove();
@@ -248,6 +266,20 @@ public class Game {
 					moveExecutable = false;
 				}
 				break;
+			case CHOOSE_CLASS:
+				PlayerClass playerClass = move.getPlayerClass();
+				moveExecutable &= player.getPlayerClass() == null;
+				moveExecutable &= getPlayerClassesToChoose().contains(playerClass);
+				break;
+			case PLACE_START_BUILDING:
+				//the building has to be valid and the resources for the building have to be there
+				field = move.getField();
+				
+				//starting planets have to be the player color
+				moveExecutable &= field.isPlanetField() && field.getPlanet().getPlayerColor() == player.getPlayerClass().getColor();
+				//only one building per starting planet
+				moveExecutable &= field.getNumBuildings() == 0;
+				break;
 			case PASS:
 				//as long as it's the players turn it's always possible to pass
 				break;
@@ -291,6 +323,24 @@ public class Game {
 			//only if the controller is already set (will not be set in tests)
 			gameFrameController.getBoardPaneController().buildField();
 		}
+	}
+	
+	/**
+	 * Get a set of all player classes that can still be chosen
+	 */
+	public Set<PlayerClass> getPlayerClassesToChoose() {
+		Set<PlayerColor> chosen = players.stream().filter(p -> p.getPlayerClass() != null).map(p -> p.getPlayerClass().getColor())
+				.collect(Collectors.toSet());
+		Set<PlayerClass> playerClasses = new HashSet<PlayerClass>(Arrays.asList(PlayerClass.values()));
+		Iterator<PlayerClass> iter = playerClasses.iterator();
+		//remove all classes whichs color is already chosen
+		while (iter.hasNext()) {
+			PlayerClass playerClass = iter.next();
+			if (chosen.contains(playerClass.getColor())) {
+				iter.remove();
+			}
+		}
+		return playerClasses;
 	}
 	
 	public Player getPlayer(String name) throws IllegalArgumentException {
