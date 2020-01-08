@@ -23,7 +23,7 @@ import net.jfabricationgames.genesis_project.connection.GenesisClient;
 import net.jfabricationgames.genesis_project.connection.exception.AuthenticationException;
 import net.jfabricationgames.genesis_project.connection.exception.GenesisServerException;
 import net.jfabricationgames.genesis_project.connection.exception.InvalidRequestException;
-import net.jfabricationgames.genesis_project.game_frame.DialogUtils;
+import net.jfabricationgames.genesis_project.game_frame.util.DialogUtils;
 
 public class LoginFrameController implements Initializable {
 	

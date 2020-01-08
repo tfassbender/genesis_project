@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import net.jfabricationgames.genesis_project.game.AllianceBonus;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.Field;
+import net.jfabricationgames.genesis_project.game.PlayerClass;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
 import net.jfabricationgames.genesis_project.game.Technology;
@@ -28,5 +29,6 @@ public interface IMove {
 	public List<Field> getSatelliteFields();
 	public AllianceBonus getAllianceBonus();
 	public int getAllianceBonusIndex();
+	public PlayerClass getPlayerClass();
 	public boolean isPassing();
 }

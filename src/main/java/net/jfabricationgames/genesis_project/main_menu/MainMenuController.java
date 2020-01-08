@@ -37,9 +37,9 @@ import net.jfabricationgames.genesis_project.connection.notifier.NotifierService
 import net.jfabricationgames.genesis_project.game.Constants;
 import net.jfabricationgames.genesis_project.game.Game;
 import net.jfabricationgames.genesis_project.game.Player;
-import net.jfabricationgames.genesis_project.game_frame.DialogUtils;
 import net.jfabricationgames.genesis_project.game_frame.GameFrameController;
 import net.jfabricationgames.genesis_project.game_frame.pre_game.PreGameSelectionController;
+import net.jfabricationgames.genesis_project.game_frame.util.DialogUtils;
 import net.jfabricationgames.genesis_project.manager.GameManager;
 import net.jfabricationgames.genesis_project.user.UserManager;
 import net.jfabricationgames.genesis_project.user.UserStateListener;

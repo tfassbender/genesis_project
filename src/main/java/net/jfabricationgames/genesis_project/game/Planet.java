@@ -1,6 +1,6 @@
 package net.jfabricationgames.genesis_project.game;
 
-import net.jfabricationgames.genesis_project.game_frame.GuiUtils;
+import net.jfabricationgames.genesis_project.game_frame.util.GuiUtils;
 
 public enum Planet {
 	

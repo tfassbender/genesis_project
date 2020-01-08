@@ -2,20 +2,21 @@ package net.jfabricationgames.genesis_project.game;
 
 public enum PlayerClass {
 	
-	ENCOR(PlayerColor.BLUE, Resource.CARBON, Resource.SILICIUM, Resource.IRON, false, false, "classes/class_boards/class_board_blue_1.png"),//
-	MUNEN(PlayerColor.BLUE, Resource.CARBON, Resource.SILICIUM, Resource.IRON, false, false, "classes/class_boards/class_board_blue_2.png"),//
-	SALARANIER(PlayerColor.GREEN, Resource.CARBON, Resource.IRON, Resource.SILICIUM, false, false, "classes/class_boards/class_board_green_1.png"),//
-	NOVOX(PlayerColor.GREEN, Resource.CARBON, Resource.IRON, Resource.SILICIUM, false, true, "classes/class_boards/class_board_green_2.png"),//
-	WANNARACK(PlayerColor.RED, Resource.SILICIUM, Resource.CARBON, Resource.IRON, false, true, "classes/class_boards/class_board_red_1.png"),//
-	YGDRACK(PlayerColor.RED, Resource.SILICIUM, Resource.CARBON, Resource.IRON, false, true, "classes/class_boards/class_board_red_2.png"),//
-	LEGION(PlayerColor.YELLOW, Resource.SILICIUM, Resource.IRON, Resource.CARBON, false, true, "classes/class_boards/class_board_yellow_1.png"),//
-	GUNRACS(PlayerColor.YELLOW, Resource.SILICIUM, Resource.IRON, Resource.CARBON, false, true, "classes/class_boards/class_board_yellow_2.png"),//
-	BORAC(PlayerColor.BLACK, Resource.IRON, Resource.SILICIUM, Resource.CARBON, false, false, "classes/class_boards/class_board_black_1.png"),//
-	CRAGONS(PlayerColor.BLACK, Resource.IRON, Resource.SILICIUM, Resource.CARBON, false, false, "classes/class_boards/class_board_black_2.png"),//
-	JORAVAS(PlayerColor.GRAY, Resource.IRON, Resource.CARBON, Resource.SILICIUM, false, true, "classes/class_boards/class_board_gray_1.png"),//
-	HERATICS(PlayerColor.GRAY, Resource.IRON, Resource.CARBON, Resource.SILICIUM, true, false, "classes/class_boards/class_board_gray_2.png");//
+	ENCOR(PlayerColor.BLUE, 1, Resource.CARBON, Resource.SILICIUM, Resource.IRON, false, false, "classes/class_boards/class_board_blue_1.png"),//
+	MUNEN(PlayerColor.BLUE, 2, Resource.CARBON, Resource.SILICIUM, Resource.IRON, false, false, "classes/class_boards/class_board_blue_2.png"),//
+	SALARANIER(PlayerColor.GREEN, 1, Resource.CARBON, Resource.IRON, Resource.SILICIUM, false, false, "classes/class_boards/class_board_green_1.png"),//
+	NOVOX(PlayerColor.GREEN, 2, Resource.CARBON, Resource.IRON, Resource.SILICIUM, false, true, "classes/class_boards/class_board_green_2.png"),//
+	WANNARACK(PlayerColor.RED, 1, Resource.SILICIUM, Resource.CARBON, Resource.IRON, false, true, "classes/class_boards/class_board_red_1.png"),//
+	YGDRACK(PlayerColor.RED, 2, Resource.SILICIUM, Resource.CARBON, Resource.IRON, false, true, "classes/class_boards/class_board_red_2.png"),//
+	LEGION(PlayerColor.YELLOW, 1, Resource.SILICIUM, Resource.IRON, Resource.CARBON, false, true, "classes/class_boards/class_board_yellow_1.png"),//
+	GUNRACS(PlayerColor.YELLOW, 2, Resource.SILICIUM, Resource.IRON, Resource.CARBON, false, true, "classes/class_boards/class_board_yellow_2.png"),//
+	BORAC(PlayerColor.BLACK, 1, Resource.IRON, Resource.SILICIUM, Resource.CARBON, false, false, "classes/class_boards/class_board_black_1.png"),//
+	CRAGONS(PlayerColor.BLACK, 2, Resource.IRON, Resource.SILICIUM, Resource.CARBON, false, false, "classes/class_boards/class_board_black_2.png"),//
+	JORAVAS(PlayerColor.GRAY, 1, Resource.IRON, Resource.CARBON, Resource.SILICIUM, false, true, "classes/class_boards/class_board_gray_1.png"),//
+	HERATICS(PlayerColor.GRAY, 2, Resource.IRON, Resource.CARBON, Resource.SILICIUM, true, false, "classes/class_boards/class_board_gray_2.png");//
 	
 	private final PlayerColor color;
+	private final int colorClass;
 	
 	private final String classPaneImagePath;
 	
@@ -27,9 +28,13 @@ public enum PlayerClass {
 	private final boolean classAbilityMove;
 	private final boolean governmentAbilityMove;
 	
-	private PlayerClass(PlayerColor color, Resource primaryResource, Resource secundaryResource, Resource tertiaryResource, boolean classAbilityMove,
-			boolean governmentAbilityMove, String classPaneImagePath) {
+	private static final String classCircleImagePath = "classes/class_circles/class_circle_";//remaining part of the path is added dynamically
+	private static final String classEffectImagePath = "classes/class_effects/class_effect_";//remaining part of the path is added dynamically
+	
+	private PlayerClass(PlayerColor color, int colorClass, Resource primaryResource, Resource secundaryResource, Resource tertiaryResource,
+			boolean classAbilityMove, boolean governmentAbilityMove, String classPaneImagePath) {
 		this.color = color;
+		this.colorClass = colorClass;
 		this.primaryResource = primaryResource;
 		this.secundaryResource = secundaryResource;
 		this.tertiaryResource = tertiaryResource;
@@ -70,6 +75,15 @@ public enum PlayerClass {
 	
 	public String getClassPaneImagePath() {
 		return classPaneImagePath;
+	}
+	public String getClassCircleImagePath() {
+		return classCircleImagePath + color.name().toLowerCase() + ".png";
+	}
+	public String getClassEffectBaseImagePath() {
+		return classEffectImagePath + "base_" + color.name().toLowerCase() + "_" + colorClass + ".png";
+	}
+	public String getClassEffectGovernmentImagePath() {
+		return classEffectImagePath + "government_" + color.name().toLowerCase() + "_" + colorClass + ".png";
 	}
 	
 	public Resource getPrimaryResource() {

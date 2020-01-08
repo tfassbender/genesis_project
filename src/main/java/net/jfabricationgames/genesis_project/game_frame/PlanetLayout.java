@@ -25,6 +25,8 @@ import net.jfabricationgames.genesis_project.game.DescriptionTexts;
 import net.jfabricationgames.genesis_project.game.Field;
 import net.jfabricationgames.genesis_project.game.PlayerBuilding;
 import net.jfabricationgames.genesis_project.game.PlayerColor;
+import net.jfabricationgames.genesis_project.game_frame.util.DialogUtils;
+import net.jfabricationgames.genesis_project.game_frame.util.GuiUtils;
 import net.jfabricationgames.genesis_project.manager.GameManager;
 import net.jfabricationgames.genesis_project.manager.IAllianceManager;
 import net.jfabricationgames.genesis_project.move.IMove;
@@ -138,7 +140,7 @@ public class PlanetLayout extends Region {
 		
 		if (preGame) {
 			MenuItem placeBuilding = new MenuItem("Startgebäude platzieren");
-			placeBuilding.setOnAction(e -> executePlaceBuildingMove());
+			placeBuilding.setOnAction(e -> executePlaceStartBuildingMove());
 			if (!canPlaceStartBuilding()) {
 				placeBuilding.setDisable(true);
 			}
@@ -206,12 +208,21 @@ public class PlanetLayout extends Region {
 		return allianceMenu;
 	}
 	
-	private void executePlaceBuildingMove() {
-		// TODO Auto-generated method stub
+	private void executePlaceStartBuildingMove() {
+		IMove move = createPlaceStartBuildingMove();
+		GameManager gameManager = GameManager.getInstance();
+		try {
+			gameManager.executeMove(gameId, move);
+		}
+		catch (IllegalArgumentException | InvalidMoveException e) {
+			LOGGER.error("Error in move execution", e);
+			DialogUtils.showExceptionDialog("Move execution error", DescriptionTexts.getInstance().ERROR_TEXT_MOVE_EXECUTION, e, true);
+		}
 	}
 	private boolean canPlaceStartBuilding() {
-		// TODO Auto-generated method stub
-		return false;
+		IMove move = createPlaceStartBuildingMove();
+		GameManager gameManager = GameManager.getInstance();
+		return gameManager.isMoveExecutable(gameId, move);
 	}
 	
 	private void executeBuildMove(Building building) {
@@ -264,6 +275,12 @@ public class PlanetLayout extends Region {
 		builder.setPlayer(UserManager.getInstance().getLocalUsername());
 		IMove move = builder.build();
 		
+		return move;
+	}
+	
+	private IMove createPlaceStartBuildingMove() {
+		IMove move = new MoveBuilder().setType(MoveType.PLACE_START_BUILDING).setField(field).setPlayer(UserManager.getInstance().getLocalUsername())
+				.build();
 		return move;
 	}
 	

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.google.common.base.Supplier;
 
-import net.jfabricationgames.genesis_project.game_frame.GuiUtils;
+import net.jfabricationgames.genesis_project.game_frame.util.GuiUtils;
 
 public enum Building {
 	

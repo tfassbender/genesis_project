@@ -1,4 +1,4 @@
-package net.jfabricationgames.genesis_project.game_frame;
+package net.jfabricationgames.genesis_project.game_frame.util;
 
 import java.io.IOException;
 import java.net.URL;
@@ -73,6 +73,23 @@ public class GuiUtils {
 		catch (IOException ioe) {
 			ioe.printStackTrace();
 			LOGGER.error("An exception occured while inserting a pane to the main frame", ioe);
+		}
+	}
+	
+	public Parent loadPane(String fxmlFileName, Initializable controller, String cssFileName) {
+		try {
+			URL fxmlUrl = getClass().getResource(fxmlFileName);
+			FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl);
+			fxmlLoader.setController(controller);
+			Parent pane = fxmlLoader.load();
+			if (cssFileName != null) {
+				pane.getStylesheets().add(getClass().getResource(cssFileName).toExternalForm());
+			}
+			return pane;
+		}
+		catch (IOException ioe) {
+			LOGGER.error("An exception occured while inserting a pane to the main frame", ioe);
+			return null;
 		}
 	}
 }

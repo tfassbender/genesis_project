@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import net.jfabricationgames.genesis_project.game.Technology;
+import net.jfabricationgames.genesis_project.game_frame.util.GuiUtils;
 import net.jfabricationgames.genesis_project.manager.GameManager;
 import net.jfabricationgames.genesis_project.manager.ITechnologyManager;
 

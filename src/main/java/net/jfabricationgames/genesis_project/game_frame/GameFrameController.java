@@ -11,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import net.jfabricationgames.genesis_project.game_frame.util.GuiUtils;
 
 public class GameFrameController implements Initializable {
 	

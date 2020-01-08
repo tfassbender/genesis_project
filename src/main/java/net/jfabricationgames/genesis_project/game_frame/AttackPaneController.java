@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import net.jfabricationgames.genesis_project.game.Attack;
+import net.jfabricationgames.genesis_project.game_frame.util.GuiUtils;
 
 public class AttackPaneController implements Initializable {
 	

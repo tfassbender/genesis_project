@@ -7,8 +7,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
 import net.jfabricationgames.genesis_project.game_frame.BoardPaneController;
-import net.jfabricationgames.genesis_project.game_frame.GuiUtils;
 import net.jfabricationgames.genesis_project.game_frame.TurnPaneController;
+import net.jfabricationgames.genesis_project.game_frame.util.GuiUtils;
 
 public class PreGameSelectionController implements Initializable {
 	
