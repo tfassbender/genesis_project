@@ -21,6 +21,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import net.jfabricationgames.genesis_project.connection.exception.ServerCommunicationException;
 import net.jfabricationgames.genesis_project.game.Alliance;
 import net.jfabricationgames.genesis_project.game.AllianceBonus;
 import net.jfabricationgames.genesis_project.game.AllianceBuilder;
@@ -369,7 +370,7 @@ public class AlliancePaneController implements Initializable {
 			try {
 				gameManager.executeMove(gameId, move);
 			}
-			catch (IllegalArgumentException | InvalidMoveException e) {
+			catch (IllegalArgumentException | InvalidMoveException | ServerCommunicationException e) {
 				LOGGER.error("Error in move execution", e);
 				DialogUtils.showExceptionDialog("Move execution error", DescriptionTexts.getInstance().ERROR_TEXT_MOVE_EXECUTION, e, true);
 			}

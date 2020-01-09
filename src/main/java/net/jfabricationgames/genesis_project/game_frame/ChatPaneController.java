@@ -12,8 +12,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import net.jfabricationgames.genesis_project.connection.exception.ServerCommunicationException;
 import net.jfabricationgames.genesis_project.connection.notifier.NotificationMessageListener;
 import net.jfabricationgames.genesis_project.connection.notifier.NotifierService;
+import net.jfabricationgames.genesis_project.game_frame.util.DialogUtils;
 import net.jfabricationgames.genesis_project.manager.GameManager;
 import net.jfabricationgames.genesis_project.user.UserManager;
 
@@ -63,7 +65,13 @@ public class ChatPaneController implements Initializable, NotificationMessageLis
 			String username = UserManager.getInstance().getLocalUsername();
 			String completeMessage = NOTIFIER_PREFIX + username + "/" + gameId + "/" + message;
 			LOGGER.debug("sending chat message: \"{}\" to game: {}", completeMessage, gameId);
-			notifier.informPlayers(completeMessage, GameManager.getInstance().getPlayers(gameId));
+			try {
+				notifier.informPlayers(completeMessage, GameManager.getInstance().getPlayers(gameId));
+			}
+			catch (ServerCommunicationException sce) {
+				LOGGER.error("couldn't send notification to players", sce);
+				DialogUtils.showExceptionDialog("Serververbindungs Fehler", "Server kann nicht erreicht werden", sce, false);
+			}
 			//the message is not added to the text area here because this player also receives the message
 		}
 	}

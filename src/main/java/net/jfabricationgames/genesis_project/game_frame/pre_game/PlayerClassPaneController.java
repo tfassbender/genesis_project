@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
+import net.jfabricationgames.genesis_project.connection.exception.ServerCommunicationException;
 import net.jfabricationgames.genesis_project.game.DescriptionTexts;
 import net.jfabricationgames.genesis_project.game.PlayerClass;
 import net.jfabricationgames.genesis_project.game_frame.util.DialogUtils;
@@ -68,7 +69,7 @@ public class PlayerClassPaneController implements Initializable {
 		try {
 			gameManager.executeMove(gameId, move);
 		}
-		catch (IllegalArgumentException | InvalidMoveException e) {
+		catch (IllegalArgumentException | InvalidMoveException | ServerCommunicationException e) {
 			LOGGER.error("Error in move execution", e);
 			DialogUtils.showExceptionDialog("Move execution error", DescriptionTexts.getInstance().ERROR_TEXT_MOVE_EXECUTION, e, true);
 		}

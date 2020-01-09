@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -32,6 +33,7 @@ import net.jfabricationgames.genesis_project.connection.AbstractGenesisClientEve
 import net.jfabricationgames.genesis_project.connection.GenesisClient;
 import net.jfabricationgames.genesis_project.connection.exception.GenesisServerException;
 import net.jfabricationgames.genesis_project.connection.exception.InvalidRequestException;
+import net.jfabricationgames.genesis_project.connection.exception.ServerCommunicationException;
 import net.jfabricationgames.genesis_project.connection.notifier.NotificationMessageListener;
 import net.jfabricationgames.genesis_project.connection.notifier.NotifierService;
 import net.jfabricationgames.genesis_project.game.Constants;
@@ -139,26 +141,30 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 				
 				@Override
 				public void receiveGetConfigAnswer(String config) {
-					LOGGER.debug("received constants");
-					ObjectMapper mapper = new ObjectMapper();
-					try {
-						//"manually" parse JSON to Object
-						Constants constants = mapper.readValue(config, Constants.class);
-						Constants.setConstants(constants);
-					}
-					catch (IOException ioe) {
-						LOGGER.error("constants configuration couldn't be parsed", ioe);
-						LOGGER.error("constants configuration couldn't be parsed. Loaded constants were:\n{}", config);
-						DialogUtils.showExceptionDialog("Fehler bei der Serververbindung",
-								"Konfigurationsdaten (Spielkonstanten) konnten nicht geladen werden", ioe, false);
-					}
+					Platform.runLater(() -> {
+						LOGGER.debug("received constants");
+						ObjectMapper mapper = new ObjectMapper();
+						try {
+							//"manually" parse JSON to Object
+							Constants constants = mapper.readValue(config, Constants.class);
+							Constants.setConstants(constants);
+						}
+						catch (IOException ioe) {
+							LOGGER.error("constants configuration couldn't be parsed", ioe);
+							LOGGER.error("constants configuration couldn't be parsed. Loaded constants were:\n{}", config);
+							DialogUtils.showExceptionDialog("Fehler bei der Serververbindung",
+									"Konfigurationsdaten (Spielkonstanten) konnten nicht geladen werden", ioe, false);
+						}
+					});
 				}
 				
 				@Override
 				public void receiveException(GenesisServerException exception) {
-					LOGGER.error("dynamic content couldn't be loaded", exception);
-					DialogUtils.showExceptionDialog("Fehler bei der Serververbindung",
-							"Konfigurationsdaten (Spielkonstanten) konnten nicht geladen werden", exception, false);
+					Platform.runLater(() -> {
+						LOGGER.error("dynamic content couldn't be loaded", exception);
+						DialogUtils.showExceptionDialog("Fehler bei der Serververbindung",
+								"Konfigurationsdaten (Spielkonstanten) konnten nicht geladen werden", exception, false);
+					});
 				}
 			});
 		}
@@ -173,8 +179,10 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 				
 				@Override
 				public void receiveGetConfigAnswer(String config) {
-					LOGGER.debug("received dynamic content");
-					textAreaNews.setText(config);
+					Platform.runLater(() -> {
+						LOGGER.debug("received dynamic content");
+						textAreaNews.setText(config);
+					});
 				}
 				
 				@Override
@@ -256,7 +264,13 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 		playersAsked = players;
 		
 		//start the creation of the game by informing all other players
-		notifier.informPlayers(NOTIFIER_PREFIX + NOTIFIER_PREFIX_GAME_INVITATION + localPlayer + "/" + playerListAsString, informedPlayers);
+		try {
+			notifier.informPlayers(NOTIFIER_PREFIX + NOTIFIER_PREFIX_GAME_INVITATION + localPlayer + "/" + playerListAsString, informedPlayers);
+		}
+		catch (ServerCommunicationException sce) {
+			LOGGER.error("couldn't send notification to players", sce);
+			DialogUtils.showExceptionDialog("Serververbindungs Fehler", "Server kann nicht erreicht werden", sce, false);
+		}
 		
 		//wait for other players answers
 		disableAll();
@@ -280,24 +294,28 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 			
 			@Override
 			public void receiveGetGameAnswer(Game game) {
-				//add the game to the manager and start the game frame
-				GameManager.getInstance().addGame(selectedId, game);
-				startGameFrame(selectedId);
+				Platform.runLater(() -> {
+					//add the game to the manager and start the game frame
+					GameManager.getInstance().addGame(selectedId, game);
+					startGameFrame(selectedId);
+				});
 			}
 			
 			@Override
 			public void receiveException(GenesisServerException exception) {
-				if (exception instanceof InvalidRequestException) {
-					LOGGER.error("game id was not found", exception);
-					DialogUtils.showErrorDialog("Fehler", "Spiel konnte nicht geladen werden", "Das Spiel wurde nicht in der Datenbank gefunden",
-							true);
-				}
-				else {
-					LOGGER.error("unknown error whil loading the game", exception);
-					DialogUtils.showExceptionDialog("Fehler", "Spiel konnte nicht geladen werden - Ein Unbekannter Fehler ist aufgetreten", exception,
-							true);
-				}
-				enableAll();
+				Platform.runLater(() -> {
+					if (exception instanceof InvalidRequestException) {
+						LOGGER.error("game id was not found", exception);
+						DialogUtils.showErrorDialog("Fehler", "Spiel konnte nicht geladen werden", "Das Spiel wurde nicht in der Datenbank gefunden",
+								true);
+					}
+					else {
+						LOGGER.error("unknown error whil loading the game", exception);
+						DialogUtils.showExceptionDialog("Fehler", "Spiel konnte nicht geladen werden - Ein Unbekannter Fehler ist aufgetreten",
+								exception, true);
+					}
+					enableAll();
+				});
 			}
 		});
 		disableAll();
@@ -312,31 +330,41 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 			
 			@Override
 			public void receiveCreateGameAnswer(int gameId) {
-				//create the  players and the game
-				List<Player> players = playersAsked.stream().map(p -> new Player(p)).collect(Collectors.toList());
-				Game game = new Game(gameId, players, UserManager.getInstance().getLocalUsername());
-				//add the game to the manager
-				GameManager.getInstance().addGame(gameId, game);
-				
-				//start the pre-game selections
-				startPreGameFrame(gameId);
-				
-				//inform all other players about the started game
-				List<String> playersInvited = new ArrayList<String>(playersAsked);
-				playersInvited.remove(UserManager.getInstance().getLocalUsername());
-				notifier.informPlayers(NOTIFIER_PREFIX + NOTIFIER_PREFIX_GAME_STARTED + gameId, playersInvited);
+				Platform.runLater(() -> {
+					//create the  players and the game
+					List<Player> players = playersAsked.stream().map(p -> new Player(p)).collect(Collectors.toList());
+					Game game = new Game(gameId, players, UserManager.getInstance().getLocalUsername());
+					//add the game to the manager
+					GameManager.getInstance().addGame(gameId, game);
+					
+					//start the pre-game selections
+					startPreGameFrame(gameId);
+					
+					//inform all other players about the started game
+					List<String> playersInvited = new ArrayList<String>(playersAsked);
+					playersInvited.remove(UserManager.getInstance().getLocalUsername());
+					try {
+						notifier.informPlayers(NOTIFIER_PREFIX + NOTIFIER_PREFIX_GAME_STARTED + gameId, playersInvited);
+					}
+					catch (ServerCommunicationException sce) {
+						LOGGER.error("couldn't send notification to players", sce);
+						DialogUtils.showExceptionDialog("Serververbindungs Fehler", "Server kann nicht erreicht werden", sce, false);
+					}
+				});
 			}
 			
 			@Override
 			public void receiveException(GenesisServerException exception) {
-				if (exception instanceof InvalidRequestException) {
-					LOGGER.error("at least one player was not found in the database", exception);
-				}
-				else {
-					LOGGER.error("an unknown error occured while trying to start the game", exception);
-				}
-				DialogUtils.showExceptionDialog("Fehler beim Erstellen des Spiels", "Beim Erstellen des Spiels ist ein Fehler aufgetreten", exception,
-						true);
+				Platform.runLater(() -> {
+					if (exception instanceof InvalidRequestException) {
+						LOGGER.error("at least one player was not found in the database", exception);
+					}
+					else {
+						LOGGER.error("an unknown error occured while trying to start the game", exception);
+					}
+					DialogUtils.showExceptionDialog("Fehler beim Erstellen des Spiels", "Beim Erstellen des Spiels ist ein Fehler aufgetreten",
+							exception, true);
+				});
 			}
 		});
 	}
@@ -352,16 +380,18 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 			
 			@Override
 			public void receiveException(GenesisServerException exception) {
-				if (exception instanceof InvalidRequestException) {
-					LOGGER.error("game id was not found", exception);
-					DialogUtils.showErrorDialog("Fehler", "Spiel konnte nicht geladen werden", "Das Spiel wurde nicht in der Datenbank gefunden",
-							true);
-				}
-				else {
-					LOGGER.error("unknown error whil loading the game", exception);
-					DialogUtils.showExceptionDialog("Fehler", "Spiel konnte nicht geladen werden - Ein Unbekannter Fehler ist aufgetreten", exception,
-							true);
-				}
+				Platform.runLater(() -> {
+					if (exception instanceof InvalidRequestException) {
+						LOGGER.error("game id was not found", exception);
+						DialogUtils.showErrorDialog("Fehler", "Spiel konnte nicht geladen werden", "Das Spiel wurde nicht in der Datenbank gefunden",
+								true);
+					}
+					else {
+						LOGGER.error("unknown error whil loading the game", exception);
+						DialogUtils.showExceptionDialog("Fehler", "Spiel konnte nicht geladen werden - Ein Unbekannter Fehler ist aufgetreten",
+								exception, true);
+					}
+				});
 			}
 		});
 	}
@@ -441,7 +471,13 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 			String username = UserManager.getInstance().getLocalUsername();
 			String completeMessage = NOTIFIER_PREFIX + NOTIFIER_PREFIX_GLOBAL_CHAT + username + "/" + message;
 			LOGGER.debug("sending chat message: \"{}\"", completeMessage);
-			notifier.informAllPlayers(completeMessage);
+			try {
+				notifier.informAllPlayers(completeMessage);
+			}
+			catch (ServerCommunicationException sce) {
+				LOGGER.error("couldn't send notification to players", sce);
+				DialogUtils.showExceptionDialog("Serververbindungs Fehler", "Server kann nicht erreicht werden", sce, false);
+			}
 			//the message is not added to the text area here because this player also receives the message
 		}
 	}
@@ -547,15 +583,29 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 				"Einladung annehmen?");
 		if (result.isPresent() && result.get() == ButtonType.OK) {
 			// ... user chose OK -> inform the inviting player
-			notifier.informPlayers(NOTIFIER_PREFIX + NOTIFIER_PREFIX_GAME_INVITATION_ANSWER + UserManager.getInstance().getLocalUsername() + "/true",
-					invitingPlayer);
+			try {
+				notifier.informPlayers(
+						NOTIFIER_PREFIX + NOTIFIER_PREFIX_GAME_INVITATION_ANSWER + UserManager.getInstance().getLocalUsername() + "/true",
+						invitingPlayer);
+			}
+			catch (ServerCommunicationException sce) {
+				LOGGER.error("couldn't send notification to players", sce);
+				DialogUtils.showExceptionDialog("Serververbindungs Fehler", "Server kann nicht erreicht werden", sce, false);
+			}
 			disableAll();
 			DialogUtils.showInfoDialog("Warte auf Mitspieler", "Warte auf Antwort der anderen Spieler", "");
 		}
 		else {
 			// ... user chose CANCEL or closed the dialog -> inform all players
-			notifier.informPlayers(NOTIFIER_PREFIX + NOTIFIER_PREFIX_GAME_INVITATION_ANSWER + UserManager.getInstance().getLocalUsername() + "/false",
-					participatingPlayers);
+			try {
+				notifier.informPlayers(
+						NOTIFIER_PREFIX + NOTIFIER_PREFIX_GAME_INVITATION_ANSWER + UserManager.getInstance().getLocalUsername() + "/false",
+						participatingPlayers);
+			}
+			catch (ServerCommunicationException sce) {
+				LOGGER.error("couldn't send notification to players", sce);
+				DialogUtils.showExceptionDialog("Serververbindungs Fehler", "Server kann nicht erreicht werden", sce, false);
+			}
 		}
 	}
 	

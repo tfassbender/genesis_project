@@ -19,6 +19,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Region;
+import net.jfabricationgames.genesis_project.connection.exception.ServerCommunicationException;
 import net.jfabricationgames.genesis_project.game.AllianceBuilder;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.DescriptionTexts;
@@ -214,7 +215,7 @@ public class PlanetLayout extends Region {
 		try {
 			gameManager.executeMove(gameId, move);
 		}
-		catch (IllegalArgumentException | InvalidMoveException e) {
+		catch (IllegalArgumentException | InvalidMoveException | ServerCommunicationException e) {
 			LOGGER.error("Error in move execution", e);
 			DialogUtils.showExceptionDialog("Move execution error", DescriptionTexts.getInstance().ERROR_TEXT_MOVE_EXECUTION, e, true);
 		}
@@ -230,7 +231,7 @@ public class PlanetLayout extends Region {
 		try {
 			GameManager.getInstance().executeMove(gameId, move);
 		}
-		catch (IllegalArgumentException | IllegalStateException | InvalidMoveException e) {
+		catch (IllegalArgumentException | IllegalStateException | InvalidMoveException | ServerCommunicationException e) {
 			LOGGER.error("Error in move execution", e);
 			DialogUtils.showExceptionDialog("Move execution error", DescriptionTexts.getInstance().ERROR_TEXT_MOVE_EXECUTION, e, true);
 		}

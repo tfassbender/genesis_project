@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -23,7 +24,10 @@ import net.jfabricationgames.genesis_project.connection.GenesisClient;
 import net.jfabricationgames.genesis_project.connection.exception.AuthenticationException;
 import net.jfabricationgames.genesis_project.connection.exception.GenesisServerException;
 import net.jfabricationgames.genesis_project.connection.exception.InvalidRequestException;
+import net.jfabricationgames.genesis_project.connection.exception.ServerCommunicationException;
+import net.jfabricationgames.genesis_project.connection.notifier.NotifierService;
 import net.jfabricationgames.genesis_project.game_frame.util.DialogUtils;
+import net.jfabricationgames.genesis_project.user.UserManager;
 
 public class LoginFrameController implements Initializable {
 	
@@ -114,26 +118,52 @@ public class LoginFrameController implements Initializable {
 				
 				@Override
 				public void receiveVerifyUserSuccessful() {
-					labelLoading.setText("");
-					startMainMenu();
+					Platform.runLater(() -> {
+						labelLoading.setText("");
+						initializeServices(username);
+						
+						startMainMenu();
+					});
 				}
 				
 				@Override
 				public void receiveException(GenesisServerException exception) {
-					labelLoading.setText("");
-					if (exception instanceof AuthenticationException) {
-						DialogUtils.showErrorDialog("Login nicht erfolgreich", "Der Benutzername oder das Passwort sind falsch", "", true);
-					}
-					else if (exception instanceof InvalidRequestException) {
-						DialogUtils.showErrorDialog("Login nicht erfolgreich", "Dieser Benutzername wurde nicht gefunden", "", true);
-					}
-					else {
-						DialogUtils.showExceptionDialog("Login nicht erfolgreich", "Unbekannter Fehler", exception, false);
-					}
+					Platform.runLater(() -> {
+						labelLoading.setText("");
+						if (exception instanceof AuthenticationException) {
+							DialogUtils.showErrorDialog("Login nicht erfolgreich", "Der Benutzername oder das Passwort sind falsch", "", true);
+						}
+						else if (exception instanceof InvalidRequestException) {
+							DialogUtils.showErrorDialog("Login nicht erfolgreich", "Dieser Benutzername wurde nicht gefunden", "", true);
+						}
+						else {
+							DialogUtils.showExceptionDialog("Login nicht erfolgreich", "Unbekannter Fehler", exception, false);
+						}
+					});
 				}
 			});
 			
 			labelLoading.setText("Login wird bearteitet...");
+		}
+	}
+	
+	/**
+	 * Start the NotifierService and the UserManager
+	 */
+	private void initializeServices(String username) {
+		try {
+			//initialize the notifier service
+			NotifierService.startNotifierService(username);
+			//initialize the UserManager
+			UserManager.startUserManager(username);
+		}
+		catch (IOException ioe) {
+			LOGGER.error("Notifier service couldn't be started", ioe);
+			DialogUtils.showExceptionDialog("Service Fehler", "Notifier Service konnte nicht gestartet werden", ioe, false);
+		}
+		catch (IllegalStateException | ServerCommunicationException e) {
+			LOGGER.error("UserManager couldn't be started", e);
+			DialogUtils.showExceptionDialog("User-Manager Fehler", "Der User-Manager konnte nicht gestartet werden", e, false);
 		}
 	}
 	

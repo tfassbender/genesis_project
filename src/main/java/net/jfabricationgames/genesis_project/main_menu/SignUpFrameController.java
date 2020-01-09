@@ -84,13 +84,16 @@ public class SignUpFrameController implements Initializable {
 				
 				@Override
 				public void receiveException(GenesisServerException exception) {
-					labelLoading.setText("");
-					if (exception instanceof InvalidRequestException) {
-						DialogUtils.showErrorDialog("Benutzer Erstellung nicht erfolgreich", "Dieser Benutzername wird bereits verwendet", "", true);
-					}
-					else {
-						DialogUtils.showExceptionDialog("Benutzer Erstellung nicht erfolgreich", "Unbekannter Fehler", exception, false);
-					}
+					Platform.runLater(() -> {
+						labelLoading.setText("");
+						if (exception instanceof InvalidRequestException) {
+							DialogUtils.showErrorDialog("Benutzer Erstellung nicht erfolgreich", "Dieser Benutzername wird bereits verwendet", "",
+									true);
+						}
+						else {
+							DialogUtils.showExceptionDialog("Benutzer Erstellung nicht erfolgreich", "Unbekannter Fehler", exception, false);
+						}
+					});
 				}
 			});
 			

@@ -12,8 +12,10 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.jfabricationgames.genesis_project.connection.exception.ServerCommunicationException;
 import net.jfabricationgames.genesis_project.connection.notifier.NotificationMessageListener;
 import net.jfabricationgames.genesis_project.connection.notifier.NotifierService;
+import net.jfabricationgames.genesis_project.game_frame.util.DialogUtils;
 
 public class UserManager implements NotificationMessageListener {
 	
@@ -33,7 +35,7 @@ public class UserManager implements NotificationMessageListener {
 	
 	private static UserManager instance;
 	
-	private UserManager(String username) throws IOException {
+	private UserManager(String username) throws IOException, ServerCommunicationException {
 		this.localUsername = username;
 		usersOnline = new HashSet<String>();
 		listeners = new ArrayList<UserStateListener>();
@@ -63,7 +65,7 @@ public class UserManager implements NotificationMessageListener {
 		LOGGER.info("UserManager started successfully");
 	}
 	
-	public static synchronized UserManager startUserManager(String username) throws IllegalStateException, IOException {
+	public static synchronized UserManager startUserManager(String username) throws IllegalStateException, IOException, ServerCommunicationException {
 		if (instance == null) {
 			instance = new UserManager(username);
 			return instance;
@@ -95,7 +97,7 @@ public class UserManager implements NotificationMessageListener {
 	/**
 	 * Inform the other users about the logout and close the notifier service.
 	 */
-	public void logout() throws IOException, IllegalStateException {
+	public void logout() throws IOException, IllegalStateException, ServerCommunicationException {
 		LOGGER.debug("logging out");
 		NotifierService notifier = NotifierService.getInstance();
 		//inform the other users
@@ -116,10 +118,17 @@ public class UserManager implements NotificationMessageListener {
 				switch (split[1] + "/") {
 					case NOTIFIER_REQUEST_USERNAMES + "/":
 						//answer with a broadcast of my username
-						Response answerUsername = NotifierService.getInstance().informAllPlayers(NOTIFIER_ANSWER_USERNAME + localUsername);
-						if (answerUsername.getStatus() != Status.OK.getStatusCode()) {
-							LOGGER.error("Couldn't send a username answer to other players (Response status was HTTP {})",
-									answerUsername.getStatus());
+						Response answerUsername;
+						try {
+							answerUsername = NotifierService.getInstance().informAllPlayers(NOTIFIER_ANSWER_USERNAME + localUsername);
+							if (answerUsername.getStatus() != Status.OK.getStatusCode()) {
+								LOGGER.error("Couldn't send a username answer to other players (Response status was HTTP {})",
+										answerUsername.getStatus());
+							}
+						}
+						catch (ServerCommunicationException sce) {
+							LOGGER.error("couldn't send notification to players", sce);
+							DialogUtils.showExceptionDialog("Serververbindungs Fehler", "Server kann nicht erreicht werden", sce, false);
 						}
 						break;
 					case NOTIFIER_ANSWER_USERNAME:

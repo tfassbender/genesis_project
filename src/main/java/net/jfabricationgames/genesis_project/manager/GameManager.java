@@ -11,10 +11,12 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import net.jfabricationgames.genesis_project.connection.AbstractGenesisClientEventSubscriber;
 import net.jfabricationgames.genesis_project.connection.GenesisClient;
 import net.jfabricationgames.genesis_project.connection.exception.GenesisServerException;
+import net.jfabricationgames.genesis_project.connection.exception.ServerCommunicationException;
 import net.jfabricationgames.genesis_project.connection.notifier.NotificationMessageListener;
 import net.jfabricationgames.genesis_project.connection.notifier.NotifierService;
 import net.jfabricationgames.genesis_project.game.Board;
@@ -71,7 +73,7 @@ public class GameManager implements NotificationMessageListener {
 		games.put(gameId, game);
 	}
 	
-	public void executeMove(int gameId, IMove move) throws IllegalArgumentException, InvalidMoveException {
+	public void executeMove(int gameId, IMove move) throws IllegalArgumentException, InvalidMoveException, ServerCommunicationException {
 		LOGGER.debug("trying to execute move {}", move);
 		testGameId(gameId);
 		Game game = games.get(gameId);
@@ -157,7 +159,8 @@ public class GameManager implements NotificationMessageListener {
 	 */
 	private void handleGenesisClientException(GenesisServerException ex) {
 		LOGGER.error("An error occured while trying to get the updated game from the database", ex);
-		DialogUtils.showExceptionDialog("Server error", DescriptionTexts.getInstance().ERROR_TEXT_GENESIS_SERVER_EXCEPTION, ex, false);
+		Platform.runLater(
+				() -> DialogUtils.showExceptionDialog("Server error", DescriptionTexts.getInstance().ERROR_TEXT_GENESIS_SERVER_EXCEPTION, ex, false));
 	}
 	
 	/**
