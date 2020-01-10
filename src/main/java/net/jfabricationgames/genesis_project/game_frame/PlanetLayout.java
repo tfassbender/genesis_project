@@ -5,6 +5,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.common.base.Predicate;
 
 import javafx.collections.ObservableList;
@@ -16,21 +19,32 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Region;
+import net.jfabricationgames.genesis_project.connection.exception.ServerCommunicationException;
+import net.jfabricationgames.genesis_project.game.AllianceBuilder;
 import net.jfabricationgames.genesis_project.game.Building;
+import net.jfabricationgames.genesis_project.game.DescriptionTexts;
 import net.jfabricationgames.genesis_project.game.Field;
-import net.jfabricationgames.genesis_project.game.Game;
 import net.jfabricationgames.genesis_project.game.PlayerBuilding;
 import net.jfabricationgames.genesis_project.game.PlayerColor;
+import net.jfabricationgames.genesis_project.game_frame.util.DialogUtils;
+import net.jfabricationgames.genesis_project.game_frame.util.GuiUtils;
+import net.jfabricationgames.genesis_project.manager.GameManager;
+import net.jfabricationgames.genesis_project.manager.IAllianceManager;
 import net.jfabricationgames.genesis_project.move.IMove;
+import net.jfabricationgames.genesis_project.move.InvalidMoveException;
 import net.jfabricationgames.genesis_project.move.MoveBuilder;
 import net.jfabricationgames.genesis_project.move.MoveType;
+import net.jfabricationgames.genesis_project.user.UserManager;
 
 /**
  * A Layout class to relocate the buildings on a field.
  */
 public class PlanetLayout extends Region {
 	
-	private Game game;
+	private static final Logger LOGGER = LogManager.getLogger(PlanetLayout.class);
+	
+	private int gameId;
+	private boolean preGame;
 	//the field that is to be displayed
 	private Field field;
 	
@@ -48,9 +62,13 @@ public class PlanetLayout extends Region {
 	private static final int centerOffsetX = (int) (planetImageWidth / 3.5);
 	private static final int centerOffsetY = (int) (planetImageHeight / 3.5);
 	
-	public PlanetLayout(Game game, Field field) {
+	public PlanetLayout(int gameId, Field field) {
+		this(gameId, field, false);
+	}
+	public PlanetLayout(int gameId, Field field, boolean preGame) {
+		this.gameId = gameId;
 		this.field = field;
-		this.game = game;
+		this.preGame = preGame;
 		//generate and add a context menu
 		addContextMenu(this);
 		//add all content from the field as child nodes
@@ -120,21 +138,34 @@ public class PlanetLayout extends Region {
 	
 	private void addContextMenu(Node node) {
 		ContextMenu contextMenu = new ContextMenu();
-		//building menu
-		Menu buildMenu = createBuildMenu();
 		
-		//add menus to context menu
-		contextMenu.getItems().add(buildMenu);
-		
-		//show or hide the context menu
-		node.setOnMouseClicked((e) -> {
-			if (e.getButton() == MouseButton.SECONDARY) {
-				contextMenu.show(node, e.getScreenX(), e.getScreenY());
+		if (preGame) {
+			MenuItem placeBuilding = new MenuItem("Startgebäude platzieren");
+			placeBuilding.setOnAction(e -> executePlaceStartBuildingMove());
+			if (!canPlaceStartBuilding()) {
+				placeBuilding.setDisable(true);
 			}
-			else {
-				contextMenu.hide();
-			}
-		});
+			contextMenu.getItems().add(placeBuilding);
+		}
+		else {
+			//building menu
+			Menu buildMenu = createBuildMenu();
+			Menu allianceMenu = createAllianceMenu();
+			
+			//add menus to context menu
+			contextMenu.getItems().add(buildMenu);
+			contextMenu.getItems().add(allianceMenu);
+			
+			//show or hide the context menu
+			node.setOnMouseClicked((e) -> {
+				if (e.getButton() == MouseButton.SECONDARY) {
+					contextMenu.show(node, e.getScreenX(), e.getScreenY());
+				}
+				else {
+					contextMenu.hide();
+				}
+			});
+		}
 	}
 	
 	private Menu createBuildMenu() {
@@ -155,14 +186,86 @@ public class PlanetLayout extends Region {
 		return buildMenu;
 	}
 	
+	private Menu createAllianceMenu() {
+		Menu allianceMenu = new Menu("Allianz");
+		MenuItem addToSelection = new MenuItem("Zur Auswahl hinzufügen");
+		MenuItem removeFromSelection = new MenuItem("Von der Auswahl entfernen");
+		
+		//disable an item when the field is already added or not
+		GameManager gameManager = GameManager.getInstance();
+		IAllianceManager allianceManager = gameManager.getAllianceManager(gameId, gameManager.getLocalPlayer());
+		AllianceBuilder builder = allianceManager.getAllianceBuilder();
+		if (builder.containsField(field)) {
+			addToSelection.setDisable(true);
+		}
+		else {
+			removeFromSelection.setDisable(true);
+		}
+		
+		addToSelection.setOnAction(e -> addFieldToAllianceSelection());
+		removeFromSelection.setOnAction(e -> removeFieldFromAllianceSelection());
+		allianceMenu.getItems().add(addToSelection);
+		allianceMenu.getItems().add(removeFromSelection);
+		return allianceMenu;
+	}
+	
+	private void executePlaceStartBuildingMove() {
+		IMove move = createPlaceStartBuildingMove();
+		GameManager gameManager = GameManager.getInstance();
+		try {
+			gameManager.executeMove(gameId, move);
+		}
+		catch (IllegalArgumentException | InvalidMoveException | ServerCommunicationException e) {
+			LOGGER.error("Error in move execution", e);
+			DialogUtils.showExceptionDialog("Move execution error", DescriptionTexts.getInstance().ERROR_TEXT_MOVE_EXECUTION, e, true);
+		}
+	}
+	private boolean canPlaceStartBuilding() {
+		IMove move = createPlaceStartBuildingMove();
+		GameManager gameManager = GameManager.getInstance();
+		return gameManager.isMoveExecutable(gameId, move);
+	}
+	
 	private void executeBuildMove(Building building) {
 		IMove move = buildMove(building);
-		game.executeMove(move);
+		try {
+			GameManager.getInstance().executeMove(gameId, move);
+		}
+		catch (IllegalArgumentException | IllegalStateException | InvalidMoveException | ServerCommunicationException e) {
+			LOGGER.error("Error in move execution", e);
+			DialogUtils.showExceptionDialog("Move execution error", DescriptionTexts.getInstance().ERROR_TEXT_MOVE_EXECUTION, e, true);
+		}
+	}
+	
+	private void addFieldToAllianceSelection() {
+		GameManager gameManager = GameManager.getInstance();
+		IAllianceManager allianceManager = gameManager.getAllianceManager(gameId, gameManager.getLocalPlayer());
+		AllianceBuilder builder = allianceManager.getAllianceBuilder();
+		
+		if (field.isPlanetField()) {
+			builder.addPlanetField(field);
+		}
+		else {
+			builder.addConnectingField(field);
+		}
+	}
+	
+	private void removeFieldFromAllianceSelection() {
+		GameManager gameManager = GameManager.getInstance();
+		IAllianceManager allianceManager = gameManager.getAllianceManager(gameId, gameManager.getLocalPlayer());
+		AllianceBuilder builder = allianceManager.getAllianceBuilder();
+		
+		if (field.isPlanetField()) {
+			builder.removePlanetField(field);
+		}
+		else {
+			builder.removeConnectingField(field);
+		}
 	}
 	
 	private boolean isBuildable(Building building) {
 		IMove move = buildMove(building);
-		return game.isMoveExecutable(move);
+		return GameManager.getInstance().isMoveExecutable(gameId, move);
 	}
 	
 	private IMove buildMove(Building building) {
@@ -170,9 +273,15 @@ public class PlanetLayout extends Region {
 		builder.setType(MoveType.BUILD);
 		builder.setBuilding(building);
 		builder.setField(field);
-		builder.setPlayer(game.getLocalPlayer().getUsername());
+		builder.setPlayer(UserManager.getInstance().getLocalUsername());
 		IMove move = builder.build();
 		
+		return move;
+	}
+	
+	private IMove createPlaceStartBuildingMove() {
+		IMove move = new MoveBuilder().setType(MoveType.PLACE_START_BUILDING).setField(field).setPlayer(UserManager.getInstance().getLocalUsername())
+				.build();
 		return move;
 	}
 	

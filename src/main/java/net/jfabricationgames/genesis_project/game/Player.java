@@ -106,6 +106,10 @@ public class Player {
 	public PlayerClass getPlayerClass() {
 		return playerClass;
 	}
+	//should only be changed from the Game class
+	protected void setPlayerClass(PlayerClass playerClass) {
+		this.playerClass = playerClass;
+	}
 	
 	public Game getGame() {
 		return game;

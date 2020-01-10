@@ -11,11 +11,11 @@ import javafx.scene.layout.AnchorPane;
 import net.jfabricationgames.genesis_project.game.Board.Position;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.Field;
-import net.jfabricationgames.genesis_project.game.Game;
 import net.jfabricationgames.genesis_project.game.Planet;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.PlayerBuilding;
 import net.jfabricationgames.genesis_project.game.PlayerClass;
+import net.jfabricationgames.genesis_project.manager.GameManager;
 
 public class PlanetInfoPaneController implements Initializable {
 	
@@ -59,10 +59,14 @@ public class PlanetInfoPaneController implements Initializable {
 	@FXML
 	private AnchorPane anchorPaneImage;
 	
-	private Game game;
+	private int gameId;
 	
-	public PlanetInfoPaneController(Game game) {
-		this.game = game;
+	public PlanetInfoPaneController(int gameId) {
+		this.gameId = gameId;
+	}
+
+	public void updateAll() {
+		//nothing to do here *flies away*
 	}
 	
 	@Override
@@ -91,8 +95,10 @@ public class PlanetInfoPaneController implements Initializable {
 			else {
 				labelPlanetInfoPrimariResource.setText(noInfo);
 			}
-			labelPlanetInfoDefence.setText(Integer.toString(field.calculateDefense(game)));
-			labelPlanetInfoAlliances.setText(Integer.toString(field.getAlliances(game).size()));
+			GameManager gameManager = GameManager.getInstance();
+			labelPlanetInfoDefence
+					.setText(Integer.toString(field.calculateDefense(gameManager.getBoard(gameId), gameManager.getResearchManager(gameId))));
+			labelPlanetInfoAlliances.setText(Integer.toString(field.getAlliances(gameManager.getAllianceManager(gameId)).size()));
 			PlayerBuilding[] buildings = field.getBuildings();
 			if (buildings.length > 3) {
 				//it's the center planet that can have up to 5 buildings (one for each player) set all building labels visible
@@ -132,10 +138,12 @@ public class PlanetInfoPaneController implements Initializable {
 			}
 		}
 		else {
+			GameManager gameManager = GameManager.getInstance();
 			//space field
 			labelPlanetInfoType.setText(noInfo);
 			labelPlanetInfoPrimariResource.setText(noInfo);
-			labelPlanetInfoDefence.setText(Integer.toString(field.calculateDefense(game)));
+			labelPlanetInfoDefence
+					.setText(Integer.toString(field.calculateDefense(gameManager.getBoard(gameId), gameManager.getResearchManager(gameId))));
 			labelPlanetInfoAlliances.setText(noInfo);
 			//search for a space building except a satellite (satellites are not listed here)
 			Optional<PlayerBuilding> spaceBuilding = field.getSpaceBuildings().stream()
@@ -156,7 +164,7 @@ public class PlanetInfoPaneController implements Initializable {
 		}
 		
 		//set the image
-		PlanetLayout planetLayout = new PlanetLayout(game, field);
+		PlanetLayout planetLayout = new PlanetLayout(gameId, field);
 		anchorPaneImage.getChildren().add(planetLayout);
 	}
 }

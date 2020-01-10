@@ -25,6 +25,7 @@ public class GameCreationUtil {
 		ConstantsInitializerUtil.initBuildingNumbers();
 		ConstantsInitializerUtil.initStartingResearchStates();
 		ConstantsInitializerUtil.initResearchResources();
+		ConstantsInitializerUtil.initAllianceValues();
 		ConstantsInitializerUtil.initBuildingCosts();
 		ConstantsInitializerUtil.initBuildingDefense();
 		ConstantsInitializerUtil.initCellPositions();
@@ -56,8 +57,8 @@ public class GameCreationUtil {
 	private static void initializeBoard(Game game) {
 		Board board = game.getBoard();
 		//initialize the board with some fields
-		for (int x = 0; x < 10; x++) {
-			for (int y = 0; y < 10; y++) {
+		for (int x = 0; x < 15; x++) {
+			for (int y = 0; y < 15; y++) {
 				Position pos = new Position(x, y);
 				Field field = new Field(pos, null, 0);
 				board.getFields().put(pos, field);

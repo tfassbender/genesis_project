@@ -13,7 +13,7 @@ import net.jfabricationgames.genesis_project.game.ResearchResources;
 
 public class CustomObjectPropertyResearchResourcesDeserializer extends StdDeserializer<ObjectProperty<ResearchResources>> {
 	
-	private static final long serialVersionUID = -3536423964915572579L;
+	private static final long serialVersionUID = -2522879376792513876L;
 	
 	public CustomObjectPropertyResearchResourcesDeserializer() {
 		this(null);

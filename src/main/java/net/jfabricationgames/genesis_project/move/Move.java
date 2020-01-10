@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.jfabricationgames.genesis_project.game.AllianceBonus;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.Field;
+import net.jfabricationgames.genesis_project.game.PlayerClass;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
 import net.jfabricationgames.genesis_project.game.Technology;
@@ -24,6 +25,7 @@ public class Move implements IMove {
 	private List<Field> satelliteFields;
 	private AllianceBonus allianceBonus;
 	private int allianceBonusIndex;
+	private PlayerClass playerClass;
 	private boolean pass;
 	
 	/**
@@ -35,7 +37,8 @@ public class Move implements IMove {
 	}
 	
 	protected Move(MoveType type, String player, Field field, Building building, ResearchArea researchArea, ResearchResources researchResources,
-			Technology technology, List<Field> alliancePlanets, List<Field> satelliteFields, AllianceBonus allianceBonus, int allianceBonusIndex) {
+			Technology technology, List<Field> alliancePlanets, List<Field> satelliteFields, AllianceBonus allianceBonus, int allianceBonusIndex,
+			PlayerClass playerClass) {
 		this.type = type;
 		this.player = player;
 		this.field = field;
@@ -47,6 +50,7 @@ public class Move implements IMove {
 		this.satelliteFields = satelliteFields;
 		this.allianceBonus = allianceBonus;
 		this.allianceBonusIndex = allianceBonusIndex;
+		this.playerClass = playerClass;
 		this.pass = (type == MoveType.PASS);
 	}
 	
@@ -103,6 +107,11 @@ public class Move implements IMove {
 	@Override
 	public int getAllianceBonusIndex() {
 		return allianceBonusIndex;
+	}
+	
+	@Override
+	public PlayerClass getPlayerClass() {
+		return playerClass;
 	}
 	
 	@Override

@@ -1,4 +1,4 @@
-package net.jfabricationgames.genesis_project.game_frame;
+package net.jfabricationgames.genesis_project.game_frame.util;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

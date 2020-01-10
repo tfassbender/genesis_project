@@ -18,7 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.VBox;
-import net.jfabricationgames.genesis_project.game.Player;
+import net.jfabricationgames.genesis_project.manager.GameManager;
 import net.jfabricationgames.genesis_project.manager.IPointManager;
 import net.jfabricationgames.genesis_project.manager.IResourceManager;
 
@@ -66,10 +66,14 @@ public class PlaningToolPaneController implements Initializable {
 	
 	private List<PlaningToolStep> planingSteps;
 	
-	private Player player;
+	private int gameId;
 	
-	public PlaningToolPaneController(Player player) {
-		this.player = player;
+	public PlaningToolPaneController(int gameId) {
+		this.gameId = gameId;
+	}
+
+	public void updateAll() {
+		//changes here have to be only made by the player and not by updated games
 	}
 	
 	@Override
@@ -84,8 +88,9 @@ public class PlaningToolPaneController implements Initializable {
 	}
 	
 	private void resetStartResourcesToCurrentResources() {
-		IResourceManager resourceManager = player.getResourceManager();
-		IPointManager pointManager = player.getPointManager();
+		GameManager gameManager = GameManager.getInstance();
+		IResourceManager resourceManager = gameManager.getResourceManager(gameId, gameManager.getLocalPlayer());
+		IPointManager pointManager = gameManager.getPointManager(gameId, gameManager.getLocalPlayer());
 		
 		planingToolStartResourcesPrimary.getValueFactory().setValue(Integer.valueOf(resourceManager.getResourcesPrimary()));
 		planingToolStartResourcesSecundary.getValueFactory().setValue(Integer.valueOf(resourceManager.getResourcesSecundary()));

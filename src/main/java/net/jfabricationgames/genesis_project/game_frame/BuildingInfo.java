@@ -6,7 +6,6 @@ import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import net.jfabricationgames.genesis_project.game.Building;
-import net.jfabricationgames.genesis_project.game.Player;
 
 /**
  * Information about buildings used for the CostOverviewPane.
@@ -14,7 +13,6 @@ import net.jfabricationgames.genesis_project.game.Player;
 public class BuildingInfo {
 	
 	private Building building;
-	private Player player;
 	
 	private int id;
 	private String buildingName;
@@ -34,15 +32,15 @@ public class BuildingInfo {
 	private int built;
 	private int left;
 	
-	public BuildingInfo(Building building, Player player) {
+	public BuildingInfo(Building building) {
 		this.building = building;
 		gatherInfo();
 	}
 	
-	public static ObservableList<BuildingInfo> forAllBuildings(Player player) {
+	public static ObservableList<BuildingInfo> forAllBuildings() {
 		List<BuildingInfo> infos = new ArrayList<BuildingInfo>(Building.values().length);
 		for (Building building : Building.values()) {
-			infos.add(new BuildingInfo(building, player));
+			infos.add(new BuildingInfo(building));
 		}
 		return FXCollections.observableArrayList(infos);
 	}
@@ -53,9 +51,6 @@ public class BuildingInfo {
 	
 	public Building getBuilding() {
 		return building;
-	}
-	public Player getPlayer() {
-		return player;
 	}
 	
 	public int getId() {

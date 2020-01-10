@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -44,9 +45,15 @@ public class GenesisClient {
 	
 	public static final String CONFIG_RESOURCE_FILE = "config/hosts.config";
 	public static final String CONFIG_KEY_NOTIFIER_HOST = "notifier.host";
-	public static final String CONFIG_KEY_NOTIFIER_PORT = "notifier.port";
+	public static final String CONFIG_KEY_NOTIFIER_PORT_REST = "notifier.port.rest";
+	public static final String CONFIG_KEY_NOTIFIER_PORT_SOCKET = "notifier.port.socket";
 	public static final String CONFIG_KEY_SERVER_HOST = "server.host";
 	public static final String CONFIG_KEY_SERVER_PORT = "server.port";
+	
+	/**
+	 * Encryption key for passwords. Not loaded from configuration because it's a symmetric key.
+	 */
+	private String passwordEncryptionKey = "vcuh31250hvcsojnl312vcnlsgr329fdsip";
 	
 	private static Properties hosts;
 	
@@ -71,20 +78,37 @@ public class GenesisClient {
 	/**
 	 * Send a request to a host server using HTTP GET or POST.
 	 */
-	public static Response sendRequest(String host, String resource, String requestType, Entity<?> entity) {
-		LOGGER.debug("sending request to URI: {}/{} (type: {}   entity: {})", host, resource, requestType, entity);
+	public static Response sendRequest(String host, String resource, String requestType, Entity<?> entity) throws ServerCommunicationException {
+		return sendRequest(host, resource, requestType, entity, true);
+	}
+	/**
+	 * Send a request to a host server using HTTP GET or POST.
+	 */
+	public static Response sendRequest(String host, String resource, String requestType, Entity<?> entity, boolean logEntity)
+			throws ServerCommunicationException {
+		if (logEntity) {
+			LOGGER.debug("sending request to URI: {}{} (type: {}   entity: {})", host, resource, requestType, entity);
+		}
+		else {
+			LOGGER.debug("sending request to URI: {}{} (type: {}   entity: {})", host, resource, requestType, "<entity_not_logged>");
+		}
 		Client client = ClientBuilder.newClient();
 		WebTarget webTarget = client.target(host).path(resource);
 		Response response = null;
-		switch (requestType) {
-			case "GET":
-				response = webTarget.request().get();
-				break;
-			case "POST":
-				response = webTarget.request().post(entity);
-				break;
+		try {
+			switch (requestType) {
+				case "GET":
+					response = webTarget.request().get();
+					break;
+				case "POST":
+					response = webTarget.request().post(entity);
+					break;
+			}
+			return response;
 		}
-		return response;
+		catch (ProcessingException pe) {
+			throw new ServerCommunicationException("Server not reachable", pe);
+		}
 	}
 	
 	public static String getHostProperty(String key) {
@@ -93,9 +117,9 @@ public class GenesisClient {
 	
 	private static void loadConfiguration() throws IOException {
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		Properties configProperties = new Properties();
+		hosts = new Properties();
 		try (InputStream resourceStream = loader.getResourceAsStream(CONFIG_RESOURCE_FILE)) {
-			configProperties.load(resourceStream);
+			hosts.load(resourceStream);
 		}
 	}
 	
@@ -315,7 +339,8 @@ public class GenesisClient {
 	public void createUser(String username, String password) throws GenesisServerException {
 		String resource = "create_user";
 		Login login = new Login(username, password);
-		Response response = sendServerRequest(resource, "POST", Entity.entity(login, MediaType.APPLICATION_JSON));
+		login.encryptPassword(passwordEncryptionKey);
+		Response response = sendServerRequest(resource, "POST", Entity.entity(login, MediaType.APPLICATION_JSON), false);
 		
 		switch (Status.fromStatusCode(response.getStatus())) {
 			case OK:
@@ -332,7 +357,8 @@ public class GenesisClient {
 	public void createUserAsync(String username, String password, GenesisClientEventSubscriber subscriber) {
 		Thread thread = new Thread(() -> {
 			try {
-				login(username, password);
+				createUser(username, password);
+				subscriber.receiveCreateUserSuccessful();
 			}
 			catch (GenesisServerException gse) {
 				subscriber.receiveException(gse);
@@ -346,7 +372,8 @@ public class GenesisClient {
 			throws GenesisServerException {
 		String resource = "update_user";
 		List<Login> logins = Arrays.asList(new Login(currentUsername, currentPassword), new Login(updatedUsername, updatedPassword));
-		Response response = sendServerRequest(resource, "POST", Entity.entity(logins, MediaType.APPLICATION_JSON));
+		logins.forEach(l -> l.encryptPassword(passwordEncryptionKey));
+		Response response = sendServerRequest(resource, "POST", Entity.entity(logins, MediaType.APPLICATION_JSON), false);
 		
 		switch (Status.fromStatusCode(response.getStatus())) {
 			case OK:
@@ -381,7 +408,8 @@ public class GenesisClient {
 	public void verifyUser(String username, String password) throws GenesisServerException {
 		String resource = "verify_user";
 		Login login = new Login(username, password);
-		Response response = sendServerRequest(resource, "POST", Entity.entity(login, MediaType.APPLICATION_JSON));
+		login.encryptPassword(passwordEncryptionKey);
+		Response response = sendServerRequest(resource, "POST", Entity.entity(login, MediaType.APPLICATION_JSON), false);
 		
 		switch (Status.fromStatusCode(response.getStatus())) {
 			case OK:
@@ -400,12 +428,13 @@ public class GenesisClient {
 	public void verifyUserAsync(String username, String password, GenesisClientEventSubscriber subscriber) {
 		Thread thread = new Thread(() -> {
 			try {
-				login(username, password);
+				verifyUser(username, password);
+				subscriber.receiveVerifyUserSuccessful();
 			}
 			catch (GenesisServerException gse) {
 				subscriber.receiveException(gse);
 			}
-		}, "");
+		}, "verifyUserAsync");
 		thread.setDaemon(true);
 		thread.start();
 	}
@@ -506,10 +535,13 @@ public class GenesisClient {
 		consumers.remove(subscriber);
 	}
 	
-	private Response sendServerRequest(String resource, String requestType, Entity<?> entity) {
+	private Response sendServerRequest(String resource, String requestType, Entity<?> entity) throws ServerCommunicationException {
+		return sendServerRequest(resource, requestType, entity, true);
+	}
+	private Response sendServerRequest(String resource, String requestType, Entity<?> entity, boolean logEntity) throws ServerCommunicationException {
 		String serverURI = "http://" + hosts.getProperty(CONFIG_KEY_SERVER_HOST) + ":" + hosts.getProperty(CONFIG_KEY_SERVER_PORT)
 				+ "/genesis_project_server/genesis_project/genesis_project/";
-		return sendRequest(serverURI, resource, requestType, entity);
+		return sendRequest(serverURI, resource, requestType, entity, logEntity);
 	}
 	
 	private ObjectMapper getGameObjectMapper() {

@@ -8,6 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
 
 import org.junit.jupiter.api.Test;
 
@@ -190,6 +192,28 @@ class BuildingManagerTest {
 		assertEquals(Building.MINE, field.getBuildings()[0].getBuilding());
 		assertNull(field.getBuildings()[1]);
 		assertEquals(Building.TRADING_POST, field.getBuildings()[2].getBuilding());
+		//verify the resources were reduced (or tried to, because it's a mock)
+		verify(resourceManager, times(3)).reduceResources(any(BuildingResources.class));
+	}
+	
+	@Test
+	public void testPlaceStartBuildings() {
+		Player player1 = mock(Player.class);
+		when(player1.getPlayerClass()).thenReturn(PlayerClass.ENCOR);
+		IResourceManager resourceManager = mock(ResourceManager.class);
+		when(player1.getResourceManager()).thenReturn(resourceManager);
+		BuildingManager manager = getBuildingManager(player1);
+		Field field = getFieldWithBuildings(null, null, new PlayerBuilding(Building.COLONY, player1));
+		
+		manager.placeStartBuilding(Building.COLONY, field);
+		manager.placeStartBuilding(Building.MINE, field);
+		manager.placeStartBuilding(Building.TRADING_POST, field);
+		
+		assertEquals(Building.MINE, field.getBuildings()[0].getBuilding());
+		assertNull(field.getBuildings()[1]);
+		assertEquals(Building.TRADING_POST, field.getBuildings()[2].getBuilding());
+		//verify the resources were NOT reduced
+		verify(resourceManager, times(0)).reduceResources(any(BuildingResources.class));
 	}
 	
 	@Test

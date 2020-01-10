@@ -162,10 +162,10 @@ class FieldTest {
 	public void testGetDefense() {
 		Game game = getInitializedGameWithDefenseBuildings();
 		
-		assertEquals(2, game.getBoard().getFields().get(new Position(0, 0)).calculateDefense(game));
-		assertEquals(12, game.getBoard().getFields().get(new Position(2, 3)).calculateDefense(game));
-		assertEquals(10, game.getBoard().getFields().get(new Position(2, 4)).calculateDefense(game));
-		assertEquals(5, game.getBoard().getFields().get(new Position(3, 3)).calculateDefense(game));
+		assertEquals(2, game.getBoard().getFields().get(new Position(0, 0)).calculateDefense(game.getBoard(), game.getResearchManager()));
+		assertEquals(12, game.getBoard().getFields().get(new Position(2, 3)).calculateDefense(game.getBoard(), game.getResearchManager()));
+		assertEquals(10, game.getBoard().getFields().get(new Position(2, 4)).calculateDefense(game.getBoard(), game.getResearchManager()));
+		assertEquals(5, game.getBoard().getFields().get(new Position(3, 3)).calculateDefense(game.getBoard(), game.getResearchManager()));
 	}
 	
 	@Test
@@ -185,12 +185,12 @@ class FieldTest {
 		allianceManager.addAlliance(Arrays.asList(planet1, planet2, planet3), Arrays.asList(spaceField2, spaceField3), AllianceBonus.POINTS, 0);
 		allianceManager.addAlliance(Arrays.asList(planet1, planet2), Arrays.asList(spaceField1), AllianceBonus.SCIENTISTS, 0);
 		
-		List<Alliance> alliancesPlanet1 = planet1.getAlliances(game);
-		List<Alliance> alliancesPlanet3 = planet3.getAlliances(game);
-		List<Alliance> alliancesSpaceField1 = spaceField1.getAlliances(game);
-		List<Alliance> alliancesSpaceField2 = spaceField2.getAlliances(game);
-		List<Alliance> alliancesPlanet4 = fields.get(new Position(2, 0)).getAlliances(game);
-		List<Alliance> alliancesSpaceField4 = fields.get(new Position(2, 2)).getAlliances(game);
+		List<Alliance> alliancesPlanet1 = planet1.getAlliances(game.getAllianceManager());
+		List<Alliance> alliancesPlanet3 = planet3.getAlliances(game.getAllianceManager());
+		List<Alliance> alliancesSpaceField1 = spaceField1.getAlliances(game.getAllianceManager());
+		List<Alliance> alliancesSpaceField2 = spaceField2.getAlliances(game.getAllianceManager());
+		List<Alliance> alliancesPlanet4 = fields.get(new Position(2, 0)).getAlliances(game.getAllianceManager());
+		List<Alliance> alliancesSpaceField4 = fields.get(new Position(2, 2)).getAlliances(game.getAllianceManager());
 		
 		assertEquals(2, alliancesPlanet1.size());
 		assertEquals(1, alliancesPlanet3.size());
@@ -198,6 +198,64 @@ class FieldTest {
 		assertEquals(1, alliancesSpaceField2.size());
 		assertEquals(0, alliancesPlanet4.size());
 		assertEquals(0, alliancesSpaceField4.size());
+	}
+	
+	@Test
+	public void testGetPlayerBuildings() {
+		Player player1 = mock(Player.class);
+		Player player2 = mock(Player.class);
+		
+		Field field1 = new Field(new Position(0, 0), Planet.GENESIS, 0);
+		Field field2 = new Field(new Position(0, 1), Planet.GENESIS, 0);
+		Field field3 = new Field(new Position(0, 2), Planet.GENESIS, 0);
+		
+		field1.build(new PlayerBuilding(Building.COLONY, player1), 0);
+		field1.build(new PlayerBuilding(Building.COLONY, player1), 1);
+		field1.build(new PlayerBuilding(Building.MINE, player1), 2);
+		field2.build(new PlayerBuilding(Building.COLONY, player1), 0);
+		field2.build(new PlayerBuilding(Building.COLONY, player2), 1);
+		field2.build(new PlayerBuilding(Building.COLONY, player1), 2);
+		
+		assertEquals(3, field1.getPlayerBuildings(player1).size());
+		assertEquals(2, field2.getPlayerBuildings(player1).size());
+		assertEquals(0, field3.getPlayerBuildings(player1).size());
+		
+		assertEquals(0, field1.getPlayerBuildings(player2).size());
+		assertEquals(1, field2.getPlayerBuildings(player2).size());
+		assertEquals(0, field3.getPlayerBuildings(player2).size());
+		
+		assertTrue(field1.getPlayerBuildings(player1).contains(new PlayerBuilding(Building.COLONY, player1)));
+		assertTrue(field1.getPlayerBuildings(player1).contains(new PlayerBuilding(Building.MINE, player1)));
+		assertFalse(field1.getPlayerBuildings(player1).contains(new PlayerBuilding(Building.GOVERNMENT, player1)));
+	}
+	
+	@Test
+	public void testGetOtherPlayersBuildings() {
+		Player player1 = mock(Player.class);
+		Player player2 = mock(Player.class);
+		
+		Field field1 = new Field(new Position(0, 0), Planet.GENESIS, 0);
+		Field field2 = new Field(new Position(0, 1), Planet.GENESIS, 0);
+		Field field3 = new Field(new Position(0, 2), Planet.GENESIS, 0);
+		
+		field1.build(new PlayerBuilding(Building.COLONY, player1), 0);
+		field1.build(new PlayerBuilding(Building.COLONY, player1), 1);
+		field1.build(new PlayerBuilding(Building.MINE, player1), 2);
+		field2.build(new PlayerBuilding(Building.COLONY, player1), 0);
+		field2.build(new PlayerBuilding(Building.COLONY, player2), 1);
+		field2.build(new PlayerBuilding(Building.COLONY, player1), 2);
+		
+		assertEquals(0, field1.getOtherPlayersBuildings(player1).size());
+		assertEquals(1, field2.getOtherPlayersBuildings(player1).size());
+		assertEquals(0, field3.getOtherPlayersBuildings(player1).size());
+		
+		assertEquals(3, field1.getOtherPlayersBuildings(player2).size());
+		assertEquals(2, field2.getOtherPlayersBuildings(player2).size());
+		assertEquals(0, field3.getOtherPlayersBuildings(player2).size());
+		
+		assertTrue(field1.getOtherPlayersBuildings(player2).contains(new PlayerBuilding(Building.COLONY, player1)));
+		assertTrue(field1.getOtherPlayersBuildings(player2).contains(new PlayerBuilding(Building.MINE, player1)));
+		assertFalse(field1.getOtherPlayersBuildings(player2).contains(new PlayerBuilding(Building.GOVERNMENT, player1)));
 	}
 	
 	@Test

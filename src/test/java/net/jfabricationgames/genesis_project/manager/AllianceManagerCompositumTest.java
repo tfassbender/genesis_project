@@ -39,6 +39,17 @@ class AllianceManagerCompositumTest {
 	}
 	
 	@Test
+	public void testIsAllianceBonusTaken_anyBonus() {
+		Game game = mock(Game.class);
+		IAllianceManager allianceManager = new AllianceManagerCompositum(game);
+		
+		allianceManager.setAllianceBonusTaken(AllianceBonus.ANY, 0, true);
+		
+		//the ANY bonus can't be taken away
+		assertFalse(allianceManager.isAllianceBonusTaken(AllianceBonus.ANY, 0));
+	}
+	
+	@Test
 	public void testIsAllianceBonusTaken_invalidInput() {
 		Game game = mock(Game.class);
 		IAllianceManager allianceManager = new AllianceManagerCompositum(game);

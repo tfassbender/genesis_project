@@ -1,6 +1,7 @@
 package net.jfabricationgames.genesis_project.game;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -9,6 +10,9 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.annotations.VisibleForTesting;
+
+import net.jfabricationgames.genesis_project.manager.IAllianceManager;
+import net.jfabricationgames.genesis_project.manager.IResearchManager;
 
 public class Field {
 	
@@ -157,11 +161,10 @@ public class Field {
 	/**
 	 * Calculate the total defense of this field (consists of WEAPON defense and defense buildings)
 	 */
-	public int calculateDefense(Game game) {
+	public int calculateDefense(Board board, IResearchManager researchManager) {
 		if (planet == Planet.CENTER) {
 			return 99;//the center planet can't be attacked (till the end of the game)
 		}
-		Board board = game.getBoard();
 		List<Field> defenseFields = board.getFields().values().stream().filter(field -> field.hasDefenseBuilding()).collect(Collectors.toList());
 		int defense = 0;
 		//check every defense field if it's in range
@@ -191,7 +194,7 @@ public class Field {
 		}
 		
 		//add the global additional defense by the WEAPON research area
-		defense += game.getResearchManager().getAdditionalWeaponDefense();
+		defense += researchManager.getAdditionalWeaponDefense();
 		
 		return defense;
 	}
@@ -199,9 +202,9 @@ public class Field {
 	/**
 	 * Get a list of all alliances in which this field is included.
 	 */
-	public List<Alliance> getAlliances(Game game) {
+	public List<Alliance> getAlliances(IAllianceManager allianceManager) {
 		List<Alliance> alliancesOnField = new ArrayList<Alliance>();
-		List<Alliance> allAlliances = game.getAllianceManager().getAlliances();
+		List<Alliance> allAlliances = allianceManager.getAlliances();
 		
 		for (Alliance alliance : allAlliances) {
 			boolean allianceIncludesField = false;
@@ -225,6 +228,17 @@ public class Field {
 		return alliancesOnField;
 	}
 	
+	public List<PlayerBuilding> getPlayerBuildings(Player player) {
+		List<PlayerBuilding> playerBuildings = Arrays.asList(buildings).stream()
+				.filter(building -> building != null && building.getPlayer().equals(player)).collect(Collectors.toList());
+		return playerBuildings;
+	}
+	public List<PlayerBuilding> getOtherPlayersBuildings(Player player) {
+		List<PlayerBuilding> otherPlayerBuildings = Arrays.asList(buildings).stream()
+				.filter(building -> building != null && !building.getPlayer().equals(player)).collect(Collectors.toList());
+		return otherPlayerBuildings;
+	}
+	
 	/**
 	 * Check whether the planet contains at least one building of the player.
 	 */
@@ -245,5 +259,20 @@ public class Field {
 			containsBuilding |= building != null && !building.getPlayer().getPlayerClass().equals(playerClass);
 		}
 		return containsBuilding;
+	}
+	
+	public int getNumBuildings() {
+		int numBuildings = 0;
+		if (isPlanetField()) {
+			for (PlayerBuilding building : buildings) {
+				if (building != null) {
+					numBuildings++;
+				}
+			}
+		}
+		else {
+			numBuildings = spaceBuildings.size();
+		}
+		return numBuildings;
 	}
 }

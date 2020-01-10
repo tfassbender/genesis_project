@@ -52,7 +52,7 @@ public class Attack {
 	}
 	
 	public int calculateDefenseStrength() {
-		return targetField.calculateDefense(game);
+		return targetField.calculateDefense(game.getBoard(), game.getResearchManager());
 	}
 	
 	private int getAttackStrengthOffset() {
@@ -142,9 +142,6 @@ public class Attack {
 		}
 	}
 	
-	public Game getGame() {
-		return game;
-	}
 	public Field getTarget() {
 		return targetField;
 	}
@@ -156,5 +153,11 @@ public class Attack {
 	}
 	public AttackTarget getAttackTarget() {
 		return attackTarget;
+	}
+	public int[] getAttackPenalty() {
+		return attackPenalty;
+	}
+	public int[] getPenaltyOffsets() {
+		return penaltyOffsets;
 	}
 }

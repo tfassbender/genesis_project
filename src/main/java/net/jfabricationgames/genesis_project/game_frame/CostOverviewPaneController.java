@@ -1,7 +1,6 @@
 package net.jfabricationgames.genesis_project.game_frame;
 
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.collections.ListChangeListener;
@@ -13,8 +12,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import net.jfabricationgames.genesis_project.game.CompleteResources;
-import net.jfabricationgames.genesis_project.game.Game;
-import net.jfabricationgames.genesis_project.game.Player;
+import net.jfabricationgames.genesis_project.manager.GameManager;
 
 public class CostOverviewPaneController implements Initializable {
 	
@@ -67,13 +65,10 @@ public class CostOverviewPaneController implements Initializable {
 	@FXML
 	private Label labelBuildingEarningsScientists;
 	
-	private Player player;
+	private int gameId;
 	
-	private ObservableList<PlayerInfo> playerInfos;
-	
-	public CostOverviewPaneController(Game game, Player player) {
-		this.playerInfos = game.getPlayerInfoList();
-		this.player = player;
+	public CostOverviewPaneController(int gameId) {
+		this.gameId = gameId;
 	}
 	
 	@Override
@@ -82,8 +77,13 @@ public class CostOverviewPaneController implements Initializable {
 		bindTotalEarningLabels();
 	}
 	
+	public void updateAll() {
+		addTableContent();
+		bindTotalEarningLabels();
+	}
+	
 	private void addTableContent() {
-		ObservableList<BuildingInfo> buildingInfos = BuildingInfo.forAllBuildings(player);
+		ObservableList<BuildingInfo> buildingInfos = BuildingInfo.forAllBuildings();
 		
 		tableColumnBuildingCostsId.setCellValueFactory(new PropertyValueFactory<BuildingInfo, Integer>("id"));
 		tableColumnBuildingCostsBuilding.setCellValueFactory(new PropertyValueFactory<BuildingInfo, String>("building"));
@@ -108,22 +108,19 @@ public class CostOverviewPaneController implements Initializable {
 	
 	private void bindTotalEarningLabels() {
 		ListChangeListener<PlayerInfo> changeListener = (c) -> updateTotalEarningLabels();
-		playerInfos.addListener(changeListener);
+		
+		GameManager gameManager = GameManager.getInstance();
+		gameManager.getPlayerInfoList(gameId).addListener(changeListener);
 	}
 	
 	private void updateTotalEarningLabels() {
-		Optional<PlayerInfo> local = playerInfos.stream().filter(p -> p.getPlayer().equals(player)).findFirst();
-		if (local.isPresent()) {
-			PlayerInfo info = local.get();
-			Player player = info.getPlayer();
-			CompleteResources receivingResources = player.getBuildingManager().getNextTurnsStartingResources();
-			
-			labelBuildingEarningsCarbon.setText(Integer.toString(receivingResources.getResourcesC()));
-			labelBuildingEarningsSilicium.setText(Integer.toString(receivingResources.getResourcesSi()));
-			labelBuildingEarningsIron.setText(Integer.toString(receivingResources.getResourcesFe()));
-			labelBuildingEarningsResearchPoints.setText(Integer.toString(receivingResources.getResearchPoints()));
-			labelBuildingEarningsScientists.setText(Integer.toString(receivingResources.getScientists()));
-		}
-		//if not present they are removed (and added afterwards)
+		GameManager gameManager = GameManager.getInstance();
+		CompleteResources receivingResources = gameManager.getBuildingManager(gameId, gameManager.getLocalPlayer()).getNextTurnsStartingResources();
+		
+		labelBuildingEarningsCarbon.setText(Integer.toString(receivingResources.getResourcesC()));
+		labelBuildingEarningsSilicium.setText(Integer.toString(receivingResources.getResourcesSi()));
+		labelBuildingEarningsIron.setText(Integer.toString(receivingResources.getResourcesFe()));
+		labelBuildingEarningsResearchPoints.setText(Integer.toString(receivingResources.getResearchPoints()));
+		labelBuildingEarningsScientists.setText(Integer.toString(receivingResources.getScientists()));
 	}
 }

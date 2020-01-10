@@ -14,6 +14,8 @@ import net.jfabricationgames.genesis_project.manager.BuildingManager;
 import net.jfabricationgames.genesis_project.manager.IResearchManager;
 import net.jfabricationgames.genesis_project.manager.IResourceManager;
 import net.jfabricationgames.genesis_project.move.IMove;
+import net.jfabricationgames.genesis_project.move.MoveBuilder;
+import net.jfabricationgames.genesis_project.move.MoveType;
 import net.jfabricationgames.genesis_project.testUtils.GameCreationUtil;
 import net.jfabricationgames.genesis_project.testUtils.MoveCreaterUtil;
 
@@ -183,6 +185,45 @@ class GameTest {
 	}
 	
 	@Test
+	public void testExecuteMove_choosePlayerClassMove() {
+		Game game = GameCreationUtil.createGame();
+		game.getPlayers().stream().forEach(p -> p.setPlayerClass(null));
+		
+		IMove chooseClass = new MoveBuilder().setType(MoveType.CHOOSE_CLASS).setPlayerClass(PlayerClass.LEGION)
+				.setPlayer(game.getPlayers().get(0).getUsername()).build();
+		
+		game.executeMove(chooseClass);
+		
+		assertEquals(PlayerClass.LEGION, game.getPlayers().get(0).getPlayerClass());
+		//turn over
+		assertFalse(game.getTurnManager().isPlayersTurn(game.getPlayers().get(0)));
+	}
+	
+	@Test
+	public void testExecuteMove_placeStartBuilding() {
+		Game game = GameCreationUtil.createGame();
+		
+		Board board = game.getBoard();
+		board.getField(10, 10).setPlanet(Planet.BLUE);
+		board.getField(11, 11).setPlanet(Planet.RED);
+		
+		IMove placeStartBuildings = new MoveBuilder().setType(MoveType.PLACE_START_BUILDING).setBuilding(Building.COLONY)
+				.setPlayer(game.getPlayers().get(0).getUsername()).setField(board.getField(10, 10)).build();
+		IMove placeStartBuildings2 = new MoveBuilder().setType(MoveType.PLACE_START_BUILDING).setBuilding(Building.COLONY)
+				.setPlayer(game.getPlayers().get(1).getUsername()).setField(board.getField(11, 11)).build();
+		
+		game.executeMove(placeStartBuildings);
+		game.executeMove(placeStartBuildings2);
+		
+		assertEquals(Building.COLONY, board.getField(10, 10).getBuildings()[0].getBuilding());
+		assertEquals(Building.COLONY, board.getField(11, 11).getBuildings()[0].getBuilding());
+		assertEquals(game.getPlayers().get(0), board.getField(10, 10).getBuildings()[0].getPlayer());
+		assertEquals(game.getPlayers().get(1), board.getField(11, 11).getBuildings()[0].getPlayer());
+		//turn over (player 2)
+		assertFalse(game.getTurnManager().isPlayersTurn(game.getPlayers().get(1)));
+	}
+	
+	@Test
 	public void testExecuteMove_passMoves() {
 		Game game = GameCreationUtil.createGame();
 		Player player = game.getPlayers().get(0);
@@ -331,6 +372,74 @@ class GameTest {
 		assertFalse(game.isMoveExecutable(researchResourcesMoveToManyResources));
 		assertFalse(game.isMoveExecutable(researchResourcesMoveEmpty));
 		assertFalse(game.isMoveExecutable(researchResourcesMoveNoResourcesNeeded));
+	}
+	
+	@Test
+	public void testIsMoveExecutable_choosePlayerClassMove() {
+		Game game = GameCreationUtil.createGame();
+		game.getPlayers().get(0).setPlayerClass(null);
+		game.getPlayers().get(1).setPlayerClass(PlayerClass.ENCOR);
+		
+		IMove chooseClassLegion = new MoveBuilder().setType(MoveType.CHOOSE_CLASS).setPlayerClass(PlayerClass.LEGION)
+				.setPlayer(game.getPlayers().get(0).getUsername()).build();
+		IMove chooseClassEncor = new MoveBuilder().setType(MoveType.CHOOSE_CLASS).setPlayerClass(PlayerClass.ENCOR)
+				.setPlayer(game.getPlayers().get(0).getUsername()).build();
+		IMove chooseClassMunen = new MoveBuilder().setType(MoveType.CHOOSE_CLASS).setPlayerClass(PlayerClass.MUNEN)
+				.setPlayer(game.getPlayers().get(0).getUsername()).build();
+		IMove chooseClassPlayer2Encor = new MoveBuilder().setType(MoveType.CHOOSE_CLASS).setPlayerClass(PlayerClass.ENCOR)
+				.setPlayer(game.getPlayers().get(1).getUsername()).build();
+		IMove chooseClassPlayer2Ygdrack = new MoveBuilder().setType(MoveType.CHOOSE_CLASS).setPlayerClass(PlayerClass.YGDRACK)
+				.setPlayer(game.getPlayers().get(1).getUsername()).build();
+		
+		assertTrue(game.isMoveExecutable(chooseClassLegion));
+		assertFalse(game.isMoveExecutable(chooseClassEncor));
+		assertFalse(game.isMoveExecutable(chooseClassMunen));
+		
+		//let player 1 pass so the next player has it's turn (otherwise the move can never be executed)
+		game.executeMove(new MoveBuilder().setPlayer(game.getPlayers().get(0).getUsername()).setType(MoveType.PASS).build());
+		
+		assertFalse(game.isMoveExecutable(chooseClassPlayer2Encor));
+		assertFalse(game.isMoveExecutable(chooseClassPlayer2Ygdrack));
+	}
+	
+	@Test
+	public void testIsMoveExecutable_placeStartBuildingMove() {
+		Game game = GameCreationUtil.createGame();
+		
+		Board board = game.getBoard();
+		board.getField(10, 10).setPlanet(Planet.BLUE);
+		board.getField(11, 11).setPlanet(Planet.RED);
+		board.getField(12, 12).setPlanet(Planet.GENESIS);
+		board.getField(13, 13).setPlanet(Planet.CENTER);
+		board.getField(14, 14).setPlanet(Planet.BLUE);
+		board.getField(14, 14).build(new PlayerBuilding(Building.COLONY, game.getPlayers().get(0)), 1);
+		
+		IMove placeStartBuildingsPlayer1Blue = new MoveBuilder().setType(MoveType.PLACE_START_BUILDING).setBuilding(Building.COLONY)
+				.setPlayer(game.getPlayers().get(0).getUsername()).setField(board.getField(10, 10)).build();
+		IMove placeStartBuildingsPlayer1Red = new MoveBuilder().setType(MoveType.PLACE_START_BUILDING).setBuilding(Building.COLONY)
+				.setPlayer(game.getPlayers().get(0).getUsername()).setField(board.getField(11, 11)).build();
+		IMove placeStartBuildingsPlayer1Genesis = new MoveBuilder().setType(MoveType.PLACE_START_BUILDING).setBuilding(Building.COLONY)
+				.setPlayer(game.getPlayers().get(0).getUsername()).setField(board.getField(12, 12)).build();
+		IMove placeStartBuildingsPlayer1Center = new MoveBuilder().setType(MoveType.PLACE_START_BUILDING).setBuilding(Building.COLONY)
+				.setPlayer(game.getPlayers().get(0).getUsername()).setField(board.getField(13, 13)).build();
+		IMove placeStartBuildingsPlayer1AlreadyFull = new MoveBuilder().setType(MoveType.PLACE_START_BUILDING).setBuilding(Building.COLONY)
+				.setPlayer(game.getPlayers().get(0).getUsername()).setField(board.getField(14, 14)).build();
+		IMove placeStartBuildingsPlayer2Red = new MoveBuilder().setType(MoveType.PLACE_START_BUILDING).setBuilding(Building.COLONY)
+				.setPlayer(game.getPlayers().get(1).getUsername()).setField(board.getField(11, 11)).build();
+		IMove placeStartBuildingsPlayer2Blue = new MoveBuilder().setType(MoveType.PLACE_START_BUILDING).setBuilding(Building.COLONY)
+				.setPlayer(game.getPlayers().get(1).getUsername()).setField(board.getField(10, 10)).build();
+		
+		assertTrue(game.isMoveExecutable(placeStartBuildingsPlayer1Blue));
+		assertFalse(game.isMoveExecutable(placeStartBuildingsPlayer1Red));
+		assertFalse(game.isMoveExecutable(placeStartBuildingsPlayer1Genesis));
+		assertFalse(game.isMoveExecutable(placeStartBuildingsPlayer1Center));
+		assertFalse(game.isMoveExecutable(placeStartBuildingsPlayer1AlreadyFull));
+		
+		//let player 1 pass so the next player has it's turn (otherwise the move can never be executed)
+		game.executeMove(new MoveBuilder().setPlayer(game.getPlayers().get(0).getUsername()).setType(MoveType.PASS).build());
+		
+		assertTrue(game.isMoveExecutable(placeStartBuildingsPlayer2Red));
+		assertFalse(game.isMoveExecutable(placeStartBuildingsPlayer2Blue));
 	}
 	
 	@Test

@@ -2,6 +2,7 @@ package net.jfabricationgames.genesis_project.connection.notifier;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -15,7 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.jfabricationgames.genesis_project.connection.GenesisClient;
-import net.jfabricationgames.genesis_project.game.Player;
+import net.jfabricationgames.genesis_project.connection.exception.ServerCommunicationException;
 
 public class NotifierService {
 	
@@ -41,6 +42,7 @@ public class NotifierService {
 	private NotifierService(String username) throws IOException {
 		loadConfiguration();
 		client = new NotifierSubscriberClient(username, this);
+		listeners = new ArrayList<NotificationMessageListener>();
 		LOGGER.info("NotifierService started");
 	}
 	
@@ -57,7 +59,7 @@ public class NotifierService {
 	public static synchronized NotifierService getInstance() {
 		if (instance == null) {
 			throw new IllegalStateException(
-					"The NotifierService has not yet been initialized (use startNotifierService(Player) method to initialize)");
+					"The NotifierService has not yet been initialized (use startNotifierService(String) method to initialize)");
 		}
 		return instance;
 	}
@@ -80,41 +82,48 @@ public class NotifierService {
 	protected void handleMessageFromService(String message) {
 		LOGGER.debug("received notification message: {}", message);
 		//inform all listeners
-		listeners.forEach(l -> l.receiveNotificationMessage(message));
+		synchronized (listeners) {
+			listeners.forEach(l -> l.receiveNotificationMessage(message));
+		}
+		
 	}
 	
 	/**
 	 * Use a broadcast to inform all other players about changes.
 	 */
-	public Response informAllPlayers(String message) {
+	public Response informAllPlayers(String message) throws ServerCommunicationException {
 		Notification notification = new Notification(message, username, Arrays.asList(BROADCAST_NAME));
 		return sendNotifierRequest("notify", "POST", Entity.entity(notification, MediaType.APPLICATION_JSON));
 	}
 	/**
 	 * Use the notifier service to inform other players about any changes.
 	 */
-	public Response informPlayers(String message, Player... players) {
+	public Response informPlayers(String message, String... players) throws ServerCommunicationException {
 		return informPlayers(message, Arrays.asList(players));
 	}
 	/**
 	 * Use the notifier service to inform other players about any changes.
 	 */
-	public Response informPlayers(String message, List<Player> players) {
+	public Response informPlayers(String message, List<String> players) throws ServerCommunicationException {
 		//map the players to their usernames with the default prefix for the notifier service
-		List<String> usernames = players.stream().map(p -> NotifierService.USERNAME_PREFIX + p.getUsername()).collect(Collectors.toList());
+		List<String> usernames = players.stream().map(p -> NotifierService.USERNAME_PREFIX + p).collect(Collectors.toList());
 		Notification notification = new Notification(message, username, usernames);
 		return sendNotifierRequest("notify", "POST", Entity.entity(notification, MediaType.APPLICATION_JSON));
 	}
-	private Response sendNotifierRequest(String resource, String requestType, Entity<?> entity) {
+	private Response sendNotifierRequest(String resource, String requestType, Entity<?> entity) throws ServerCommunicationException {
 		String notifierURI = "http://" + GenesisClient.getHostProperty(GenesisClient.CONFIG_KEY_NOTIFIER_HOST) + ":"
-				+ GenesisClient.getHostProperty(GenesisClient.CONFIG_KEY_NOTIFIER_PORT) + "JFG_Notification/notification/notification/";
+				+ GenesisClient.getHostProperty(GenesisClient.CONFIG_KEY_NOTIFIER_PORT_REST) + "/JFG_Notifier/notifier/notifier/";
 		return GenesisClient.sendRequest(notifierURI, resource, requestType, entity);
 	}
 	
 	public void addNotificationMessageListener(NotificationMessageListener listener) {
-		listeners.add(listener);
+		synchronized (listeners) {
+			listeners.add(listener);
+		}
 	}
 	public void removeNotifiationMessageListener(NotificationMessageListener listener) {
-		listeners.remove(listener);
+		synchronized (listeners) {
+			listeners.remove(listener);
+		}
 	}
 }

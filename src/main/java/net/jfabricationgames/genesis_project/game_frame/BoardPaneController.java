@@ -15,8 +15,9 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import net.jfabricationgames.genesis_project.game.Board;
 import net.jfabricationgames.genesis_project.game.Board.Position;
+import net.jfabricationgames.genesis_project.game_frame.util.GuiUtils;
+import net.jfabricationgames.genesis_project.manager.GameManager;
 import net.jfabricationgames.genesis_project.game.Field;
-import net.jfabricationgames.genesis_project.game.Game;
 
 public class BoardPaneController implements Initializable {
 	
@@ -25,12 +26,15 @@ public class BoardPaneController implements Initializable {
 	@FXML
 	private AnchorPane anchorPaneFields;
 	
-	private Game game;
-	private Board board;
+	private int gameId;
+	private boolean preGame;
 	
-	public BoardPaneController(Game game, Board board) {
-		this.game = game;
-		this.board = board;
+	public BoardPaneController(int gameId) {
+		this(gameId, false);
+	}
+	public BoardPaneController(int gameId, boolean preGame) {
+		this.gameId = gameId;
+		this.preGame = preGame;
 	}
 	
 	@Override
@@ -40,10 +44,17 @@ public class BoardPaneController implements Initializable {
 		buildField();
 	}
 	
+	public void updateAll() {
+		buildField();
+	}
+	
 	/**
 	 * Add all planet and building images to the field.
 	 */
 	public void buildField() {
+		GameManager gameManager = GameManager.getInstance();
+		Board board = gameManager.getBoard(gameId);
+		
 		//remove all old images first
 		anchorPaneFields.getChildren().clear();
 		//check every field on the board
@@ -53,16 +64,16 @@ public class BoardPaneController implements Initializable {
 				Position position = fieldPosition.getKey();
 				Field field = fieldPosition.getValue();
 				if (field.isDisplayed() != background) {//keep the empty space fields in the background
-					PlanetLayout fieldLayout = new PlanetLayout(game, field);
+					PlanetLayout fieldLayout = new PlanetLayout(gameId, field, preGame);
 					//add the field to the board
 					anchorPaneFields.getChildren().add(fieldLayout);
 					//relocate the field to it's position
 					int[] boardPosition = position.getBoardLocation();
-					if (boardPosition != null) {//TODO maybe remove if-condition after testing (?)
-						fieldLayout.relocate(boardPosition[0], boardPosition[1]);					
+					if (boardPosition != null) {
+						fieldLayout.relocate(boardPosition[0], boardPosition[1]);
 					}
 				}
-			}			
+			}
 		}
 	}
 	

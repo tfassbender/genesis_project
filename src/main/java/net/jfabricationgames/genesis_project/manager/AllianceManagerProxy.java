@@ -2,8 +2,10 @@ package net.jfabricationgames.genesis_project.manager;
 
 import java.util.List;
 
+import javafx.beans.property.BooleanProperty;
 import net.jfabricationgames.genesis_project.game.Alliance;
 import net.jfabricationgames.genesis_project.game.AllianceBonus;
+import net.jfabricationgames.genesis_project.game.AllianceBuilder;
 import net.jfabricationgames.genesis_project.game.Field;
 
 public class AllianceManagerProxy implements IAllianceManager {
@@ -47,5 +49,15 @@ public class AllianceManagerProxy implements IAllianceManager {
 	@Override
 	public int getDefenseBuildingAdditionalRange() {
 		return manager.getDefenseBuildingAdditionalRange();
+	}
+	
+	@Override
+	public BooleanProperty getAllianceBonusTakenProperty(AllianceBonus bonus, int bonusIndex) {
+		return manager.getAllianceBonusTakenProperty(bonus, bonusIndex);
+	}
+	
+	@Override
+	public AllianceBuilder getAllianceBuilder() {
+		return manager.getAllianceBuilder();
 	}
 }

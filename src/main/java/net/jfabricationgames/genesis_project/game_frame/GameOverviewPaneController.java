@@ -11,9 +11,9 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import net.jfabricationgames.genesis_project.game.Game;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game.PlayerScore;
+import net.jfabricationgames.genesis_project.manager.GameManager;
 import net.jfabricationgames.genesis_project.manager.IGamePointManager;
 import net.jfabricationgames.genesis_project.manager.IPointManager;
 import net.jfabricationgames.genesis_project.manager.ITurnManager;
@@ -74,12 +74,10 @@ public class GameOverviewPaneController implements Initializable {
 	@FXML
 	private TableColumn<PlayerInfo, Integer> tableColumnGameOverviewSpaceStations;
 	
-	private Game game;
-	private Player player;
+	private int gameId;
 	
-	public GameOverviewPaneController(Game game, Player player) {
-		this.game = game;
-		this.player = player;
+	public GameOverviewPaneController(int gameId) {
+		this.gameId = gameId;
 	}
 	
 	@Override
@@ -89,9 +87,24 @@ public class GameOverviewPaneController implements Initializable {
 		addTableContent();
 	}
 	
+	public void updateAll() {
+		unbindAll();
+		
+		bindPlayerOrderLists();
+		bindLabels();
+		addTableContent();
+	}
+	
+	private void unbindAll() {
+		labelGameOverviewPlayerPoints.textProperty().unbind();
+		labelGameOverviewPlayerPosition.textProperty().unbind();
+		labelGameOverviewPlayersTurn.textProperty().unbind();
+	}
+	
 	private void bindPlayerOrderLists() {
-		ITurnManager turnManager = game.getTurnManager();
-		IGamePointManager pointManager = game.getPointManager();
+		GameManager gameManager = GameManager.getInstance();
+		ITurnManager turnManager = gameManager.getTurnManager(gameId);
+		IGamePointManager pointManager = gameManager.getGamePointManager(gameId);
 		
 		listGameOverviewPoints.setItems(pointManager.getScoreList());
 		listGameOverviewPlayerOrder.setItems(turnManager.getCurrentTurnPlayerOrder());
@@ -99,8 +112,9 @@ public class GameOverviewPaneController implements Initializable {
 	}
 	
 	private void bindLabels() {
-		IPointManager pointManager = player.getPointManager();
-		ITurnManager turnManager = game.getTurnManager();
+		GameManager gameManager = GameManager.getInstance();
+		IPointManager pointManager = gameManager.getPointManager(gameId, gameManager.getLocalPlayer());
+		ITurnManager turnManager = gameManager.getTurnManager(gameId);
 		
 		labelGameOverviewPlayerPoints.textProperty().bind(Bindings.convert(pointManager.getPointsProperty()));
 		labelGameOverviewPlayerPosition.textProperty().bind(Bindings.convert(pointManager.getPositionProperty()));
@@ -128,6 +142,7 @@ public class GameOverviewPaneController implements Initializable {
 		tableColumnGameOverviewDrones.setCellValueFactory(new PropertyValueFactory<PlayerInfo, Integer>("drones"));
 		tableColumnGameOverviewSpaceStations.setCellValueFactory(new PropertyValueFactory<PlayerInfo, Integer>("spaceStations"));
 		
-		tableGameOverview.setItems(game.getPlayerInfoList());
+		GameManager gameManager = GameManager.getInstance();
+		tableGameOverview.setItems(gameManager.getPlayerInfoList(gameId));
 	}
 }

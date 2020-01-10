@@ -78,6 +78,15 @@ public class BuildingManager implements IBuildingManager {
 	
 	@Override
 	public void build(Building building, Field field) throws IllegalStateException {
+		addBuilding(building, field, true);
+	}
+	
+	@Override
+	public void placeStartBuilding(Building building, Field field) {
+		addBuilding(building, field, false);
+	}
+	
+	private void addBuilding(Building building, Field field, boolean pay) {
 		if (!field.isPlanetField() && !(building == Building.SATELLITE || building == Building.DRONE || building == Building.SPACE_STATION)) {
 			throw new IllegalArgumentException("Can't build a planetary building (" + building + ") on a space field.");
 		}
@@ -90,10 +99,13 @@ public class BuildingManager implements IBuildingManager {
 		if (position != -1) {
 			field.build(playerBuilding, position);
 			
-			//take the resources
-			BuildingResources resources = getResourcesNeededForBuilding(building, field);
-			IResourceManager resourceManager = player.getResourceManager();
-			resourceManager.reduceResources(resources);
+			//only pay for the building if it's not a start building (placed before the game starts)
+			if (pay) {
+				//take the resources
+				BuildingResources resources = getResourcesNeededForBuilding(building, field);
+				IResourceManager resourceManager = player.getResourceManager();
+				resourceManager.reduceResources(resources);				
+			}
 		}
 		else {
 			throw new IllegalArgumentException("No possible position found for this building on this field.");

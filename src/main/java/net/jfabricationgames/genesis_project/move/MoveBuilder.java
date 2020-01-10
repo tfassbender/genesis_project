@@ -5,6 +5,7 @@ import java.util.List;
 import net.jfabricationgames.genesis_project.game.AllianceBonus;
 import net.jfabricationgames.genesis_project.game.Building;
 import net.jfabricationgames.genesis_project.game.Field;
+import net.jfabricationgames.genesis_project.game.PlayerClass;
 import net.jfabricationgames.genesis_project.game.ResearchArea;
 import net.jfabricationgames.genesis_project.game.ResearchResources;
 import net.jfabricationgames.genesis_project.game.Technology;
@@ -25,6 +26,7 @@ public class MoveBuilder {
 	private List<Field> satelliteFields;
 	private AllianceBonus allianceBonus;
 	private int allianceBonusIndex;
+	private PlayerClass playerClass;
 	
 	public MoveBuilder() {
 		
@@ -35,7 +37,7 @@ public class MoveBuilder {
 	 */
 	public IMove build() throws IllegalStateException {
 		IMove move = new Move(type, player, field, building, researchArea, researchResources, technology, alliancePlanets, satelliteFields,
-				allianceBonus, allianceBonusIndex);
+				allianceBonus, allianceBonusIndex, playerClass);
 		return move;
 	}
 	
@@ -54,6 +56,7 @@ public class MoveBuilder {
 		satelliteFields = null;
 		allianceBonus = null;
 		allianceBonusIndex = -1;
+		playerClass = null;
 	}
 	
 	public MoveType getType() {
@@ -141,6 +144,14 @@ public class MoveBuilder {
 	}
 	public MoveBuilder setAllianceBonusIndex(int allianceBonusIndex) {
 		this.allianceBonusIndex = allianceBonusIndex;
+		return this;
+	}
+	
+	public PlayerClass getPlayerClass() {
+		return playerClass;
+	}
+	public MoveBuilder setPlayerClass(PlayerClass playerClass) {
+		this.playerClass = playerClass;
 		return this;
 	}
 	
