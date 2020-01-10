@@ -18,6 +18,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import net.jfabricationgames.genesis_project.connection.AbstractGenesisClientEventSubscriber;
 import net.jfabricationgames.genesis_project.connection.GenesisClient;
@@ -63,6 +64,11 @@ public class LoginFrameController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		buttonLogin.setOnAction(e -> login());
 		buttonNewAccount.setOnAction(e -> createNewUser());
+		passwordField.setOnKeyPressed(key -> {
+			if (key.getCode().equals(KeyCode.ENTER)) {
+				login();
+			}
+		});
 	}
 	
 	private void createNewUser() {
@@ -96,6 +102,8 @@ public class LoginFrameController implements Initializable {
 			stage.setTitle("Main Menü - Genesis Project");
 			stage.setScene(scene);
 			stage.show();
+			
+			((Stage) labelLoading.getScene().getWindow()).close();
 		}
 		catch (Exception e) {
 			LOGGER.error("MainMenu couldn't be loaded", e);

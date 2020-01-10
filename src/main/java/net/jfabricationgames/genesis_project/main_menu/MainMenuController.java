@@ -115,6 +115,10 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 			}
 		});
 		
+		//lists
+		listPlayersOnline.setItems(playersOnline);
+		listGames.setItems(games);
+		
 		//load the constants from the server
 		loadConstants();
 		
@@ -480,6 +484,7 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 			}
 			//the message is not added to the text area here because this player also receives the message
 		}
+		textFieldChat.setText("");
 	}
 	
 	@Override
@@ -498,7 +503,7 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 							}
 							
 							//only add the message if it comes from this game chat
-							textAreaChat.appendText(username + ": " + message);
+							textAreaChat.appendText(username + ": " + message + "\n");
 						}
 						else {
 							LOGGER.error("Received global chat message with not enough content (split.length: {} message: {})", split.length,

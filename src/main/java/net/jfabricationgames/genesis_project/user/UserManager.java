@@ -51,13 +51,13 @@ public class UserManager implements NotificationMessageListener {
 		//register for notifications of other users
 		notifier.addNotificationMessageListener(this);
 		//tell all other players that this player registered and is now online
-		Response informPlayers = notifier.informAllPlayers(NOTIFIER_NEW_USER_LOGGED_IN + username);
+		Response informPlayers = notifier.informAllPlayers(NOTIFIER_PREFIX + NOTIFIER_NEW_USER_LOGGED_IN + username);
 		if (informPlayers.getStatus() != Status.OK.getStatusCode()) {
 			throw new IllegalStateException(
 					"Failed to inform other players about the login (Response status was HTTP " + informPlayers.getStatus() + ")");
 		}
 		//send a request to all other users to tell their names
-		Response requestNames = notifier.informAllPlayers(NOTIFIER_REQUEST_USERNAMES);
+		Response requestNames = notifier.informAllPlayers(NOTIFIER_PREFIX + NOTIFIER_REQUEST_USERNAMES);
 		if (requestNames.getStatus() != Status.OK.getStatusCode()) {
 			throw new IllegalStateException("Failed to request other players usernames (Response status was HTTP " + requestNames.getStatus() + ")");
 		}
@@ -101,7 +101,7 @@ public class UserManager implements NotificationMessageListener {
 		LOGGER.debug("logging out");
 		NotifierService notifier = NotifierService.getInstance();
 		//inform the other users
-		Response logout = notifier.informAllPlayers(NOTIFIER_USER_LOGGING_OFF + localUsername);
+		Response logout = notifier.informAllPlayers(NOTIFIER_PREFIX + NOTIFIER_USER_LOGGING_OFF + localUsername);
 		if (logout.getStatus() != Status.OK.getStatusCode()) {
 			throw new IllegalStateException("Failed to inform other players about logout (Response status was HTTP " + logout.getStatus() + ")");
 		}
@@ -113,6 +113,7 @@ public class UserManager implements NotificationMessageListener {
 	public void receiveNotificationMessage(String notificationMessage) {
 		//only handle messages that start with the correct prefix
 		if (notificationMessage.startsWith(NOTIFIER_PREFIX)) {
+			LOGGER.debug("handling UserManager message: {}", notificationMessage);
 			String[] split = notificationMessage.split("/");
 			if (split.length > 1) {
 				switch (split[1] + "/") {
@@ -120,7 +121,8 @@ public class UserManager implements NotificationMessageListener {
 						//answer with a broadcast of my username
 						Response answerUsername;
 						try {
-							answerUsername = NotifierService.getInstance().informAllPlayers(NOTIFIER_ANSWER_USERNAME + localUsername);
+							answerUsername = NotifierService.getInstance()
+									.informAllPlayers(NOTIFIER_PREFIX + NOTIFIER_ANSWER_USERNAME + localUsername);
 							if (answerUsername.getStatus() != Status.OK.getStatusCode()) {
 								LOGGER.error("Couldn't send a username answer to other players (Response status was HTTP {})",
 										answerUsername.getStatus());
