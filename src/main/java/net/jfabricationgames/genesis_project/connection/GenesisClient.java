@@ -45,7 +45,8 @@ public class GenesisClient {
 	
 	public static final String CONFIG_RESOURCE_FILE = "config/hosts.config";
 	public static final String CONFIG_KEY_NOTIFIER_HOST = "notifier.host";
-	public static final String CONFIG_KEY_NOTIFIER_PORT = "notifier.port";
+	public static final String CONFIG_KEY_NOTIFIER_PORT_REST = "notifier.port.rest";
+	public static final String CONFIG_KEY_NOTIFIER_PORT_SOCKET = "notifier.port.socket";
 	public static final String CONFIG_KEY_SERVER_HOST = "server.host";
 	public static final String CONFIG_KEY_SERVER_PORT = "server.port";
 	
@@ -433,7 +434,7 @@ public class GenesisClient {
 			catch (GenesisServerException gse) {
 				subscriber.receiveException(gse);
 			}
-		}, "");
+		}, "verifyUserAsync");
 		thread.setDaemon(true);
 		thread.start();
 	}

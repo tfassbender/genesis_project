@@ -82,7 +82,10 @@ public class NotifierService {
 	protected void handleMessageFromService(String message) {
 		LOGGER.debug("received notification message: {}", message);
 		//inform all listeners
-		listeners.forEach(l -> l.receiveNotificationMessage(message));
+		synchronized (listeners) {
+			listeners.forEach(l -> l.receiveNotificationMessage(message));
+		}
+		
 	}
 	
 	/**
@@ -109,14 +112,18 @@ public class NotifierService {
 	}
 	private Response sendNotifierRequest(String resource, String requestType, Entity<?> entity) throws ServerCommunicationException {
 		String notifierURI = "http://" + GenesisClient.getHostProperty(GenesisClient.CONFIG_KEY_NOTIFIER_HOST) + ":"
-				+ GenesisClient.getHostProperty(GenesisClient.CONFIG_KEY_NOTIFIER_PORT) + "/JFG_Notification/notification/notification/";
+				+ GenesisClient.getHostProperty(GenesisClient.CONFIG_KEY_NOTIFIER_PORT_REST) + "/JFG_Notifier/notifier/notifier/";
 		return GenesisClient.sendRequest(notifierURI, resource, requestType, entity);
 	}
 	
 	public void addNotificationMessageListener(NotificationMessageListener listener) {
-		listeners.add(listener);
+		synchronized (listeners) {
+			listeners.add(listener);
+		}
 	}
 	public void removeNotifiationMessageListener(NotificationMessageListener listener) {
-		listeners.remove(listener);
+		synchronized (listeners) {
+			listeners.remove(listener);
+		}
 	}
 }
