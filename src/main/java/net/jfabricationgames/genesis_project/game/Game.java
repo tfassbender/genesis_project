@@ -165,6 +165,7 @@ public class Game {
 			case CHOOSE_CLASS:
 				PlayerClass chosenClass = move.getPlayerClass();
 				player.setPlayerClass(chosenClass);
+				player.initializeManagers();
 				
 				turnManager.nextMove();
 				break;

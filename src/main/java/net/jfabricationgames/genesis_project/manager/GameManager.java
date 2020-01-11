@@ -73,6 +73,23 @@ public class GameManager implements NotificationMessageListener {
 		games.put(gameId, game);
 	}
 	
+	/**
+	 * Send a game to the database. This will only work for games that have just been initialized. Otherwise a move needs to be executed to update the
+	 * game in the database.
+	 */
+	public void initializeGameInDatabase(int gameId) throws GenesisServerException, IllegalStateException {
+		testGameId(gameId);
+		Game game = games.get(gameId);
+		//game is initialized if at least one player has initialized the managers
+		boolean gameInitialized = game.getPlayers().stream().anyMatch(p -> p.isManagersInitialized());
+		
+		if (gameInitialized) {
+			throw new IllegalStateException("The game has already been initialized. Initialized games can only be updated when executing a move");
+		}
+		
+		client.updateGame(game);
+	}
+	
 	public void executeMove(int gameId, IMove move) throws IllegalArgumentException, InvalidMoveException, ServerCommunicationException {
 		LOGGER.debug("trying to execute move {}", move);
 		testGameId(gameId);

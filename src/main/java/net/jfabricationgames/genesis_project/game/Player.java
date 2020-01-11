@@ -3,7 +3,9 @@ package net.jfabricationgames.genesis_project.game;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.google.common.annotations.VisibleForTesting;
 
 import net.jfabricationgames.genesis_project.json.serializer.SerializationIdGenerator;
 import net.jfabricationgames.genesis_project.manager.AllianceManager;
@@ -47,17 +49,14 @@ public class Player {
 	}
 	
 	public Player(String username) {
-		this(username, null);
+		this.username = username;
+		this.playerClass = null;
+		//managers are initialized after the player class was selected
 	}
 	public Player(String username, PlayerClass playerClass) {
 		this.username = username;
 		this.playerClass = playerClass;
-		pointManager = new PointManager(this);
-		resourceManager = new ResourceManager(this);
-		buildingManager = new BuildingManager(this);
-		researchManager = new ResearchManager(this);
-		technologyManager = new TechnologyManager(this);
-		allianceManager = new AllianceManager(this);
+		initializeManagers();
 	}
 	
 	@Override
@@ -110,14 +109,46 @@ public class Player {
 	protected void setPlayerClass(PlayerClass playerClass) {
 		this.playerClass = playerClass;
 	}
+	protected void initializeManagers() throws IllegalStateException {
+		if (pointManager != null || resourceManager != null || buildingManager != null || researchManager != null || technologyManager != null
+				|| allianceManager != null) {
+			throw new IllegalStateException("The managers have already been initialized");
+		}
+		else {
+			pointManager = new PointManager(this);
+			resourceManager = new ResourceManager(this);
+			buildingManager = new BuildingManager(this);
+			researchManager = new ResearchManager(this);
+			technologyManager = new TechnologyManager(this);
+			allianceManager = new AllianceManager(this);
+		}
+	}
+	@JsonIgnore
+	public boolean isManagersInitialized() {
+		return pointManager != null && resourceManager != null && buildingManager != null && researchManager != null && technologyManager != null
+				&& allianceManager != null;
+	}
+	@VisibleForTesting
+	protected void resetManagers() {
+		pointManager = null;
+		resourceManager = null;
+		buildingManager = null;
+		researchManager = null;
+		technologyManager = null;
+		allianceManager = null;
+	}
 	
 	public Game getGame() {
 		return game;
 	}
 	public void setGame(Game game) {
 		this.game = game;
-		//initialize the number of players in the research manager by calling the counter method
-		((ResearchManager) researchManager).getNumPlayersInGame();
+		
+		//TODO player not initialized here; may cause problems
+		if (researchManager != null) {
+			//initialize the number of players in the research manager by calling the counter method
+			((ResearchManager) researchManager).getNumPlayersInGame();
+		}
 	}
 	
 	public int getId() {
