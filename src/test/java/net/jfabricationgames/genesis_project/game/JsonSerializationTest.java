@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import net.jfabricationgames.genesis_project.connection.exception.ServerCommunicationException;
 import net.jfabricationgames.genesis_project.game.Board.Position;
 import net.jfabricationgames.genesis_project.move.IMove;
 import net.jfabricationgames.genesis_project.move.MoveBuilder;
@@ -53,6 +55,32 @@ class JsonSerializationTest {
 		else {
 			//just test whether there is no exception thrown
 			mapper.writeValueAsString(game);
+		}
+	}
+	
+	@Test
+	public void testGameDeserialization_gameStartedWithoutUtilClass() throws IllegalStateException, ServerCommunicationException, IOException {
+		List<String> playersAsked = Arrays.asList("Player1", "Player2");
+		int gameId = 42;
+		//start the game just like in the main menu
+		List<Player> players = playersAsked.stream().map(p -> new Player(p)).collect(Collectors.toList());
+		Game game = new Game(gameId, players, "Player1");
+		
+		try {
+			String serialized = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(game);
+			
+			Game deserialized = mapper.readerFor(Game.class).readValue(serialized);
+			
+			//test some of the values
+			//Player1 is included
+			assertTrue(deserialized.getPlayers().stream().map(p -> p.getUsername()).filter(name -> name.equals("Player1")).findAny().isPresent());
+			
+			//there is no local player because the field is transient
+			assertThrows(IllegalStateException.class, () -> deserialized.getLocalPlayer());
+		}
+		catch (IOException ioe) {
+			ioe.printStackTrace();
+			throw ioe;
 		}
 	}
 	

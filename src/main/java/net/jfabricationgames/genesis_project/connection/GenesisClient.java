@@ -222,10 +222,10 @@ public class GenesisClient {
 		
 		//read the response text to a string
 		String responseText = response.readEntity(String.class);
-		ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = getGameObjectMapper();
 		try {
 			//parse the response text to a Game object
-			Game game = mapper.readValue(responseText, Game.class);
+			Game game = mapper.readerFor(Game.class).readValue(responseText);
 			return game;
 		}
 		catch (IOException ioe) {
@@ -602,9 +602,10 @@ public class GenesisClient {
 		ObjectMapper mapper = new ObjectMapper();
 		//register the module to parse java-8 LocalDate
 		mapper.registerModule(new JavaTimeModule());
+
 		try {
 			//"manually" parse JSON to Object
-			GameList resp = mapper.readValue(gameListText, GameList.class);
+			GameList resp = mapper.readerFor(GameList.class).readValue(gameListText);
 			return resp;
 		}
 		catch (IOException e) {
@@ -617,7 +618,7 @@ public class GenesisClient {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			//"manually" parse JSON to Object
-			MoveList resp = mapper.readValue(moveListText, MoveList.class);
+			MoveList resp = mapper.readerFor(MoveList.class).readValue(moveListText);
 			return resp;
 		}
 		catch (IOException e) {

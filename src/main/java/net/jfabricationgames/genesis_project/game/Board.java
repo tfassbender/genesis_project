@@ -85,6 +85,7 @@ public class Board {
 	@JsonIgnore
 	private final int[][] neighboursOddX = new int[][] {{0, -1}, {0, 1}, {-1, 1}, {-1, 0}, {1, 1}, {1, 0}};
 	
+	@JsonIgnore
 	private final Position center = new Position(8, 4);
 	
 	@JsonSerialize(keyUsing = CustomBoardPositionSerializer.class)
