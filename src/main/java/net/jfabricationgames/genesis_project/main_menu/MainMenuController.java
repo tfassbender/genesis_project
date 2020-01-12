@@ -541,6 +541,7 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 							LOGGER.error("Received invitation answer message with not enough content (split.length: {} message: {})", split.length,
 									notificationMessage);
 						}
+						break;
 					case NOTIFIER_PREFIX_GAME_STARTED:
 						if (split.length >= 3) {
 							try {

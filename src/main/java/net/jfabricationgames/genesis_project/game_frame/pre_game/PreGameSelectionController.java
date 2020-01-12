@@ -41,7 +41,7 @@ public class PreGameSelectionController implements Initializable {
 		turnController = new TurnPaneController(gameId);
 		guiUtils.insertPane("../BoardPane.fxml", anchorBoardPane, boardController, null);
 		//guiUtils.insertPane("ClassSelectionPane.fxml", anchorClassSelectionPane, classSelectionController, null);
-		guiUtils.insertPane("PreGamePlayerInfoPane.fxml", anchorPlayerInfoPane, playerInfoController, null);
+		//guiUtils.insertPane("PreGamePlayerInfoPane.fxml", anchorPlayerInfoPane, playerInfoController, null);
 		guiUtils.insertPane("../TurnPane.fxml", anchorTurnPane, turnController, null);
 	}
 }

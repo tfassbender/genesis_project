@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.OptionalInt;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -79,7 +80,9 @@ public class Board {
 		}
 	}
 	
+	@JsonIgnore
 	private final int[][] neighboursEvenX = new int[][] {{0, -1}, {0, 1}, {-1, -1}, {-1, 0}, {1, -1}, {1, 0}};
+	@JsonIgnore
 	private final int[][] neighboursOddX = new int[][] {{0, -1}, {0, 1}, {-1, 1}, {-1, 0}, {1, 1}, {1, 0}};
 	
 	private final Position center = new Position(8, 4);
