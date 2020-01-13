@@ -37,6 +37,7 @@ import net.jfabricationgames.genesis_project.connection.exception.ServerCommunic
 import net.jfabricationgames.genesis_project.connection.notifier.NotificationMessageListener;
 import net.jfabricationgames.genesis_project.connection.notifier.NotifierService;
 import net.jfabricationgames.genesis_project.game.Constants;
+import net.jfabricationgames.genesis_project.game.DescriptionTexts;
 import net.jfabricationgames.genesis_project.game.Game;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game_frame.GameFrameController;
@@ -119,8 +120,12 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 		listPlayersOnline.setItems(playersOnline);
 		listGames.setItems(games);
 		
+		LOGGER.info("start loading server side configuration");
 		//load the constants from the server
 		loadConstants();
+		
+		//load the description texts from the server
+		loadDescriptionTexts();
 		
 		//load some news from the server
 		loadNews();
@@ -165,9 +170,47 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 				@Override
 				public void receiveException(GenesisServerException exception) {
 					Platform.runLater(() -> {
-						LOGGER.error("dynamic content couldn't be loaded", exception);
+						LOGGER.error("configuration 'constants' couldn't be loaded", exception);
 						DialogUtils.showExceptionDialog("Fehler bei der Serververbindung",
 								"Konfigurationsdaten (Spielkonstanten) konnten nicht geladen werden", exception, false);
+					});
+				}
+			});
+		}
+	}
+	
+	/**
+	 * Load the description texts from the server
+	 */
+	private void loadDescriptionTexts() {
+		if (genesisClient != null) {
+			genesisClient.getConfigAsync("description_texts", new AbstractGenesisClientEventSubscriber() {
+				
+				@Override
+				public void receiveGetConfigAnswer(String config) {
+					Platform.runLater(() -> {
+						LOGGER.debug("received description texts");
+						ObjectMapper mapper = new ObjectMapper();
+						try {
+							//"manually" parse JSON to Object
+							DescriptionTexts descriptionTexts = mapper.readValue(config, DescriptionTexts.class);
+							DescriptionTexts.setDescriptionTexts(descriptionTexts);
+						}
+						catch (IOException ioe) {
+							LOGGER.error("description text configuration couldn't be parsed", ioe);
+							LOGGER.error("description text configuration couldn't be parsed. Loaded texts were:\n{}", config);
+							DialogUtils.showExceptionDialog("Fehler bei der Serververbindung",
+									"Konfigurationsdaten (Erklährungstexte) konnten nicht geladen werden", ioe, false);
+						}
+					});
+				}
+				
+				@Override
+				public void receiveException(GenesisServerException exception) {
+					Platform.runLater(() -> {
+						LOGGER.error("configuration 'description_texts' couldn't be loaded", exception);
+						DialogUtils.showExceptionDialog("Fehler bei der Serververbindung",
+								"Konfigurationsdaten (Erklährungstexte) konnten nicht geladen werden", exception, false);
 					});
 				}
 			});
@@ -191,7 +234,7 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 				
 				@Override
 				public void receiveException(GenesisServerException exception) {
-					LOGGER.error("dynamic content couldn't be loaded", exception);
+					LOGGER.error("configuration 'dynamic_content' couldn't be loaded", exception);
 				}
 			});
 		}

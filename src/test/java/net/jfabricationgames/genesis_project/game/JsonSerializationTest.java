@@ -230,6 +230,10 @@ class JsonSerializationTest {
 	
 	@Test
 	public void testSerializeDescriptionTexts() throws IOException {
+		@SuppressWarnings("deprecation")
+		//default texts are OK for testing, deprecated method is no problem here
+		DescriptionTexts defaultTexts = new DescriptionTexts();
+		DescriptionTexts.setDescriptionTexts(defaultTexts);
 		DescriptionTexts descriptionTexts = DescriptionTexts.getInstance();
 		DescriptionTextsInitializerUtil.initializeDescriptionTexts();
 		

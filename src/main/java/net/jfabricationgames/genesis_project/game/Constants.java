@@ -26,7 +26,7 @@ public class Constants {
 	
 	public static synchronized Constants getInstance() {
 		if (instance == null) {
-			instance = new Constants();
+			instance = new Constants();//used for hard coded basic values (in game start) or in tests
 		}
 		return instance;
 	}

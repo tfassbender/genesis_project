@@ -29,7 +29,7 @@ public class GuiUtils {
 			imageView.setCache(true);
 		}
 		catch (IllegalArgumentException | IllegalStateException e) {
-			LOGGER.warn("Could not load image for GUI element.", e);
+			LOGGER.warn("Could not load image for GUI element: " + imagePath, e);
 		}
 	}
 	
@@ -42,7 +42,7 @@ public class GuiUtils {
 			return image;
 		}
 		catch (IllegalArgumentException | IllegalStateException e) {
-			LOGGER.warn("Could not load image for GUI element.", e);
+			LOGGER.warn("Could not load image for GUI element: " + imagePath, e);
 			throw e;
 		}
 	}
@@ -55,9 +55,18 @@ public class GuiUtils {
 		return text;
 	}
 	
+	/**
+	 * Load an fxml pane into an anchor pane. Note that the filename must be relative to this class (GuiUtils)
+	 */
 	public void insertPane(String fxmlFileName, AnchorPane parent, Initializable controller, String cssFileName) {
+		insertPane(fxmlFileName, parent, controller, cssFileName, this);
+	}
+	/**
+	 * Load an fxml pane into an anchor pane with a loader object (any object) for the relative path
+	 */
+	public void insertPane(String fxmlFileName, AnchorPane parent, Initializable controller, String cssFileName, Object loader) {
 		try {
-			URL fxmlUrl = getClass().getResource(fxmlFileName);
+			URL fxmlUrl = loader.getClass().getResource(fxmlFileName);
 			FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl);
 			fxmlLoader.setController(controller);
 			Parent pane = fxmlLoader.load();
@@ -71,14 +80,13 @@ public class GuiUtils {
 			AnchorPane.setRightAnchor(pane, 0d);
 		}
 		catch (IOException ioe) {
-			ioe.printStackTrace();
-			LOGGER.error("An exception occured while inserting a pane to the main frame", ioe);
+			LOGGER.error("An exception occured while inserting a pane: " + fxmlFileName, ioe);
 		}
 	}
 	
-	public Parent loadPane(String fxmlFileName, Initializable controller, String cssFileName) {
+	public Parent loadPane(String fxmlFileName, Initializable controller, String cssFileName, Object loader) {
 		try {
-			URL fxmlUrl = getClass().getResource(fxmlFileName);
+			URL fxmlUrl = loader.getClass().getResource(fxmlFileName);
 			FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl);
 			fxmlLoader.setController(controller);
 			Parent pane = fxmlLoader.load();
@@ -88,7 +96,7 @@ public class GuiUtils {
 			return pane;
 		}
 		catch (IOException ioe) {
-			LOGGER.error("An exception occured while inserting a pane to the main frame", ioe);
+			LOGGER.error("An exception occured while loading the pane: " + fxmlFileName, ioe);
 			return null;
 		}
 	}

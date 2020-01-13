@@ -29,7 +29,7 @@ public enum PlayerClass {
 	private final boolean governmentAbilityMove;
 	
 	private static final String classCircleImagePath = "classes/class_circles/class_circle_";//remaining part of the path is added dynamically
-	private static final String classEffectImagePath = "classes/class_effects/class_effect_";//remaining part of the path is added dynamically
+	private static final String classEffectImagePath = "classes/effects/class_effect_";//remaining part of the path is added dynamically
 	
 	private PlayerClass(PlayerColor color, int colorClass, Resource primaryResource, Resource secundaryResource, Resource tertiaryResource,
 			boolean classAbilityMove, boolean governmentAbilityMove, String classPaneImagePath) {
