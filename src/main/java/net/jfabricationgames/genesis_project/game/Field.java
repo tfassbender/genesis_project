@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.annotations.VisibleForTesting;
 
+import net.jfabricationgames.genesis_project.game.Board.Position;
 import net.jfabricationgames.genesis_project.manager.IAllianceManager;
 import net.jfabricationgames.genesis_project.manager.IResearchManager;
 
@@ -150,6 +151,10 @@ public class Field {
 	@VisibleForTesting
 	public void setPlanet(Planet planet) {
 		this.planet = planet;
+	}
+	
+	protected void setPosition(Position position) {
+		this.position = position;
 	}
 	
 	public boolean hasDefenseBuilding() {
