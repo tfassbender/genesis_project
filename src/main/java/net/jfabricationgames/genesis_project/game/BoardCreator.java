@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import net.jfabricationgames.algorithm.XMeans;
 import net.jfabricationgames.genesis_project.game.Board.Position;
 import net.jfabricationgames.linear_algebra.Vector2D;
@@ -96,7 +98,8 @@ public class BoardCreator {
 	/**
 	 * Initialize the board with empty fields for all positions
 	 */
-	private void initializeEmptyField() {
+	@VisibleForTesting
+	protected void initializeEmptyField() {
 		for (int i = 0; i < Board.WIDTH; i++) {
 			int height = Board.HEIGHT_EVEN;
 			if (i % 2 == 1) {
@@ -112,7 +115,8 @@ public class BoardCreator {
 	/**
 	 * Move a random planet of the list (and check for basic rules to undo the movement if it violates a basic rule)
 	 */
-	private void moveRandomPlanet(List<Position> movable, Supplier<Boolean> ruleViolationSupplier) {
+	@VisibleForTesting
+	protected void moveRandomPlanet(List<Position> movable, Supplier<Boolean> ruleViolationSupplier) {
 		int movedPlanetIndex = (int) Math.random() * movable.size();
 		Position movedPlanetPos = movable.get(movedPlanetIndex);
 		Field movedField = fields.get(movedPlanetPos);
@@ -155,7 +159,8 @@ public class BoardCreator {
 	 * <li>Maximum of touching planets (in the whole field) is 5 (5 times 2 planets touching)</li>
 	 * </ul>
 	 */
-	private boolean isBasicRulesViolated() {
+	@VisibleForTesting
+	protected boolean isBasicRulesViolated() {
 		boolean planetsBeneathCenter = board.getNeighbourFields(fields.get(Board.CENTER)).stream().filter(field -> field.getPlanet() != null)
 				.findAny().isPresent();
 		
@@ -199,7 +204,8 @@ public class BoardCreator {
 	 * <li>The planets have to be spread</li>
 	 * </ul>
 	 */
-	private boolean isSamePlanetRulesViolated() {
+	@VisibleForTesting
+	protected boolean isSamePlanetRulesViolated() {
 		//center of mass
 		double centerOfMassThreshold = 4;//just guessing what could be a good value...
 		for (Planet planet : Planet.values()) {
@@ -241,11 +247,38 @@ public class BoardCreator {
 	 * <li>Average distance to the next near-colored planet (also genesis planets) has to be above a threshold</li>
 	 * </ul>
 	 */
-	private List<Position> findAllPlanetRulesViolatingPositions() {
+	@VisibleForTesting
+	protected List<Position> findAllPlanetRulesViolatingPositions() {
+		List<Position> violatingPositions = new ArrayList<Position>();
+		
+		//check whether the point of mass of the planets is near the center
+		violatingPositions.addAll(findCenterOfMassRuleViolatingPositions());
+		if (!violatingPositions.isEmpty()) {
+			//don't wait to find more violating positions but just return the ones that were found
+			return violatingPositions;
+		}
+		
+		//check whether the planets are spread
+		violatingPositions.addAll(findPlanetSpreadingViolatingPositions());
+		if (!violatingPositions.isEmpty()) {
+			//don't wait to find more violating positions but just return the ones that were found
+			return violatingPositions;
+		}
+		
+		//the average distance to the next near-colored planet (also genesis planets) has to be above a threshold
+		violatingPositions.addAll(findLowColorDistanceRuleViolatingPositions());
+		
+		return violatingPositions;
+	}
+	
+	/**
+	 * Find all positions that violate the center of mass rule for all planet fields
+	 */
+	@VisibleForTesting
+	protected List<Position> findCenterOfMassRuleViolatingPositions() {
 		List<Position> violatingPositions = new ArrayList<Position>();
 		List<Field> planetFields = fields.values().stream().filter(f -> f.getPlanet() != null).collect(Collectors.toList());
 		
-		//check whether the point of mass of the planets is near the center
 		double centerOfMassDifferenceThreshold = 2;//just guessing some values here...
 		boolean centerOfMassNearCenterField = isCenterOfMassNearCenter(planetFields, centerOfMassDifferenceThreshold);
 		
@@ -268,12 +301,18 @@ public class BoardCreator {
 					violatingPositions.add(field.getPosition());
 				}
 			}
-			
-			//return the violating positions directly (other positions are not needed at the moment)
-			return violatingPositions;
 		}
+		return violatingPositions;
+	}
+	
+	/**
+	 * Find all positions that violate the rule of spreading planets in the board
+	 */
+	@VisibleForTesting
+	protected List<Position> findPlanetSpreadingViolatingPositions() {
+		List<Position> violatingPositions = new ArrayList<Position>();
+		List<Field> planetFields = fields.values().stream().filter(f -> f.getPlanet() != null).collect(Collectors.toList());
 		
-		//check whether the planets are spread
 		//use an X-Means algorithm to calculate the clustering of the planets
 		int minClusters = 4;
 		int maxClusters = 6;
@@ -284,7 +323,6 @@ public class BoardCreator {
 		Map<Vector2D, Set<Field>> clusters = xMeans.findClusters();
 		
 		//calculate the average distance from the center to all fields in the cluster for all clusters
-		boolean spreadRuleViolated = false;
 		//the number of planets that need to be in a cluster to identify it as possible problem (because clusters of 1 will always have a average distance of 0)
 		int planetsPerClusterToIdentifySpreadViolation = 3;
 		for (Vector2D key : clusters.keySet()) {
@@ -295,17 +333,20 @@ public class BoardCreator {
 				if (avgDist < averageDistanceThreshold) {
 					//the cluster is not spread very well and should be moved
 					violatingPositions.addAll(clusters.get(key).stream().map(field -> field.getPosition()).collect(Collectors.toList()));
-					spreadRuleViolated = true;
 				}
 			}
 		}
 		
-		if (spreadRuleViolated) {
-			//don't wait to find more violating positions but just return the ones that were found
-			return violatingPositions;
-		}
+		return violatingPositions;
+	}
+	
+	/**
+	 * Find all positions that violate the rule of not to many low-color-distance plants to be near to each other
+	 */
+	@VisibleForTesting
+	protected List<Position> findLowColorDistanceRuleViolatingPositions() {
+		List<Position> violatingPositions = new ArrayList<Position>();
 		
-		//the average distance to the next near-colored planet (also genesis planets) has to be above a threshold
 		double averageDistanceToNearColoredPlanetThreshold = 2.5;
 		for (Planet planet : Planet.values()) {
 			if (planet != Planet.GENESIS) {
@@ -343,7 +384,7 @@ public class BoardCreator {
 			}
 		}
 		
-		//return the empty list to indicate that no rule is violated
+		//should be empty in this case
 		return violatingPositions;
 	}
 	
@@ -352,7 +393,8 @@ public class BoardCreator {
 	 * 
 	 * @return true if the difference from the center of mass to the center field is less than the differenceThreshold
 	 */
-	private boolean isCenterOfMassNearCenter(List<Field> planets, double differenceThreshold) {
+	@VisibleForTesting
+	protected boolean isCenterOfMassNearCenter(List<Field> planets, double differenceThreshold) {
 		double[] centerOfMass = calculateCenterOfMass(planets);
 		double distanceToCenter = Math.hypot(Board.CENTER.getX() - centerOfMass[0], Board.CENTER.getY() - centerOfMass[1]);
 		
@@ -362,7 +404,8 @@ public class BoardCreator {
 	/**
 	 * Calculates the center of mass of all planet fields in the list
 	 */
-	private double[] calculateCenterOfMass(List<Field> planetFields) {
+	@VisibleForTesting
+	protected double[] calculateCenterOfMass(List<Field> planetFields) {
 		double[] centerOfMass = new double[2];
 		for (Field field : planetFields) {
 			centerOfMass[0] += field.getPosition().getX();
@@ -376,7 +419,8 @@ public class BoardCreator {
 	/**
 	 * Check whether the planets are spread enough (using an x-means cluster-analysis-algorithm and a threshold)
 	 */
-	private boolean isPlanetsSpread(List<Field> planetFields, int maxClusters, double minimumAverageDistanceOfSpreadPlanets) {
+	@VisibleForTesting
+	protected boolean isPlanetsSpread(List<Field> planetFields, int maxClusters, double minimumAverageDistanceOfSpreadPlanets) {
 		//use an X-Means algorithm to calculate the clustering of the planets
 		XMeans<Field> xMeans = new XMeans<>(planetFields, 2, maxClusters, null, Field::toVector2D);
 		Map<Vector2D, Set<Field>> clusters = xMeans.findClusters();
@@ -389,7 +433,8 @@ public class BoardCreator {
 	/**
 	 * Calculate the average distance from a cluster center to the fields in the cluster
 	 */
-	private double calculateAverageSpreadDistance(Map<Vector2D, Set<Field>> classification) {
+	@VisibleForTesting
+	protected double calculateAverageSpreadDistance(Map<Vector2D, Set<Field>> classification) {
 		double avgDist = 0;
 		for (Vector2D key : classification.keySet()) {
 			avgDist += classification.get(key).stream().map(Field::toVector2D).mapToDouble(v -> v.distance(key)).sum()
