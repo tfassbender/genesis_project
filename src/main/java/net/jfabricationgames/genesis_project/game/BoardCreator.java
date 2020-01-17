@@ -121,13 +121,13 @@ public class BoardCreator {
 		Position movedPlanetPos = movable.get(movedPlanetIndex);
 		Field movedField = fields.get(movedPlanetPos);
 		
-		int x = (int) (Math.random() * width);
-		int y = (int) (Math.random() * height);
-		Position pos = new Position(x, y);
-		
 		//move the planet
 		boolean moved = false;
 		while (!moved) {
+			int x = (int) (Math.random() * width);
+			int y = (int) (Math.random() * height);
+			Position pos = new Position(x, y);
+			
 			if (fields.get(pos).getPlanet() == null) {
 				//add the field at the new position
 				fields.put(pos, movedField);
@@ -190,8 +190,10 @@ public class BoardCreator {
 			return true;
 		}
 		
+		//search for touching planets (10 planets mean 5 times two planets touching)
 		boolean moreThanFiveTouchingPlanets = fields.values().stream().filter(f -> f.getPlanet() != null)
-				.filter(f -> board.getNeighbourFields(f).stream().filter(neighbor -> neighbor.getPlanet() != null).findAny().isPresent()).count() > 5;
+				.filter(f -> board.getNeighbourFields(f).stream().filter(neighbor -> neighbor.getPlanet() != null).findAny().isPresent())
+				.count() > 10;
 		
 		return moreThanFiveTouchingPlanets;
 	}
@@ -211,26 +213,32 @@ public class BoardCreator {
 		for (Planet planet : Planet.values()) {
 			List<Field> planetFields = fields.values().stream().filter(f -> f.getPlanet() == planet).collect(Collectors.toList());
 			
-			//don't check all other conditions if one is not satisfied
-			if (!isCenterOfMassNearCenter(planetFields, centerOfMassThreshold)) {
-				return true;
+			//if there are not yet planets of this type the test must not fail
+			if (!planetFields.isEmpty()) {
+				//don't check all other conditions if one is not satisfied
+				if (!isCenterOfMassNearCenter(planetFields, centerOfMassThreshold)) {
+					return true;
+				}
 			}
 		}
 		
 		//spreading of planets
-		double minimumAverageDistanceOfSpreadPlanets = 3;//just guessing what could be a good value...
+		double minimumAverageDistanceOfSpreadPlanets = 1.5;//just guessing what could be a good value...
 		for (Planet planet : Planet.values()) {
 			List<Field> planetFields = fields.values().stream().filter(f -> f.getPlanet() == planet).collect(Collectors.toList());
 			
-			//the maximum number of clusters for the x-means algorithm that checks the spreading of the planets
-			int maxClusters = 2;
-			if (planet == Planet.GENESIS) {
-				maxClusters = 3;
-			}
-			
-			//don't check all other conditions if one is not satisfied
-			if (!isPlanetsSpread(planetFields, maxClusters, minimumAverageDistanceOfSpreadPlanets)) {
-				return true;
+			//if there are not yet planets of this type the test must not fail
+			if (!planetFields.isEmpty()) {
+				//the maximum number of clusters for the x-means algorithm that checks the spreading of the planets
+				int maxClusters = 2;
+				if (planet == Planet.GENESIS) {
+					maxClusters = 3;
+				}
+				
+				//don't check all other conditions if one is not satisfied
+				if (!isPlanetsSpread(planetFields, maxClusters, minimumAverageDistanceOfSpreadPlanets)) {
+					return true;
+				}
 			}
 		}
 		
@@ -395,6 +403,9 @@ public class BoardCreator {
 	 */
 	@VisibleForTesting
 	protected boolean isCenterOfMassNearCenter(List<Field> planets, double differenceThreshold) {
+		if (planets.isEmpty()) {
+			throw new IllegalArgumentException("no fields to calculate the center of mass");
+		}
 		double[] centerOfMass = calculateCenterOfMass(planets);
 		double distanceToCenter = Math.hypot(Board.CENTER.getX() - centerOfMass[0], Board.CENTER.getY() - centerOfMass[1]);
 		
@@ -443,5 +454,10 @@ public class BoardCreator {
 		avgDist /= classification.size();
 		
 		return avgDist;
+	}
+	
+	@VisibleForTesting
+	protected Map<Position, Field> getFields() {
+		return fields;
 	}
 }

@@ -70,7 +70,7 @@ public class Field {
 	}
 	@Override
 	public String toString() {
-		return "Field[Position: " + position + "; Planet: " + planet.name() + "]";
+		return "Field[Position: " + position + "; Planet: " + planet + "]";
 	}
 	
 	/**
