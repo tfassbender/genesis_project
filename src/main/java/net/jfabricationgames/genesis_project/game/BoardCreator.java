@@ -229,6 +229,8 @@ public class BoardCreator {
 			
 			//if there are not yet planets of this type the test must not fail
 			if (!planetFields.isEmpty()) {
+				int minClusters = 2;
+				List<Vector2D> initialClusterCenters = Arrays.asList(new Vector2D(0, 0), new Vector2D(15, 7));
 				//the maximum number of clusters for the x-means algorithm that checks the spreading of the planets
 				int maxClusters = 2;
 				if (planet == Planet.GENESIS) {
@@ -236,7 +238,7 @@ public class BoardCreator {
 				}
 				
 				//don't check all other conditions if one is not satisfied
-				if (!isPlanetsSpread(planetFields, maxClusters, minimumAverageDistanceOfSpreadPlanets)) {
+				if (!isPlanetsSpread(planetFields, minClusters, maxClusters, initialClusterCenters, minimumAverageDistanceOfSpreadPlanets)) {
 					return true;
 				}
 			}
@@ -297,7 +299,7 @@ public class BoardCreator {
 			//calculate the vector to the center of mass and check whether a field is in a certain angle to the position
 			Vector2D center = Board.CENTER.toVector2D();
 			Vector2D vectorToCenterOfMass = center.vectorTo(new Vector2D(centerOfMass));
-			for (Field field : fields.values()) {
+			for (Field field : planetFields) {
 				Vector2D toField = center.vectorTo(Field.toVector2D(field));
 				//calculate the difference in the angle between the two vectors
 				double angleDifference = vectorToCenterOfMass.getAngleDeltaTo(toField);
@@ -328,6 +330,7 @@ public class BoardCreator {
 		List<Vector2D> initialCenters = Arrays.asList(new Vector2D(0, 0), new Vector2D(0, width), new Vector2D(0, height),
 				new Vector2D(width, height));
 		XMeans<Field> xMeans = new XMeans<>(planetFields, minClusters, maxClusters, initialCenters, Field::toVector2D);
+		xMeans.setImprovementNeededToAcceptTheNewSolution(0.20);
 		Map<Vector2D, Set<Field>> clusters = xMeans.findClusters();
 		
 		//calculate the average distance from the center to all fields in the cluster for all clusters
@@ -357,7 +360,7 @@ public class BoardCreator {
 		
 		double averageDistanceToNearColoredPlanetThreshold = 2.5;
 		for (Planet planet : Planet.values()) {
-			if (planet != Planet.GENESIS) {
+			if (planet != Planet.GENESIS && planet != Planet.CENTER) {
 				//calculate the average distance from a planet of this color to the next planet which's color is near to this planet's color
 				double averageDistanceToNextNearColoredPlanet = 0;
 				
@@ -431,9 +434,10 @@ public class BoardCreator {
 	 * Check whether the planets are spread enough (using an x-means cluster-analysis-algorithm and a threshold)
 	 */
 	@VisibleForTesting
-	protected boolean isPlanetsSpread(List<Field> planetFields, int maxClusters, double minimumAverageDistanceOfSpreadPlanets) {
+	protected boolean isPlanetsSpread(List<Field> planetFields, int minClusters, int maxClusters, List<Vector2D> initialCenters,
+			double minimumAverageDistanceOfSpreadPlanets) {
 		//use an X-Means algorithm to calculate the clustering of the planets
-		XMeans<Field> xMeans = new XMeans<>(planetFields, 2, maxClusters, null, Field::toVector2D);
+		XMeans<Field> xMeans = new XMeans<>(planetFields, minClusters, maxClusters, initialCenters, Field::toVector2D);
 		Map<Vector2D, Set<Field>> clusters = xMeans.findClusters();
 		//calculate the average distance of centers to planets
 		double averageSpreadDistance = calculateAverageSpreadDistance(clusters);

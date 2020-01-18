@@ -1,22 +1,27 @@
 package net.jfabricationgames.genesis_project.game;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import net.jfabricationgames.genesis_project.game.Board.Position;
+import net.jfabricationgames.linear_algebra.Vector2D;
 
 class BoardCreatorTest {
 	
@@ -129,7 +134,7 @@ class BoardCreatorTest {
 	}
 	@Test
 	public void testIsSamePlanetRulesViolated_planetsNotSpread() {
-		addPlanet(8, 8, Planet.BLACK);
+		addPlanet(7, 8, Planet.BLACK);
 		addPlanet(5, 5, Planet.BLACK);
 		addPlanet(15, 8, Planet.BLACK);
 		
@@ -146,22 +151,62 @@ class BoardCreatorTest {
 	
 	@Test
 	public void testFindAllPlanetRulesViolatingPositions() {
-		fail("Not yet implemented");
+		addPlanet(1, 1, Planet.BLACK);
+		addPlanet(10, 3, Planet.GRAY);
+		addPlanet(5, 7, Planet.YELLOW);
+		addPlanet(3, 3, Planet.GENESIS);
+		addPlanet(15, 0, Planet.RED);
+		addPlanet(6, 8, Planet.BLUE);
+		addPlanet(9, 5, Planet.YELLOW);
+		
+		assertTrue(creator.findAllPlanetRulesViolatingPositions().isEmpty());
 	}
 	
 	@Test
 	public void testFindCenterOfMassRuleViolatingPositions() {
-		fail("Not yet implemented");
+		addPlanet(1, 1, Planet.BLACK);
+		addPlanet(3, 1, Planet.BLACK);
+		addPlanet(1, 3, Planet.BLACK);
+		addPlanet(3, 3, Planet.BLACK);
+		addPlanet(15, 0, Planet.BLACK);
+		addPlanet(6, 8, Planet.BLACK);
+		addPlanet(9, 5, Planet.BLACK);
+		
+		List<Position> violatingPositions = creator.findCenterOfMassRuleViolatingPositions();
+		List<Position> expectedViolatingPositions = Arrays.asList(new Position(1, 1), new Position(3, 1), new Position(1, 3), new Position(3, 3));
+		assertEquals(expectedViolatingPositions.size(), violatingPositions.size());
+		assertTrue(violatingPositions.containsAll(expectedViolatingPositions));
 	}
 	
 	@Test
 	public void testFindPlanetSpreadingViolatingPositions() {
-		fail("Not yet implemented");
+		addPlanet(1, 1, Planet.BLACK);
+		addPlanet(3, 1, Planet.BLACK);
+		addPlanet(1, 3, Planet.BLACK);
+		addPlanet(15, 0, Planet.BLACK);
+		addPlanet(6, 8, Planet.BLACK);
+		addPlanet(9, 5, Planet.BLACK);
+		
+		List<Position> violatingPositions = creator.findPlanetSpreadingViolatingPositions();
+		List<Position> expectedViolatingPositions = Arrays.asList(new Position(1, 1), new Position(3, 1), new Position(1, 3));
+		assertEquals(expectedViolatingPositions.size(), violatingPositions.size());
+		assertTrue(violatingPositions.containsAll(expectedViolatingPositions));
 	}
 	
 	@Test
 	public void testFindLowColorDistanceRuleViolatingPositions() {
-		fail("Not yet implemented");
+		addPlanet(1, 1, Planet.BLACK);
+		addPlanet(3, 1, Planet.GRAY);
+		addPlanet(1, 3, Planet.YELLOW);
+		addPlanet(3, 3, Planet.GENESIS);
+		addPlanet(15, 0, Planet.RED);
+		addPlanet(6, 8, Planet.BLUE);
+		addPlanet(9, 5, Planet.YELLOW);
+		
+		List<Position> violatingPositions = creator.findLowColorDistanceRuleViolatingPositions();
+		List<Position> expectedViolatingPositions = Arrays.asList(new Position(3, 1));
+		assertEquals(expectedViolatingPositions.size(), violatingPositions.size());
+		assertTrue(violatingPositions.containsAll(expectedViolatingPositions));
 	}
 	
 	@Test
@@ -185,12 +230,34 @@ class BoardCreatorTest {
 	
 	@Test
 	public void testIsPlanetsSpread() {
-		fail("Not yet implemented");
+		addPlanet(1, 1, Planet.BLACK);
+		addPlanet(3, 1, Planet.GRAY);
+		addPlanet(1, 3, Planet.YELLOW);
+		addPlanet(3, 3, Planet.GENESIS);
+		addPlanet(15, 0, Planet.RED);
+		addPlanet(6, 8, Planet.BLUE);
+		addPlanet(9, 5, Planet.YELLOW);
+		
+		List<Field> planetFields = fields.values().stream().filter(field -> field.getPlanet() != null).collect(Collectors.toList());
+		List<Vector2D> initialClusterCenters = Arrays.asList(new Vector2D(0, 0), new Vector2D(15, 7));
+		
+		assertFalse(creator.isPlanetsSpread(planetFields, 2, 2, initialClusterCenters, 3));
+		assertFalse(creator.isPlanetsSpread(planetFields, 2, 3, initialClusterCenters, 3));
+		assertFalse(creator.isPlanetsSpread(planetFields, 2, 4, initialClusterCenters, 2));
 	}
 	
 	@Test
 	public void testCalculateAverageSpreadDistance() {
-		fail("Not yet implemented");
+		Map<Vector2D, Set<Field>> classification = new HashMap<>();
+		classification.put(new Vector2D(0, 0),
+				new HashSet<Field>(Arrays.asList(getFieldAt(2, 2), getFieldAt(3, 3), getFieldAt(0, 1), getFieldAt(5, 0))));
+		classification.put(new Vector2D(4, 4), new HashSet<Field>(Arrays.asList(getFieldAt(2, 2), getFieldAt(3, 3))));
+		
+		double expectedDistance = (Math.hypot(2, 2) + Math.hypot(3, 3) + Math.hypot(0, 1) + Math.hypot(5, 0)) / 4d;
+		expectedDistance += (Math.hypot(2, 2) + Math.hypot(1, 1)) / 2;
+		expectedDistance /= 2;
+		
+		assertEquals(expectedDistance, creator.calculateAverageSpreadDistance(classification), 1e-5);
 	}
 	
 	private void addPlanet(int x, int y, Planet planet) {
