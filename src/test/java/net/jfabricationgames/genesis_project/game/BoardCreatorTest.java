@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 import net.jfabricationgames.genesis_project.game.Board.Position;
 import net.jfabricationgames.linear_algebra.Vector2D;
@@ -35,6 +36,13 @@ class BoardCreatorTest {
 		creator = new BoardCreator(new Board(), numPlayers);
 		fields = creator.getFields();
 		creator.initializeEmptyField();
+	}
+	
+	@RepeatedTest(5)
+	@Timeout(15)
+	public void testCreateBoard() {
+		creator = new BoardCreator(new Board(), numPlayers);
+		creator.createBoard();
 	}
 	
 	@Test
@@ -185,7 +193,6 @@ class BoardCreatorTest {
 		addPlanet(1, 3, Planet.BLACK);
 		addPlanet(15, 0, Planet.BLACK);
 		addPlanet(6, 8, Planet.BLACK);
-		addPlanet(9, 5, Planet.BLACK);
 		
 		List<Position> violatingPositions = creator.findPlanetSpreadingViolatingPositions();
 		List<Position> expectedViolatingPositions = Arrays.asList(new Position(1, 1), new Position(3, 1), new Position(1, 3));

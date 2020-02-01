@@ -76,6 +76,7 @@ public class Game {
 		for (Player player : players) {
 			player.setGame(this);
 		}
+		board.initializeBoard(players.size());
 		playerInfoList = FXCollections.observableArrayList(players.stream().map(p -> new PlayerInfo(p)).collect(Collectors.toList()));
 	}
 	

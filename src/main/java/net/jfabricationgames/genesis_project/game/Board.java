@@ -87,8 +87,8 @@ public class Board {
 		}
 	}
 	
-	private final int[][] neighboursEvenX = new int[][] {{0, -1}, {0, 1}, {-1, -1}, {-1, 0}, {1, -1}, {1, 0}};
-	private final int[][] neighboursOddX = new int[][] {{0, -1}, {0, 1}, {-1, 1}, {-1, 0}, {1, 1}, {1, 0}};
+	private static final int[][] neighboursEvenX = new int[][] {{0, -1}, {0, 1}, {-1, -1}, {-1, 0}, {1, -1}, {1, 0}};
+	private static final int[][] neighboursOddX = new int[][] {{0, -1}, {0, 1}, {-1, 1}, {-1, 0}, {1, 1}, {1, 0}};
 	
 	public static final Position CENTER = new Position(8, 4);
 	
@@ -109,14 +109,27 @@ public class Board {
 		this.fields = new HashMap<Position, Field>();
 	}
 	
+	/**
+	 * Initialize the board with planets on random positions following the rules for creating boards (see {@link BoardCreator})
+	 */
+	public void initializeBoard(int numPlayers) throws IllegalStateException {
+		new BoardCreator(this, numPlayers).createBoard();
+	}
+	
 	public Field getCenterField() {
 		return fields.get(CENTER);
 	}
 	
 	/**
-	 * Get the neighbors of a field (the field itself is not included)
+	 * Get the neighbors of a field on the current board (the field itself is not included)
 	 */
 	public List<Field> getNeighbourFields(Field field) {
+		return getNeighbourFields(fields, field);
+	}
+	/**
+	 * Get the neighbors of a field in a map of fields (the field itself is not included)
+	 */
+	public static List<Field> getNeighbourFields(Map<Position, Field> fields, Field field) {
 		List<Field> neighbours = new ArrayList<Field>(6);
 		
 		Position pos = field.getPosition();
@@ -169,6 +182,9 @@ public class Board {
 	
 	public Field getField(int x, int y) {
 		return fields.get(new Position(x, y));
+	}
+	protected void setFields(Map<Position, Field> fields) {
+		this.fields = fields;
 	}
 	
 	public int getId() {

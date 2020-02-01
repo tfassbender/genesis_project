@@ -2,11 +2,23 @@ package net.jfabricationgames.genesis_project.game;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -16,8 +28,10 @@ import net.jfabricationgames.linear_algebra.Vector2D;
 
 public class BoardCreator {
 	
-	private Board board;
+	private static final Logger LOGGER = LogManager.getLogger(BoardCreator.class);
+	
 	private Map<Position, Field> fields;
+	private final Board board;
 	private final int numPlayers;
 	
 	private final int width = Board.WIDTH;
@@ -25,14 +39,82 @@ public class BoardCreator {
 	
 	public BoardCreator(Board board, int numPlayers) {
 		this.board = board;
-		this.fields = board.getFields();
+		this.fields = new HashMap<>(board.getFields());
 		this.numPlayers = numPlayers;
 	}
 	
 	/**
-	 * Creates a board that follows all given rules (on the board that was given as constructor parameter)
+	 * Creates a board that follows all given rules (on the board that was given as constructor parameter).
+	 * 
+	 * This method tries to create several boards, because the algorithm can get stuck and doesn't create a board.<br>
+	 * If a board creation fails the thread is interrupted and the algorithm is restarted.<br>
+	 * To speed up the execution there are 3 threads running parallel to create a game.
 	 */
 	public void createBoard() throws IllegalStateException {
+		final int boardsCreatedParallel = 3;
+		
+		//create an executor service to execute the board creators
+		ExecutorService executor = Executors.newFixedThreadPool(boardsCreatedParallel);
+		CompletionService<Map<Position, Field>> completionService = new ExecutorCompletionService<>(executor);
+		
+		//create another thread-pool to execute the board creations (to stop the board creations after a specified amout of time)
+		ExecutorService singleBoardCreatorExecutor = Executors.newFixedThreadPool(boardsCreatedParallel);
+		
+		for (int i = 0; i < boardsCreatedParallel; i++) {
+			completionService.submit(() -> {
+				BoardCreator creator;
+				//a flag to restart the calculation after the last try failed
+				boolean restart;
+				
+				do {
+					restart = false;
+					
+					//create a new board creator to create a board
+					creator = new BoardCreator(board, numPlayers);
+					final BoardCreator finalCreator = creator;
+					
+					//try to create a single board...
+					Future<?> future = singleBoardCreatorExecutor.submit(() -> finalCreator.createSingleBoard());
+					//... and abort the calculation after at most 5 seconds
+					try {
+						future.get(5, TimeUnit.SECONDS);
+					}
+					catch (TimeoutException te) {
+						//interrupt the execution after the timeout
+						future.cancel(true);
+						
+						//start a new calculation in this thread
+						restart = true;
+					}
+				} while (restart);
+				
+				//return the fields if the calculation succeeds
+				return creator.fields;
+			});
+		}
+		
+		Future<Map<Position, Field>> result;
+		try {
+			result = completionService.take();
+			//copy the result of the board creator that finished first to this board creator and to the board
+			this.fields = result.get();
+			this.board.setFields(fields);
+		}
+		catch (InterruptedException | ExecutionException e) {
+			LOGGER.error("couldn't take a result from the service", e);
+			throw new IllegalStateException("Board couldn't be created", e);
+		}
+		finally {
+			//shutdown the executors
+			singleBoardCreatorExecutor.shutdownNow();
+			executor.shutdownNow();
+		}
+	}
+	
+	/**
+	 * Creates a board that follows all given rules
+	 */
+	private void createSingleBoard() {
 		if (fields.size() > 0) {
 			throw new IllegalStateException("the board has already been initialized");
 		}
@@ -53,7 +135,7 @@ public class BoardCreator {
 			//save the positions where the planets of the current color were saved
 			List<Position> addedPositions = new ArrayList<Position>(numPlanets);
 			
-			for (int i = 0; i < numPlanets; i++) {
+			for (int i = 0; i < numPlanets && !Thread.currentThread().isInterrupted(); i++) {
 				//the position where the planet will be placed
 				int x = (int) (Math.random() * width);
 				int y = (int) (Math.random() * height);
@@ -78,16 +160,22 @@ public class BoardCreator {
 			}
 			
 			//check whether the placed planets of the current color violate any rules
-			while (isSamePlanetRulesViolated()) {
+			while (isSamePlanetRulesViolated() && !Thread.currentThread().isInterrupted()) {
 				//if rules are violated, move a randomly chosen planet (out of the violating planets)
-				moveRandomPlanet(addedPositions, () -> isBasicRulesViolated());
+				Position[] planetMovement = moveRandomPlanet(addedPositions, () -> isBasicRulesViolated());
+				//update the planets position
+				addedPositions.remove(planetMovement[0]);
+				addedPositions.add(planetMovement[1]);
 			}
 			
 			//check whether any rule is still violated and move some planets if there are rule violations
 			List<Position> violatingPositions;
-			while (!(violatingPositions = findAllPlanetRulesViolatingPositions()).isEmpty()) {
+			
+			//test for thread interruption so JUnit can use the timeout
+			while (!(violatingPositions = findAllPlanetRulesViolatingPositions()).isEmpty() && !Thread.currentThread().isInterrupted()) {
 				//if rules are violated, move a randomly chosen planet (out of the violating planets)
 				moveRandomPlanet(violatingPositions, () -> (isBasicRulesViolated() || isSamePlanetRulesViolated()));
+				//ignore the planet movement that is returned from the moveRandomPlanet method, because the violating positions are re-calculated anyway
 			}
 		}
 		
@@ -113,39 +201,44 @@ public class BoardCreator {
 	}
 	
 	/**
-	 * Move a random planet of the list (and check for basic rules to undo the movement if it violates a basic rule)
+	 * Move a random planet of the list (and check for rules from the ruleViolationSupplier to undo the movement if it violates a basic rule)
+	 * 
+	 * @return Returns the previous position (index 0) and the new position (index 1) of the moved planet.
 	 */
 	@VisibleForTesting
-	protected void moveRandomPlanet(List<Position> movable, Supplier<Boolean> ruleViolationSupplier) {
+	protected Position[] moveRandomPlanet(List<Position> movable, Supplier<Boolean> ruleViolationSupplier) {
 		int movedPlanetIndex = (int) Math.random() * movable.size();
-		Position movedPlanetPos = movable.get(movedPlanetIndex);
-		Field movedField = fields.get(movedPlanetPos);
+		Position previousePosition = movable.get(movedPlanetIndex);
+		Field movedField = fields.get(previousePosition);
 		
 		//move the planet
 		boolean moved = false;
-		while (!moved) {
+		Position movingTo = null;
+		while (!moved && !Thread.currentThread().isInterrupted()) {
 			int x = (int) (Math.random() * width);
 			int y = (int) (Math.random() * height);
-			Position pos = new Position(x, y);
+			movingTo = new Position(x, y);
 			
-			if (fields.get(pos).getPlanet() == null) {
+			if (fields.get(movingTo).getPlanet() == null) {
 				//add the field at the new position
-				fields.put(pos, movedField);
-				movedField.setPosition(pos);
+				fields.put(movingTo, movedField);
+				movedField.setPosition(movingTo);
 				//reset the field on the old position
-				fields.put(movedPlanetPos, new Field(movedPlanetPos, null, numPlayers));
+				fields.put(previousePosition, new Field(previousePosition, null, numPlayers));
 				
 				if (ruleViolationSupplier.get()) {
 					//undo the last move, if the new position violates a basic rule
-					fields.put(movedPlanetPos, movedField);
-					movedField.setPosition(movedPlanetPos);
-					fields.put(pos, new Field(pos, null, numPlayers));
+					fields.put(previousePosition, movedField);
+					movedField.setPosition(previousePosition);
+					fields.put(movingTo, new Field(movingTo, null, numPlayers));
 				}
 				else {
 					moved = true;
 				}
 			}
 		}
+		
+		return new Position[] {previousePosition, movingTo};
 	}
 	
 	/**
@@ -161,7 +254,7 @@ public class BoardCreator {
 	 */
 	@VisibleForTesting
 	protected boolean isBasicRulesViolated() {
-		boolean planetsBeneathCenter = board.getNeighbourFields(fields.get(Board.CENTER)).stream().filter(field -> field.getPlanet() != null)
+		boolean planetsBeneathCenter = Board.getNeighbourFields(fields, fields.get(Board.CENTER)).stream().filter(field -> field.getPlanet() != null)
 				.findAny().isPresent();
 		
 		//if the rule is already violated there is no need for checking the other rules
@@ -172,8 +265,8 @@ public class BoardCreator {
 		boolean planetsOfSameColorTouching = false;
 		for (Field field : fields.values()) {
 			if (field.getPlanet() != null) {
-				planetsOfSameColorTouching |= board.getNeighbourFields(field).stream().filter(f -> f.getPlanet() == field.getPlanet()).findAny()
-						.isPresent();
+				planetsOfSameColorTouching |= Board.getNeighbourFields(fields, field).stream().filter(f -> f.getPlanet() == field.getPlanet())
+						.findAny().isPresent();
 			}
 		}
 		
@@ -183,7 +276,7 @@ public class BoardCreator {
 		
 		//search for a planet that has two or more neighbors
 		boolean moreThanTwoPlanetsTouching = fields.values().stream().filter(f -> f.getPlanet() != null)
-				.filter(f -> board.getNeighbourFields(f).stream().filter(neighbor -> neighbor.getPlanet() != null).count() >= 2).findAny()
+				.filter(f -> Board.getNeighbourFields(fields, f).stream().filter(neighbor -> neighbor.getPlanet() != null).count() >= 2).findAny()
 				.isPresent();
 		
 		if (moreThanTwoPlanetsTouching) {
@@ -192,7 +285,7 @@ public class BoardCreator {
 		
 		//search for touching planets (10 planets mean 5 times two planets touching)
 		boolean moreThanFiveTouchingPlanets = fields.values().stream().filter(f -> f.getPlanet() != null)
-				.filter(f -> board.getNeighbourFields(f).stream().filter(neighbor -> neighbor.getPlanet() != null).findAny().isPresent())
+				.filter(f -> Board.getNeighbourFields(fields, f).stream().filter(neighbor -> neighbor.getPlanet() != null).findAny().isPresent())
 				.count() > 10;
 		
 		return moreThanFiveTouchingPlanets;
@@ -223,7 +316,7 @@ public class BoardCreator {
 		}
 		
 		//spreading of planets
-		double minimumAverageDistanceOfSpreadPlanets = 1.5;//just guessing what could be a good value...
+		double minimumAverageDistanceOfSpreadPlanets = 1.2;//just guessing what could be a good value...
 		for (Planet planet : Planet.values()) {
 			List<Field> planetFields = fields.values().stream().filter(f -> f.getPlanet() == planet).collect(Collectors.toList());
 			
@@ -264,14 +357,12 @@ public class BoardCreator {
 		//check whether the point of mass of the planets is near the center
 		violatingPositions.addAll(findCenterOfMassRuleViolatingPositions());
 		if (!violatingPositions.isEmpty()) {
-			//don't wait to find more violating positions but just return the ones that were found
 			return violatingPositions;
 		}
 		
 		//check whether the planets are spread
 		violatingPositions.addAll(findPlanetSpreadingViolatingPositions());
 		if (!violatingPositions.isEmpty()) {
-			//don't wait to find more violating positions but just return the ones that were found
 			return violatingPositions;
 		}
 		
@@ -324,21 +415,37 @@ public class BoardCreator {
 		List<Field> planetFields = fields.values().stream().filter(f -> f.getPlanet() != null).collect(Collectors.toList());
 		
 		//use an X-Means algorithm to calculate the clustering of the planets
-		int minClusters = 4;
-		int maxClusters = 6;
-		//use the four edges as starting centers
-		List<Vector2D> initialCenters = Arrays.asList(new Vector2D(0, 0), new Vector2D(0, width), new Vector2D(0, height),
-				new Vector2D(width, height));
+		int minClusters = Math.min(4, planetFields.size());
+		int maxClusters = Math.min(6, planetFields.size());
+		
+		List<Vector2D> initialCenters;
+		if (planetFields.size() >= 4) {
+			//use the four edges as starting centers
+			initialCenters = Arrays.asList(new Vector2D(0, 0), new Vector2D(width, 0), new Vector2D(0, height), new Vector2D(width, height));
+		}
+		else {
+			//try to use edges as starting fields
+			if (planetFields.size() == 3) {
+				initialCenters = Arrays.asList(new Vector2D(0, 0), new Vector2D(width, 0), new Vector2D(width, height / 2));
+			}
+			else if (planetFields.size() == 2) {
+				initialCenters = Arrays.asList(new Vector2D(0, height / 2), new Vector2D(width, height / 2));
+			}
+			else {
+				//should never happen and will lead to an error in the k-means anyway
+				initialCenters = null;
+			}
+		}
 		XMeans<Field> xMeans = new XMeans<>(planetFields, minClusters, maxClusters, initialCenters, Field::toVector2D);
 		xMeans.setImprovementNeededToAcceptTheNewSolution(0.20);
 		Map<Vector2D, Set<Field>> clusters = xMeans.findClusters();
 		
-		//calculate the average distance from the center to all fields in the cluster for all clusters
+		//calculate the average distance from the center of the cluster to all fields in the cluster for all clusters
 		//the number of planets that need to be in a cluster to identify it as possible problem (because clusters of 1 will always have a average distance of 0)
 		int planetsPerClusterToIdentifySpreadViolation = 3;
 		for (Vector2D key : clusters.keySet()) {
 			//the lower threshold that indicates a problem in spreading of the planets (depending on the number of planets in the cluster)
-			double averageDistanceThreshold = clusters.get(key).size();
+			double averageDistanceThreshold = Math.min(((double) clusters.get(key).size()) / 2, 2.5);
 			if (clusters.get(key).size() >= planetsPerClusterToIdentifySpreadViolation) {
 				double avgDist = clusters.get(key).stream().map(Field::toVector2D).mapToDouble(v -> v.distance(key)).sum() / clusters.get(key).size();
 				if (avgDist < averageDistanceThreshold) {
@@ -358,7 +465,7 @@ public class BoardCreator {
 	protected List<Position> findLowColorDistanceRuleViolatingPositions() {
 		List<Position> violatingPositions = new ArrayList<Position>();
 		
-		double averageDistanceToNearColoredPlanetThreshold = 2.5;
+		double averageDistanceToNearColoredPlanetThreshold = 2.01;
 		for (Planet planet : Planet.values()) {
 			if (planet != Planet.GENESIS && planet != Planet.CENTER) {
 				//calculate the average distance from a planet of this color to the next planet which's color is near to this planet's color
@@ -370,27 +477,29 @@ public class BoardCreator {
 				List<Field> nearColoredPlanetFields = fields.values().stream().filter(field -> nearColoredPlanets.contains(field.getPlanet()))
 						.collect(Collectors.toList());
 				
-				//for every planet of the current color...
-				for (Field field : currentColorPlanetFields) {
-					double minimumDistance = Double.POSITIVE_INFINITY;
-					//... find the minimum distance to the next colored planet
-					for (Field nearColoredField : nearColoredPlanetFields) {
-						double dist = field.getPosition().toVector2D().distance(nearColoredField.getPosition().toVector2D());
-						if (dist < minimumDistance) {
-							minimumDistance = dist;
+				if (currentColorPlanetFields.size() > 0) {
+					//for every planet of the current color...
+					for (Field field : currentColorPlanetFields) {
+						double minimumDistance = Double.POSITIVE_INFINITY;
+						//... find the minimum distance to the next colored planet
+						for (Field nearColoredField : nearColoredPlanetFields) {
+							double dist = field.getPosition().toVector2D().distance(nearColoredField.getPosition().toVector2D());
+							if (dist < minimumDistance) {
+								minimumDistance = dist;
+							}
 						}
+						averageDistanceToNextNearColoredPlanet += minimumDistance;
 					}
-					averageDistanceToNextNearColoredPlanet += minimumDistance;
-				}
-				
-				averageDistanceToNextNearColoredPlanet /= currentColorPlanetFields.size();
-				
-				if (averageDistanceToNextNearColoredPlanet < averageDistanceToNearColoredPlanetThreshold) {
-					//this type of planet is to close to many other near colored planets
-					violatingPositions.addAll(currentColorPlanetFields.stream().map(field -> field.getPosition()).collect(Collectors.toList()));
 					
-					//directly return the violating positions without waiting for possible other positions to minimize the number of violating positions
-					return violatingPositions;
+					averageDistanceToNextNearColoredPlanet /= currentColorPlanetFields.size();
+					
+					if (averageDistanceToNextNearColoredPlanet < averageDistanceToNearColoredPlanetThreshold) {
+						//this type of planet is to close to many other near colored planets
+						violatingPositions.addAll(currentColorPlanetFields.stream().map(field -> field.getPosition()).collect(Collectors.toList()));
+						
+						//directly return the violating positions without waiting for possible other positions to minimize the number of violating positions
+						return violatingPositions;
+					}
 				}
 			}
 		}
