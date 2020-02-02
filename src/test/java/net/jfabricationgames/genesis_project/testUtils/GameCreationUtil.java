@@ -38,9 +38,10 @@ public class GameCreationUtil {
 		//add some resources for the player
 		players.get(0).getResourceManager().addResources(new CompleteResources(10, 10, 10, 5, 5, 2));
 		//create the game with the first player in the list as local player
-		Game game = new Game(42, players, players.get(0).getUsername());
+		Game game = new Game(42, players, players.get(0).getUsername(), false);
 		//Game turns: [MINE_TRADING_POST, ALLIANCE, GOVERNMENT_CITY, LABORATORY_RESEARCH_CENTER, NEW_PLANETS, NEIGHBORS, GENESIS_PLANET, COLONY]
 		((TurnManager) game.getTurnManager()).chooseRandomTurnGoals(TurnGoal.values(), new Random(42));
+		//start the next turn to have an active TurnGoal
 		game.getTurnManager().nextTurn();
 		initializeBoard(game);
 		

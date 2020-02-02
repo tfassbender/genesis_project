@@ -65,6 +65,9 @@ public class Game {
 	}
 	
 	public Game(int id, List<Player> players, String localPlayerName) {
+		this(id, players, localPlayerName, true);
+	}
+	public Game(int id, List<Player> players, String localPlayerName, boolean initializeBoard) {
 		this.id = id;
 		this.players = players;
 		this.localPlayerName = localPlayerName;
@@ -76,7 +79,9 @@ public class Game {
 		for (Player player : players) {
 			player.setGame(this);
 		}
-		board.initializeBoard(players.size());
+		if (initializeBoard) {
+			board.initializeBoard(players.size());
+		}
 		playerInfoList = FXCollections.observableArrayList(players.stream().map(p -> new PlayerInfo(p)).collect(Collectors.toList()));
 	}
 	

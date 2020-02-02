@@ -1,5 +1,9 @@
 package net.jfabricationgames.genesis_project.game;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.doReturn;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
@@ -13,6 +17,7 @@ import net.jfabricationgames.genesis_project.connection.exception.ServerCommunic
 import net.jfabricationgames.genesis_project.connection.notifier.NotifierService;
 import net.jfabricationgames.genesis_project.game_frame.BoardPaneController;
 import net.jfabricationgames.genesis_project.manager.GameManager;
+import net.jfabricationgames.genesis_project.move.IMove;
 import net.jfabricationgames.genesis_project.testUtils.ConstantsInitializerUtil;
 import net.jfabricationgames.genesis_project.user.UserManager;
 
@@ -40,9 +45,12 @@ public class BoardCreatorManualTest extends Application {
 		
 		//create a game
 		Game game = new Game(gameId, Arrays.asList(new Player(localPlayer), new Player(player2)), localPlayer);
+		//create a spy to mock only the isMoveExecutable method
+		Game spy = spy(game);
+		doReturn(true).when(spy).isMoveExecutable(any(IMove.class));
 		
-		//add the game to the manager so the board controller can find the references
-		GameManager.getInstance().addGame(gameId, game);
+		//add the (partially mocked) game to the manager so the board controller can find the references
+		GameManager.getInstance().addGame(gameId, spy);
 	}
 	
 	@Override
