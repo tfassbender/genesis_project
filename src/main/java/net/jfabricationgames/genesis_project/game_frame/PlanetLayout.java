@@ -140,24 +140,33 @@ public class PlanetLayout extends Region {
 		ContextMenu contextMenu = new ContextMenu();
 		
 		if (preGame) {
-			MenuItem placeBuilding = new MenuItem("Startgebäude platzieren");
-			placeBuilding.setOnAction(e -> executePlaceStartBuildingMove());
-			if (!canPlaceStartBuilding()) {
-				placeBuilding.setDisable(true);
-			}
-			contextMenu.getItems().add(placeBuilding);
+			node.setOnMouseClicked((e) -> {
+				MenuItem placeBuilding = new MenuItem("Startgebäude platzieren");
+				placeBuilding.setOnAction(e2 -> executePlaceStartBuildingMove());
+				if (!canPlaceStartBuilding()) {
+					placeBuilding.setDisable(true);
+				}
+				contextMenu.getItems().add(placeBuilding);
+				
+				if (e.getButton() == MouseButton.SECONDARY) {
+					contextMenu.show(node, e.getScreenX(), e.getScreenY());
+				}
+				else {
+					contextMenu.hide();
+				}
+			});
 		}
 		else {
-			//building menu
-			Menu buildMenu = createBuildMenu();
-			Menu allianceMenu = createAllianceMenu();
-			
-			//add menus to context menu
-			contextMenu.getItems().add(buildMenu);
-			contextMenu.getItems().add(allianceMenu);
-			
 			//show or hide the context menu
 			node.setOnMouseClicked((e) -> {
+				//building menu
+				Menu buildMenu = createBuildMenu();
+				Menu allianceMenu = createAllianceMenu();
+				
+				//add menus to context menu
+				contextMenu.getItems().add(buildMenu);
+				contextMenu.getItems().add(allianceMenu);
+				
 				if (e.getButton() == MouseButton.SECONDARY) {
 					contextMenu.show(node, e.getScreenX(), e.getScreenY());
 				}
