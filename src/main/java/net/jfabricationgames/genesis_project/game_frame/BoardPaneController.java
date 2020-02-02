@@ -70,7 +70,8 @@ public class BoardPaneController implements Initializable {
 					//relocate the field to it's position
 					int[] boardPosition = position.getBoardLocation();
 					if (boardPosition != null) {
-						fieldLayout.relocate(boardPosition[0], boardPosition[1]);
+						fieldLayout.relocate(boardPosition[0] - PlanetLayout.BUILDING_IMAGE_WIDTH,
+								boardPosition[1] - PlanetLayout.BUILDING_IMAGE_HEIGHT);
 					}
 				}
 			}

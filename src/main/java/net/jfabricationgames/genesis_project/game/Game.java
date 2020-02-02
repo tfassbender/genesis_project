@@ -277,8 +277,9 @@ public class Game {
 				//the building has to be valid and the resources for the building have to be there
 				field = move.getField();
 				
-				//starting planets have to be the player color
-				moveExecutable &= field.isPlanetField() && field.getPlanet().getPlayerColor() == player.getPlayerClass().getColor();
+				//starting planets have to be the player color (also check whether the player has already chosen a color)
+				moveExecutable &= field.isPlanetField() && player.getPlayerClass() != null
+						&& field.getPlanet().getPlayerColor() == player.getPlayerClass().getColor();
 				//only one building per starting planet
 				moveExecutable &= field.getNumBuildings() == 0;
 				break;

@@ -125,57 +125,59 @@ public class BoardCreator {
 		
 		//place planets of each color (equal number of planets)
 		for (Planet planet : Planet.values()) {
-			//the number of planets of this color that is placed on the board
-			int numPlanets = Board.PLANETS_PER_COLOR;
-			//the number of clusters for the x-means algorithm that checks the spreading of the planets
-			if (planet == Planet.GENESIS) {
-				numPlanets = Board.PLANETS_GENESIS;
-			}
-			
-			//save the positions where the planets of the current color were saved
-			List<Position> addedPositions = new ArrayList<Position>(numPlanets);
-			
-			for (int i = 0; i < numPlanets && !Thread.currentThread().isInterrupted(); i++) {
-				//the position where the planet will be placed
-				int x = (int) (Math.random() * width);
-				int y = (int) (Math.random() * height);
-				Position pos = new Position(x, y);
+			if (planet != Planet.CENTER) {
+				//the number of planets of this color that is placed on the board
+				int numPlanets = Board.PLANETS_PER_COLOR;
+				//the number of clusters for the x-means algorithm that checks the spreading of the planets
+				if (planet == Planet.GENESIS) {
+					numPlanets = Board.PLANETS_GENESIS;
+				}
 				
-				if (fields.get(pos).getPlanet() == null) {
-					//add the new planet
-					fields.put(pos, new Field(pos, planet, numPlayers));
-					addedPositions.add(pos);
+				//save the positions where the planets of the current color were saved
+				List<Position> addedPositions = new ArrayList<Position>(numPlanets);
+				
+				for (int i = 0; i < numPlanets && !Thread.currentThread().isInterrupted(); i++) {
+					//the position where the planet will be placed
+					int x = (int) (Math.random() * width);
+					int y = (int) (Math.random() * height);
+					Position pos = new Position(x, y);
 					
-					//check whether basic rules are violated and use backtracking, if they are violated
-					if (isBasicRulesViolated()) {
-						fields.put(pos, new Field(pos, null, numPlanets));
-						addedPositions.remove(addedPositions.size() - 1);
+					if (fields.get(pos).getPlanet() == null) {
+						//add the new planet
+						fields.put(pos, new Field(pos, planet, numPlayers));
+						addedPositions.add(pos);
+						
+						//check whether basic rules are violated and use backtracking, if they are violated
+						if (isBasicRulesViolated()) {
+							fields.put(pos, new Field(pos, null, numPlanets));
+							addedPositions.remove(addedPositions.size() - 1);
+							i--;
+						}
+					}
+					else {
+						//don't override a planet that was already placed
 						i--;
 					}
 				}
-				else {
-					//don't override a planet that was already placed
-					i--;
+				
+				//check whether the placed planets of the current color violate any rules
+				while (isSamePlanetRulesViolated() && !Thread.currentThread().isInterrupted()) {
+					//if rules are violated, move a randomly chosen planet (out of the violating planets)
+					Position[] planetMovement = moveRandomPlanet(addedPositions, () -> isBasicRulesViolated());
+					//update the planets position
+					addedPositions.remove(planetMovement[0]);
+					addedPositions.add(planetMovement[1]);
 				}
-			}
-			
-			//check whether the placed planets of the current color violate any rules
-			while (isSamePlanetRulesViolated() && !Thread.currentThread().isInterrupted()) {
-				//if rules are violated, move a randomly chosen planet (out of the violating planets)
-				Position[] planetMovement = moveRandomPlanet(addedPositions, () -> isBasicRulesViolated());
-				//update the planets position
-				addedPositions.remove(planetMovement[0]);
-				addedPositions.add(planetMovement[1]);
-			}
-			
-			//check whether any rule is still violated and move some planets if there are rule violations
-			List<Position> violatingPositions;
-			
-			//test for thread interruption so JUnit can use the timeout
-			while (!(violatingPositions = findAllPlanetRulesViolatingPositions()).isEmpty() && !Thread.currentThread().isInterrupted()) {
-				//if rules are violated, move a randomly chosen planet (out of the violating planets)
-				moveRandomPlanet(violatingPositions, () -> (isBasicRulesViolated() || isSamePlanetRulesViolated()));
-				//ignore the planet movement that is returned from the moveRandomPlanet method, because the violating positions are re-calculated anyway
+				
+				//check whether any rule is still violated and move some planets if there are rule violations
+				List<Position> violatingPositions;
+				
+				//test for thread interruption so JUnit can use the timeout
+				while (!(violatingPositions = findAllPlanetRulesViolatingPositions()).isEmpty() && !Thread.currentThread().isInterrupted()) {
+					//if rules are violated, move a randomly chosen planet (out of the violating planets)
+					moveRandomPlanet(violatingPositions, () -> (isBasicRulesViolated() || isSamePlanetRulesViolated()));
+					//ignore the planet movement that is returned from the moveRandomPlanet method, because the violating positions are re-calculated anyway
+				}
 			}
 		}
 		

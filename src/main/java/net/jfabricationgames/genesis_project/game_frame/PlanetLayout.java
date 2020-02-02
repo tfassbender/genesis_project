@@ -52,15 +52,15 @@ public class PlanetLayout extends Region {
 			|| building.getBuilding() == Building.SPACE_STATION;
 	private static final Predicate<PlayerBuilding> predicateSatellites = building -> building.getBuilding() == Building.SATELLITE;
 	
-	private static final int buildingImageWidth = 60;
-	private static final int buildingImageHeight = 60;
-	private static final int satelliteImageWidth = 30;
-	private static final int satelliteImageHeight = 30;
-	private static final int planetImageWidth = 120;
-	private static final int planetImageHeight = 120;
+	public static final int BUILDING_IMAGE_WIDTH = 60;
+	public static final int BUILDING_IMAGE_HEIGHT = 60;
+	public static final int SATELLITE_IMAGE_WIDTH = 30;
+	public static final int SATELLITE_IMAGE_HEIGHT = 30;
+	public static final int PLANET_IMAGE_WIDTH = 120;
+	public static final int PLANET_IMAGE_HEIGHT = 120;
 	//center images with this factor; no idea why but it seems to work...
-	private static final int centerOffsetX = (int) (planetImageWidth / 3.5);
-	private static final int centerOffsetY = (int) (planetImageHeight / 3.5);
+	private static final int centerOffsetX = (int) (PLANET_IMAGE_WIDTH / 3.5);
+	private static final int centerOffsetY = (int) (PLANET_IMAGE_HEIGHT / 3.5);
 	
 	public PlanetLayout(int gameId, Field field) {
 		this(gameId, field, false);
@@ -76,8 +76,8 @@ public class PlanetLayout extends Region {
 			//the planet image is the first that is added
 			Image planetImage = GuiUtils.loadImage(field.getPlanet().getImagePath(), false);
 			ImageView planetImageView = new ImageView(planetImage);
-			planetImageView.setFitWidth(planetImageWidth);
-			planetImageView.setFitHeight(planetImageHeight);
+			planetImageView.setFitWidth(PLANET_IMAGE_WIDTH);
+			planetImageView.setFitHeight(PLANET_IMAGE_HEIGHT);
 			getChildren().add(planetImageView);
 			
 			//add the building images next
@@ -94,8 +94,8 @@ public class PlanetLayout extends Region {
 					//if there is no building at a position add an empty imageView
 					buildingImageView = new ImageView();
 				}
-				buildingImageView.setFitWidth(buildingImageWidth);
-				buildingImageView.setFitHeight(buildingImageHeight);
+				buildingImageView.setFitWidth(BUILDING_IMAGE_WIDTH);
+				buildingImageView.setFitHeight(BUILDING_IMAGE_HEIGHT);
 				getChildren().add(buildingImageView);
 			}
 		}
@@ -109,8 +109,8 @@ public class PlanetLayout extends Region {
 				PlayerColor color = defenseBuilding.get().getPlayer().getPlayerClass().getColor();
 				Image defenseBuildingImage = GuiUtils.loadImage(imagePathes.get(color), false);
 				ImageView defenseBuildingImageView = new ImageView(defenseBuildingImage);
-				defenseBuildingImageView.setFitWidth(buildingImageWidth);
-				defenseBuildingImageView.setFitHeight(buildingImageHeight);
+				defenseBuildingImageView.setFitWidth(BUILDING_IMAGE_WIDTH);
+				defenseBuildingImageView.setFitHeight(BUILDING_IMAGE_HEIGHT);
 				getChildren().add(defenseBuildingImageView);
 			}
 			
@@ -121,8 +121,8 @@ public class PlanetLayout extends Region {
 				PlayerColor color = satellite.getPlayer().getPlayerClass().getColor();
 				Image satelliteImage = GuiUtils.loadImage(imagePathes.get(color), false);
 				ImageView satelliteImageView = new ImageView(satelliteImage);
-				satelliteImageView.setFitWidth(satelliteImageWidth);
-				satelliteImageView.setFitHeight(satelliteImageHeight);
+				satelliteImageView.setFitWidth(SATELLITE_IMAGE_WIDTH);
+				satelliteImageView.setFitHeight(SATELLITE_IMAGE_HEIGHT);
 				getChildren().add(satelliteImageView);
 			}
 			
