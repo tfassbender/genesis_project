@@ -4,14 +4,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Map.Entry;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -79,13 +83,13 @@ public class GenesisClient {
 	 * Send a request to a host server using HTTP GET or POST.
 	 */
 	public static Response sendRequest(String host, String resource, String requestType, Entity<?> entity) throws ServerCommunicationException {
-		return sendRequest(host, resource, requestType, entity, true);
+		return sendRequest(host, resource, requestType, entity, null, true);
 	}
 	/**
 	 * Send a request to a host server using HTTP GET or POST.
 	 */
-	public static Response sendRequest(String host, String resource, String requestType, Entity<?> entity, boolean logEntity)
-			throws ServerCommunicationException {
+	public static Response sendRequest(String host, String resource, String requestType, Entity<?> entity, Map<String, Object> headers,
+			boolean logEntity) throws ServerCommunicationException {
 		if (logEntity) {
 			LOGGER.debug("sending request to URI: {}{} (type: {}   entity: {})", host, resource, requestType, entity);
 		}
@@ -93,15 +97,24 @@ public class GenesisClient {
 			LOGGER.debug("sending request to URI: {}{} (type: {}   entity: {})", host, resource, requestType, "<entity_not_logged>");
 		}
 		Client client = ClientBuilder.newClient();
+		//add the host and the path to the resource
 		WebTarget webTarget = client.target(host).path(resource);
+		//add headers
+		Builder builder = webTarget.request();
+		if (headers != null) {
+			for (Entry<String, Object> header : headers.entrySet()) {
+				builder = builder.header(header.getKey(), header.getValue());
+			}
+		}
+		
 		Response response = null;
 		try {
 			switch (requestType) {
 				case "GET":
-					response = webTarget.request().get();
+					response = builder.get();
 					break;
 				case "POST":
-					response = webTarget.request().post(entity);
+					response = builder.post(entity);
 					break;
 			}
 			return response;
@@ -158,8 +171,12 @@ public class GenesisClient {
 		catch (JsonProcessingException jpe) {
 			throw new GenesisServerException("Game object couldn't be parsed", jpe);
 		}
-		String resource = "update_game/" + game.getId() + "/" + serializedGame;
-		Response response = sendServerRequest(resource, "GET", null);
+		
+		String resource = "update_game";
+		Map<String, Object> headers = new HashMap<String, Object>();
+		headers.put("id", Integer.toString(game.getId()));
+		
+		Response response = sendServerRequest(resource, "POST", Entity.entity(serializedGame, MediaType.APPLICATION_JSON), headers);
 		
 		switch (Status.fromStatusCode(response.getStatus())) {
 			case OK:
@@ -205,10 +222,10 @@ public class GenesisClient {
 		
 		//read the response text to a string
 		String responseText = response.readEntity(String.class);
-		ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = getGameObjectMapper();
 		try {
 			//parse the response text to a Game object
-			Game game = mapper.readValue(responseText, Game.class);
+			Game game = mapper.readerFor(Game.class).readValue(responseText);
 			return game;
 		}
 		catch (IOException ioe) {
@@ -238,8 +255,11 @@ public class GenesisClient {
 			throw new GenesisServerException("IMove object couldn't be parsed", jpe);
 		}
 		
-		String resource = "set_move/" + gameId + "/" + username + "/" + serializedMove;
-		Response response = sendServerRequest(resource, "GET", null);
+		String resource = "set_move";
+		Map<String, Object> headers = new HashMap<String, Object>();
+		headers.put("game_id", Integer.toString(gameId));
+		headers.put("username", username);
+		Response response = sendServerRequest(resource, "POST", Entity.entity(serializedMove, MediaType.APPLICATION_JSON), headers);
 		
 		switch (Status.fromStatusCode(response.getStatus())) {
 			case OK:
@@ -536,12 +556,20 @@ public class GenesisClient {
 	}
 	
 	private Response sendServerRequest(String resource, String requestType, Entity<?> entity) throws ServerCommunicationException {
-		return sendServerRequest(resource, requestType, entity, true);
+		return sendServerRequest(resource, requestType, entity, null, true);
 	}
 	private Response sendServerRequest(String resource, String requestType, Entity<?> entity, boolean logEntity) throws ServerCommunicationException {
+		return sendServerRequest(resource, requestType, entity, null, logEntity);
+	}
+	private Response sendServerRequest(String resource, String requestType, Entity<?> entity, Map<String, Object> headers)
+			throws ServerCommunicationException {
+		return sendServerRequest(resource, requestType, entity, headers, true);
+	}
+	private Response sendServerRequest(String resource, String requestType, Entity<?> entity, Map<String, Object> headers, boolean logEntity)
+			throws ServerCommunicationException {
 		String serverURI = "http://" + hosts.getProperty(CONFIG_KEY_SERVER_HOST) + ":" + hosts.getProperty(CONFIG_KEY_SERVER_PORT)
 				+ "/genesis_project_server/genesis_project/genesis_project/";
-		return sendRequest(serverURI, resource, requestType, entity, logEntity);
+		return sendRequest(serverURI, resource, requestType, entity, headers, logEntity);
 	}
 	
 	private ObjectMapper getGameObjectMapper() {
@@ -574,9 +602,10 @@ public class GenesisClient {
 		ObjectMapper mapper = new ObjectMapper();
 		//register the module to parse java-8 LocalDate
 		mapper.registerModule(new JavaTimeModule());
+
 		try {
 			//"manually" parse JSON to Object
-			GameList resp = mapper.readValue(gameListText, GameList.class);
+			GameList resp = mapper.readerFor(GameList.class).readValue(gameListText);
 			return resp;
 		}
 		catch (IOException e) {
@@ -589,7 +618,7 @@ public class GenesisClient {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			//"manually" parse JSON to Object
-			MoveList resp = mapper.readValue(moveListText, MoveList.class);
+			MoveList resp = mapper.readerFor(MoveList.class).readValue(moveListText);
 			return resp;
 		}
 		catch (IOException e) {

@@ -16,7 +16,7 @@ public class DescriptionTexts {
 	
 	public static synchronized DescriptionTexts getInstance() {
 		if (instance == null) {
-			instance = new DescriptionTexts();
+			throw new IllegalStateException("DescriptionTexts were not initialized yet (need to be loaded from server)");
 		}
 		return instance;
 	}
@@ -30,4 +30,8 @@ public class DescriptionTexts {
 	
 	public String ERROR_TEXT_GENESIS_SERVER_EXCEPTION;
 	public String ERROR_TEXT_MOVE_EXECUTION;
+	
+	public static void setDescriptionTexts(DescriptionTexts descriptionTexts) {
+		instance = descriptionTexts;
+	}
 }

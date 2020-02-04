@@ -99,7 +99,7 @@ public class LoginFrameController implements Initializable {
 			Parent root = fxmlLoader.load();
 			Scene scene = new Scene(root);
 			Stage stage = new Stage();
-			stage.setTitle("Main Menü - Genesis Project");
+			stage.setTitle("Main Menü - Genesis Project - " + UserManager.getInstance().getLocalUsername());
 			stage.setScene(scene);
 			stage.show();
 			

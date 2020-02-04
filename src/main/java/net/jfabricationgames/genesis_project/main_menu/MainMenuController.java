@@ -37,6 +37,7 @@ import net.jfabricationgames.genesis_project.connection.exception.ServerCommunic
 import net.jfabricationgames.genesis_project.connection.notifier.NotificationMessageListener;
 import net.jfabricationgames.genesis_project.connection.notifier.NotifierService;
 import net.jfabricationgames.genesis_project.game.Constants;
+import net.jfabricationgames.genesis_project.game.DescriptionTexts;
 import net.jfabricationgames.genesis_project.game.Game;
 import net.jfabricationgames.genesis_project.game.Player;
 import net.jfabricationgames.genesis_project.game_frame.GameFrameController;
@@ -119,8 +120,12 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 		listPlayersOnline.setItems(playersOnline);
 		listGames.setItems(games);
 		
+		LOGGER.info("start loading server side configuration");
 		//load the constants from the server
 		loadConstants();
+		
+		//load the description texts from the server
+		loadDescriptionTexts();
 		
 		//load some news from the server
 		loadNews();
@@ -165,9 +170,47 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 				@Override
 				public void receiveException(GenesisServerException exception) {
 					Platform.runLater(() -> {
-						LOGGER.error("dynamic content couldn't be loaded", exception);
+						LOGGER.error("configuration 'constants' couldn't be loaded", exception);
 						DialogUtils.showExceptionDialog("Fehler bei der Serververbindung",
 								"Konfigurationsdaten (Spielkonstanten) konnten nicht geladen werden", exception, false);
+					});
+				}
+			});
+		}
+	}
+	
+	/**
+	 * Load the description texts from the server
+	 */
+	private void loadDescriptionTexts() {
+		if (genesisClient != null) {
+			genesisClient.getConfigAsync("description_texts", new AbstractGenesisClientEventSubscriber() {
+				
+				@Override
+				public void receiveGetConfigAnswer(String config) {
+					Platform.runLater(() -> {
+						LOGGER.debug("received description texts");
+						ObjectMapper mapper = new ObjectMapper();
+						try {
+							//"manually" parse JSON to Object
+							DescriptionTexts descriptionTexts = mapper.readValue(config, DescriptionTexts.class);
+							DescriptionTexts.setDescriptionTexts(descriptionTexts);
+						}
+						catch (IOException ioe) {
+							LOGGER.error("description text configuration couldn't be parsed", ioe);
+							LOGGER.error("description text configuration couldn't be parsed. Loaded texts were:\n{}", config);
+							DialogUtils.showExceptionDialog("Fehler bei der Serververbindung",
+									"Konfigurationsdaten (Erklährungstexte) konnten nicht geladen werden", ioe, false);
+						}
+					});
+				}
+				
+				@Override
+				public void receiveException(GenesisServerException exception) {
+					Platform.runLater(() -> {
+						LOGGER.error("configuration 'description_texts' couldn't be loaded", exception);
+						DialogUtils.showExceptionDialog("Fehler bei der Serververbindung",
+								"Konfigurationsdaten (Erklährungstexte) konnten nicht geladen werden", exception, false);
 					});
 				}
 			});
@@ -191,7 +234,7 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 				
 				@Override
 				public void receiveException(GenesisServerException exception) {
-					LOGGER.error("dynamic content couldn't be loaded", exception);
+					LOGGER.error("configuration 'dynamic_content' couldn't be loaded", exception);
 				}
 			});
 		}
@@ -314,7 +357,7 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 								true);
 					}
 					else {
-						LOGGER.error("unknown error whil loading the game", exception);
+						LOGGER.error("unknown error while loading the game", exception);
 						DialogUtils.showExceptionDialog("Fehler", "Spiel konnte nicht geladen werden - Ein Unbekannter Fehler ist aufgetreten",
 								exception, true);
 					}
@@ -340,7 +383,14 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 					Game game = new Game(gameId, players, UserManager.getInstance().getLocalUsername());
 					//add the game to the manager
 					GameManager.getInstance().addGame(gameId, game);
-					
+					try {
+						//send the game to the database (using a synchronous request, because this is already a non-ui thread)
+						GameManager.getInstance().initializeGameInDatabase(gameId);
+					}
+					catch (IllegalStateException | GenesisServerException e) {
+						LOGGER.error("couldn't add game to the GameManager", e);
+						DialogUtils.showExceptionDialog("Fehler", "Das Spiel konnte nicht erstellt werden", e, false);
+					}
 					//start the pre-game selections
 					startPreGameFrame(gameId);
 					
@@ -380,6 +430,9 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 			public void receiveGetGameAnswer(Game game) {
 				//add the game to the manager and start the game frame
 				GameManager.getInstance().addGame(gameId, game);
+				
+				//start the pre-game frame
+				Platform.runLater(() -> startPreGameFrame(gameId));
 			}
 			
 			@Override
@@ -391,7 +444,7 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 								true);
 					}
 					else {
-						LOGGER.error("unknown error whil loading the game", exception);
+						LOGGER.error("unknown error while downloading the game", exception);
 						DialogUtils.showExceptionDialog("Fehler", "Spiel konnte nicht geladen werden - Ein Unbekannter Fehler ist aufgetreten",
 								exception, true);
 					}
@@ -419,7 +472,7 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 		}
 		catch (Exception e) {
 			LOGGER.error("GameFrame couldn't be loaded", e);
-			DialogUtils.showExceptionDialog("Fehler", "Der GameFrame konnte nicht geladen werden", e, true);
+			Platform.runLater(() -> DialogUtils.showExceptionDialog("Fehler", "Der GameFrame konnte nicht geladen werden", e, true));
 		}
 	}
 	
@@ -442,7 +495,7 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 		}
 		catch (Exception e) {
 			LOGGER.error("GameFrame couldn't be loaded", e);
-			DialogUtils.showExceptionDialog("Fehler", "Der (Pre-)GameFrame konnte nicht geladen werden", e, true);
+			Platform.runLater(() -> DialogUtils.showExceptionDialog("Fehler", "Der (Pre-)GameFrame konnte nicht geladen werden", e, true));
 		}
 	}
 	
@@ -523,20 +576,21 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 						break;
 					case NOTIFIER_PREFIX_GAME_INVITATION_ANSWER:
 						if (split.length >= 4) {
-							String player = split[3];
-							boolean participating = Boolean.parseBoolean(split[4]);
+							String player = split[2];
+							boolean participating = Boolean.parseBoolean(split[3]);
 							receiveInvitationAnswer(player, participating);
 						}
 						else {
 							LOGGER.error("Received invitation answer message with not enough content (split.length: {} message: {})", split.length,
 									notificationMessage);
 						}
+						break;
 					case NOTIFIER_PREFIX_GAME_STARTED:
 						if (split.length >= 3) {
 							try {
 								int gameId = Integer.parseInt(split[2]);
 								downloadGame(gameId);
-								startPreGameFrame(gameId);
+								//pre-game frame is started in download game because it can only be started after the game was downloaded (async request)
 							}
 							catch (NumberFormatException nfe) {
 								LOGGER.error("Received game started message with a not parsable game id (message: {})", notificationMessage);
@@ -564,54 +618,58 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 	 * Handle an answer to a game invitation
 	 */
 	private void receiveInvitationAnswer(String player, boolean participating) {
-		if (participating) {
-			if (invitationAnswers >= 0) {//-1 means aborted
-				invitationAnswers++;
-				if (invitationAnswers >= invitedPlayers) {
-					//all players accepted -> start the game
-					startGame();
+		Platform.runLater(() -> {
+			if (participating) {
+				if (invitationAnswers >= 0) {//-1 means aborted
+					invitationAnswers++;
+					if (invitationAnswers >= invitedPlayers) {
+						//all players accepted -> start the game
+						startGame();
+					}
 				}
 			}
-		}
-		else {
-			//abort the game creation
-			invitationAnswers = -1;
-			DialogUtils.showInfoDialog("Spiel Erstellung Abgebrochen", player + " hat die Einladung abgelehnt",
-					"Das Spiel kann nicht gestartet werden.");
-			enableAll();
-		}
+			else {
+				//abort the game creation
+				invitationAnswers = -1;
+				DialogUtils.showInfoDialog("Spiel Erstellung Abgebrochen", player + " hat die Einladung abgelehnt",
+						"Das Spiel kann nicht gestartet werden.");
+				enableAll();
+			}
+		});
 	}
 	
 	private void showGameInvitationDialog(String invitingPlayer, List<String> participatingPlayers) {
-		Optional<ButtonType> result = DialogUtils.showConfirmationDialog("Einladung zum Spiel",
-				"Spieleinladung von: " + invitingPlayer + "\nSpieler: " + participatingPlayers.stream().collect(Collectors.joining(", ")),
-				"Einladung annehmen?");
-		if (result.isPresent() && result.get() == ButtonType.OK) {
-			// ... user chose OK -> inform the inviting player
-			try {
-				notifier.informPlayers(
-						NOTIFIER_PREFIX + NOTIFIER_PREFIX_GAME_INVITATION_ANSWER + UserManager.getInstance().getLocalUsername() + "/true",
-						invitingPlayer);
+		Platform.runLater(() -> {
+			Optional<ButtonType> result = DialogUtils.showConfirmationDialog("Einladung zum Spiel",
+					"Spieleinladung von: " + invitingPlayer + "\nSpieler: " + participatingPlayers.stream().collect(Collectors.joining(", ")),
+					"Einladung annehmen?");
+			if (result.isPresent() && result.get() == ButtonType.OK) {
+				// ... user chose OK -> inform the inviting player
+				try {
+					notifier.informPlayers(
+							NOTIFIER_PREFIX + NOTIFIER_PREFIX_GAME_INVITATION_ANSWER + UserManager.getInstance().getLocalUsername() + "/true",
+							invitingPlayer);
+				}
+				catch (ServerCommunicationException sce) {
+					LOGGER.error("couldn't send notification to players", sce);
+					DialogUtils.showExceptionDialog("Serververbindungs Fehler", "Server kann nicht erreicht werden", sce, false);
+				}
+				disableAll();
+				DialogUtils.showInfoDialog("Warte auf Mitspieler", "Warte auf Antwort der anderen Spieler", "");
 			}
-			catch (ServerCommunicationException sce) {
-				LOGGER.error("couldn't send notification to players", sce);
-				DialogUtils.showExceptionDialog("Serververbindungs Fehler", "Server kann nicht erreicht werden", sce, false);
+			else {
+				// ... user chose CANCEL or closed the dialog -> inform all players
+				try {
+					notifier.informPlayers(
+							NOTIFIER_PREFIX + NOTIFIER_PREFIX_GAME_INVITATION_ANSWER + UserManager.getInstance().getLocalUsername() + "/false",
+							participatingPlayers);
+				}
+				catch (ServerCommunicationException sce) {
+					LOGGER.error("couldn't send notification to players", sce);
+					DialogUtils.showExceptionDialog("Serververbindungs Fehler", "Server kann nicht erreicht werden", sce, false);
+				}
 			}
-			disableAll();
-			DialogUtils.showInfoDialog("Warte auf Mitspieler", "Warte auf Antwort der anderen Spieler", "");
-		}
-		else {
-			// ... user chose CANCEL or closed the dialog -> inform all players
-			try {
-				notifier.informPlayers(
-						NOTIFIER_PREFIX + NOTIFIER_PREFIX_GAME_INVITATION_ANSWER + UserManager.getInstance().getLocalUsername() + "/false",
-						participatingPlayers);
-			}
-			catch (ServerCommunicationException sce) {
-				LOGGER.error("couldn't send notification to players", sce);
-				DialogUtils.showExceptionDialog("Serververbindungs Fehler", "Server kann nicht erreicht werden", sce, false);
-			}
-		}
+		});
 	}
 	
 	@Override
@@ -628,8 +686,10 @@ public class MainMenuController implements Initializable, NotificationMessageLis
 		}
 		
 		//update the list
-		playersOnline.clear();
-		playersOnline.addAll(usersOnline);
-		listPlayersOnline.getSelectionModel().selectIndices(-1, indicesAsArray);
+		Platform.runLater(() -> {
+			playersOnline.clear();
+			playersOnline.addAll(usersOnline);
+			listPlayersOnline.getSelectionModel().selectIndices(-1, indicesAsArray);
+		});
 	}
 }

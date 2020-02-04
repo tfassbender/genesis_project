@@ -11,8 +11,10 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.annotations.VisibleForTesting;
 
+import net.jfabricationgames.genesis_project.game.Board.Position;
 import net.jfabricationgames.genesis_project.manager.IAllianceManager;
 import net.jfabricationgames.genesis_project.manager.IResearchManager;
+import net.jfabricationgames.linear_algebra.Vector2D;
 
 public class Field {
 	
@@ -68,7 +70,7 @@ public class Field {
 	}
 	@Override
 	public String toString() {
-		return "Field[Position: " + position + "; Planet: " + planet.name() + "]";
+		return "Field[Position: " + position + "; Planet: " + planet + "]";
 	}
 	
 	/**
@@ -150,6 +152,10 @@ public class Field {
 	@VisibleForTesting
 	public void setPlanet(Planet planet) {
 		this.planet = planet;
+	}
+	
+	protected void setPosition(Position position) {
+		this.position = position;
 	}
 	
 	public boolean hasDefenseBuilding() {
@@ -274,5 +280,9 @@ public class Field {
 			numBuildings = spaceBuildings.size();
 		}
 		return numBuildings;
+	}
+	
+	public static Vector2D toVector2D(Field field) {
+		return field.getPosition().toVector2D();
 	}
 }

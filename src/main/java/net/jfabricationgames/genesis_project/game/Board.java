@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import net.jfabricationgames.genesis_project.json.deserializer.CustomBoardPositionDeserializer;
 import net.jfabricationgames.genesis_project.json.serializer.CustomBoardPositionSerializer;
 import net.jfabricationgames.genesis_project.json.serializer.SerializationIdGenerator;
+import net.jfabricationgames.linear_algebra.Vector2D;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Board {
@@ -74,15 +75,28 @@ public class Board {
 			return y;
 		}
 		
+		public Vector2D toVector2D() {
+			return new Vector2D(x, y);
+		}
+		public static Vector2D toVector2D(Position position) {
+			return new Vector2D(position.x, position.y);
+		}
+		
 		public int[] getBoardLocation() {
 			return Constants.getInstance().CELL_COORDINATES.get(this);
 		}
 	}
 	
-	private final int[][] neighboursEvenX = new int[][] {{0, -1}, {0, 1}, {-1, -1}, {-1, 0}, {1, -1}, {1, 0}};
-	private final int[][] neighboursOddX = new int[][] {{0, -1}, {0, 1}, {-1, 1}, {-1, 0}, {1, 1}, {1, 0}};
+	private static final int[][] neighboursEvenX = new int[][] {{0, -1}, {0, 1}, {-1, -1}, {-1, 0}, {1, -1}, {1, 0}};
+	private static final int[][] neighboursOddX = new int[][] {{0, -1}, {0, 1}, {-1, 1}, {-1, 0}, {1, 1}, {1, 0}};
 	
-	private final Position center = new Position(8, 4);
+	public static final Position CENTER = new Position(8, 4);
+	
+	public static final int WIDTH = 17;
+	public static final int HEIGHT_EVEN = 9;//number of rows in even columns
+	public static final int HEIGHT_ODD = 8;//number of rows in odd columns
+	public static final int PLANETS_PER_COLOR = 5;//the number of planets of each color placed on the board
+	public static final int PLANETS_GENESIS = 7;//the number of genesis planets placed on the board
 	
 	@JsonSerialize(keyUsing = CustomBoardPositionSerializer.class)
 	@JsonDeserialize(keyUsing = CustomBoardPositionDeserializer.class)
@@ -95,11 +109,27 @@ public class Board {
 		this.fields = new HashMap<Position, Field>();
 	}
 	
-	public Field getCenterField() {
-		return fields.get(center);
+	/**
+	 * Initialize the board with planets on random positions following the rules for creating boards (see {@link BoardCreator})
+	 */
+	public void initializeBoard(int numPlayers) throws IllegalStateException {
+		new BoardCreator(this, numPlayers).createBoard();
 	}
 	
+	public Field getCenterField() {
+		return fields.get(CENTER);
+	}
+	
+	/**
+	 * Get the neighbors of a field on the current board (the field itself is not included)
+	 */
 	public List<Field> getNeighbourFields(Field field) {
+		return getNeighbourFields(fields, field);
+	}
+	/**
+	 * Get the neighbors of a field in a map of fields (the field itself is not included)
+	 */
+	public static List<Field> getNeighbourFields(Map<Position, Field> fields, Field field) {
 		List<Field> neighbours = new ArrayList<Field>(6);
 		
 		Position pos = field.getPosition();
@@ -152,6 +182,9 @@ public class Board {
 	
 	public Field getField(int x, int y) {
 		return fields.get(new Position(x, y));
+	}
+	protected void setFields(Map<Position, Field> fields) {
+		this.fields = fields;
 	}
 	
 	public int getId() {

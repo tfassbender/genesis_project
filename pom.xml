@@ -18,28 +18,30 @@
 		<jersey2.version>2.26</jersey2.version>
 		<jaxrs.version>2.1.1</jaxrs.version>
 		<jackson-jsr310.version>2.9.7</jackson-jsr310.version>
+		
+		<junit.version>5.5.0</junit.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.4.0</version>
-			<scope>test</scope>
+			<version>${junit.version}</version>
+			<!-- <scope>test</scope> -->
 		</dependency>
 
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
-			<version>5.4.0</version>
-			<scope>test</scope>
+			<version>${junit.version}</version>
+			<!-- <scope>test</scope> -->
 		</dependency>
 
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
 			<version>1.9.5</version>
-			<scope>test</scope>
+			<!-- <scope>test</scope> -->
 		</dependency>
 
 

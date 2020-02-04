@@ -54,7 +54,7 @@ public class TurnPaneController implements Initializable {
 		initializeTurnLabels();
 		updateTurnImages();
 	}
-
+	
 	public void updateAll() {
 		//nothing to do here *flies away*
 	}
@@ -82,7 +82,9 @@ public class TurnPaneController implements Initializable {
 			images[i].setImage(image);
 			images[i].setCache(true);
 		}
-		for (int i = turnManager.getTurn() - 1; i < Constants.getInstance().TURNS_PLAYED; i++) {
+		int currentTurnIndex = turnManager.getTurn() - 1;
+		currentTurnIndex = Math.max(0, currentTurnIndex);
+		for (int i = currentTurnIndex; i < Constants.getInstance().TURNS_PLAYED; i++) {
 			String imagePath = turnManager.getTurnGoals().get(i).getImagePath();
 			Image image = GuiUtils.loadImage(imagePath, true);
 			images[i].setImage(image);

@@ -46,6 +46,7 @@ public class PlayerClassPaneController implements Initializable {
 	
 	public PlayerClassPaneController(int gameId, PlayerClass playerClass) {
 		this.gameId = gameId;
+		this.playerClass = playerClass;
 	}
 	
 	@Override
@@ -53,8 +54,14 @@ public class PlayerClassPaneController implements Initializable {
 		GuiUtils.loadImageToView(playerClass.getClassCircleImagePath(), true, imageViewClassCircle);
 		GuiUtils.loadImageToView(playerClass.getClassEffectBaseImagePath(), true, imageViewClassEffect);
 		GuiUtils.loadImageToView(playerClass.getClassEffectGovernmentImagePath(), true, imageViewGovernmentEffect);
-		Tooltip.install(imageViewClassEffect, new Tooltip(playerClass.getClassEffectDescription()));
-		Tooltip.install(imageViewGovernmentEffect, new Tooltip(playerClass.getGovernmentEffectDescription()));
+		
+		Tooltip classEffect = new Tooltip(playerClass.getClassEffectDescription());
+		classEffect.setStyle("-fx-font-size: 16");
+		Tooltip.install(imageViewClassEffect, classEffect);
+		
+		Tooltip governmentEffect = new Tooltip(playerClass.getGovernmentEffectDescription());
+		governmentEffect.setStyle("-fx-font-size: 16");
+		Tooltip.install(imageViewGovernmentEffect, governmentEffect);
 		
 		labelClassName.setText(GuiUtils.toLeadingCapitalLetter(playerClass.name()));
 		buttonSelectClass.setOnAction(e -> selectClass());

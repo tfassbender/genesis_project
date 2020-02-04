@@ -36,7 +36,7 @@ public abstract class DialogUtils {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle(title);
 		alert.setHeaderText(hint);
-		alert.setContentText(ex.toString());
+		alert.setContentText(ex.getMessage());
 		
 		Pane detailsPane = createStackTracePane(ex);
 		alert.getDialogPane().setExpandableContent(detailsPane);

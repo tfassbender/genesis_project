@@ -187,7 +187,10 @@ class GameTest {
 	@Test
 	public void testExecuteMove_choosePlayerClassMove() {
 		Game game = GameCreationUtil.createGame();
-		game.getPlayers().stream().forEach(p -> p.setPlayerClass(null));
+		game.getPlayers().stream().forEach(p -> {
+			p.setPlayerClass(null);
+			p.resetManagers();
+		});
 		
 		IMove chooseClass = new MoveBuilder().setType(MoveType.CHOOSE_CLASS).setPlayerClass(PlayerClass.LEGION)
 				.setPlayer(game.getPlayers().get(0).getUsername()).build();

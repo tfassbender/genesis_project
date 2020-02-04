@@ -65,6 +65,9 @@ public class Game {
 	}
 	
 	public Game(int id, List<Player> players, String localPlayerName) {
+		this(id, players, localPlayerName, true);
+	}
+	public Game(int id, List<Player> players, String localPlayerName, boolean initializeBoard) {
 		this.id = id;
 		this.players = players;
 		this.localPlayerName = localPlayerName;
@@ -75,6 +78,9 @@ public class Game {
 		this.pointManager = new GamePointManager(this);
 		for (Player player : players) {
 			player.setGame(this);
+		}
+		if (initializeBoard) {
+			board.initializeBoard(players.size());
 		}
 		playerInfoList = FXCollections.observableArrayList(players.stream().map(p -> new PlayerInfo(p)).collect(Collectors.toList()));
 	}
@@ -165,6 +171,7 @@ public class Game {
 			case CHOOSE_CLASS:
 				PlayerClass chosenClass = move.getPlayerClass();
 				player.setPlayerClass(chosenClass);
+				player.initializeManagers();
 				
 				turnManager.nextMove();
 				break;
@@ -275,8 +282,9 @@ public class Game {
 				//the building has to be valid and the resources for the building have to be there
 				field = move.getField();
 				
-				//starting planets have to be the player color
-				moveExecutable &= field.isPlanetField() && field.getPlanet().getPlayerColor() == player.getPlayerClass().getColor();
+				//starting planets have to be the player color (also check whether the player has already chosen a color)
+				moveExecutable &= field.isPlanetField() && player.getPlayerClass() != null
+						&& field.getPlanet().getPlayerColor() == player.getPlayerClass().getColor();
 				//only one building per starting planet
 				moveExecutable &= field.getNumBuildings() == 0;
 				break;

@@ -1,5 +1,9 @@
 package net.jfabricationgames.genesis_project.game;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import net.jfabricationgames.genesis_project.game_frame.util.GuiUtils;
 
 public enum Planet {
@@ -48,6 +52,37 @@ public enum Planet {
 	}
 	public Resource getTertiaryResource() {
 		return tertiaryResource;
+	}
+	
+	public static List<Planet> getNearColoredPlanets(Planet planet) {
+		List<Planet> nearColored = new ArrayList<Planet>();
+		switch (planet) {
+			case BLUE:
+				nearColored.addAll(Arrays.asList(GREEN, RED, GENESIS));
+				break;
+			case GREEN:
+				nearColored.addAll(Arrays.asList(BLUE, GRAY, GENESIS));
+				break;
+			case GRAY:
+				nearColored.addAll(Arrays.asList(GREEN, BLACK, GENESIS));
+				break;
+			case BLACK:
+				nearColored.addAll(Arrays.asList(GRAY, YELLOW, GENESIS));
+				break;
+			case YELLOW:
+				nearColored.addAll(Arrays.asList(BLACK, RED, GENESIS));
+				break;
+			case RED:
+				nearColored.addAll(Arrays.asList(YELLOW, BLUE, GENESIS));
+				break;
+			case CENTER:
+			case GENESIS:
+				nearColored.addAll(Arrays.asList(BLUE, GREEN, GRAY, BLACK, YELLOW, RED, GENESIS));
+				break;
+			default:
+				throw new IllegalStateException("The planet type is unknown: " + planet);
+		}
+		return nearColored;
 	}
 	
 	/**

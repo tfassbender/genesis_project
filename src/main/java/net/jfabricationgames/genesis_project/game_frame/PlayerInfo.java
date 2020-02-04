@@ -42,24 +42,26 @@ public class PlayerInfo {
 	
 	private void initializeValues(Player player) {
 		name = player.getUsername();
-		points = player.getPointManager().getPoints();
-		planets = player.getGame().getBoard().getPlayersPlanets(player).size();
-		alliances = player.getAllianceManager().getAlliances().size();
-		resourcesC = player.getResourceManager().getResourcesC();
-		resourcesFe = player.getResourceManager().getResourcesFe();
-		resourcesSi = player.getResourceManager().getResourcesSi();
-		researchPoints = player.getResourceManager().getResearchPoints();
-		scientists = player.getResourceManager().getScientists();
-		colonies = player.getBuildingManager().getNumBuildingsOnField(Building.COLONY);
-		mines = player.getBuildingManager().getNumBuildingsOnField(Building.MINE);
-		tradingPosts = player.getBuildingManager().getNumBuildingsOnField(Building.TRADING_POST);
-		laboratories = player.getBuildingManager().getNumBuildingsOnField(Building.LABORATORY);
-		governments = player.getBuildingManager().getNumBuildingsOnField(Building.GOVERNMENT);
-		cities = player.getBuildingManager().getNumBuildingsOnField(Building.CITY);
-		researchCenters = player.getBuildingManager().getNumBuildingsOnField(Building.RESEARCH_CENTER);
-		drones = player.getBuildingManager().getNumBuildingsOnField(Building.DRONE);
-		spaceStations = player.getBuildingManager().getNumBuildingsOnField(Building.SPACE_STATION);
-		buildings = colonies + mines + tradingPosts + laboratories + governments + cities + researchCenters + drones + spaceStations;
+		if (player.isManagersInitialized()) {
+			points = player.getPointManager().getPoints();
+			planets = player.getGame().getBoard().getPlayersPlanets(player).size();
+			alliances = player.getAllianceManager().getAlliances().size();
+			resourcesC = player.getResourceManager().getResourcesC();
+			resourcesFe = player.getResourceManager().getResourcesFe();
+			resourcesSi = player.getResourceManager().getResourcesSi();
+			researchPoints = player.getResourceManager().getResearchPoints();
+			scientists = player.getResourceManager().getScientists();
+			colonies = player.getBuildingManager().getNumBuildingsOnField(Building.COLONY);
+			mines = player.getBuildingManager().getNumBuildingsOnField(Building.MINE);
+			tradingPosts = player.getBuildingManager().getNumBuildingsOnField(Building.TRADING_POST);
+			laboratories = player.getBuildingManager().getNumBuildingsOnField(Building.LABORATORY);
+			governments = player.getBuildingManager().getNumBuildingsOnField(Building.GOVERNMENT);
+			cities = player.getBuildingManager().getNumBuildingsOnField(Building.CITY);
+			researchCenters = player.getBuildingManager().getNumBuildingsOnField(Building.RESEARCH_CENTER);
+			drones = player.getBuildingManager().getNumBuildingsOnField(Building.DRONE);
+			spaceStations = player.getBuildingManager().getNumBuildingsOnField(Building.SPACE_STATION);
+			buildings = colonies + mines + tradingPosts + laboratories + governments + cities + researchCenters + drones + spaceStations;
+		}
 	}
 	
 	public String getName() {

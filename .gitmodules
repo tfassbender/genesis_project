@@ -1,3 +1,6 @@
 [submodule "genesis_project_server"]
 	path = genesis_project_server
 	url = pi@jfabricationgames.ddns.net:/home/pi/git/genesis_project_server.git
+[submodule "jfg_linear_algebra"]
+	path = jfg_linear_algebra
+	url = pi@jfabricationgames.ddns.net:/home/pi/git/jfg_linear_algebra

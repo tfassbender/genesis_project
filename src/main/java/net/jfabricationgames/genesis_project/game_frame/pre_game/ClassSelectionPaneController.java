@@ -25,7 +25,7 @@ public class ClassSelectionPaneController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		//add a panel for every player class
 		for (PlayerClass playerClass : PlayerClass.values()) {
-			Parent classPane = new GuiUtils().loadPane("PlayerClassPane.fxml", new PlayerClassPaneController(gameId, playerClass), null);
+			Parent classPane = new GuiUtils().loadPane("PlayerClassPane.fxml", new PlayerClassPaneController(gameId, playerClass), null, this);
 			vboxPlayerClasses.getChildren().add(classPane);
 		}
 	}
