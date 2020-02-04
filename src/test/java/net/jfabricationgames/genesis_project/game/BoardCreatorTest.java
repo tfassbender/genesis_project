@@ -38,8 +38,8 @@ class BoardCreatorTest {
 		creator.initializeEmptyField();
 	}
 	
-	@RepeatedTest(5)
-	@Timeout(15)
+	@RepeatedTest(1)
+	@Timeout(10)
 	public void testCreateBoard() {
 		creator = new BoardCreator(new Board(), numPlayers);
 		creator.createBoard();
@@ -150,7 +150,7 @@ class BoardCreatorTest {
 	}
 	@Test
 	public void testIsSamePlanetRulesViolated_noViolations() {
-		addPlanet(1, 8, Planet.BLACK);
+		addPlanet(3, 6, Planet.BLACK);
 		addPlanet(7, 1, Planet.BLACK);
 		addPlanet(15, 8, Planet.BLACK);
 		

@@ -64,7 +64,7 @@ class JsonSerializationTest {
 		int gameId = 42;
 		//start the game just like in the main menu
 		List<Player> players = playersAsked.stream().map(p -> new Player(p)).collect(Collectors.toList());
-		Game game = new Game(gameId, players, "Player1");
+		Game game = new Game(gameId, players, "Player1", false);
 		
 		try {
 			String serialized = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(game);

@@ -95,8 +95,8 @@ public class Board {
 	public static final int WIDTH = 17;
 	public static final int HEIGHT_EVEN = 9;//number of rows in even columns
 	public static final int HEIGHT_ODD = 8;//number of rows in odd columns
-	public static final int PLANETS_PER_COLOR = 3;//the number of planets of each color placed on the board
-	public static final int PLANETS_GENESIS = 5;//the number of genesis planets placed on the board
+	public static final int PLANETS_PER_COLOR = 5;//the number of planets of each color placed on the board
+	public static final int PLANETS_GENESIS = 7;//the number of genesis planets placed on the board
 	
 	@JsonSerialize(keyUsing = CustomBoardPositionSerializer.class)
 	@JsonDeserialize(keyUsing = CustomBoardPositionDeserializer.class)

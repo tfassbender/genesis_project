@@ -77,9 +77,9 @@ public class BoardCreator {
 					Future<?> future = singleBoardCreatorExecutor.submit(() -> finalCreator.createSingleBoard());
 					//... and abort the calculation after at most 5 seconds
 					try {
-						future.get(5, TimeUnit.SECONDS);
+						future.get(200, TimeUnit.MILLISECONDS);
 					}
-					catch (TimeoutException te) {
+					catch (TimeoutException | ExecutionException e) {
 						//interrupt the execution after the timeout
 						future.cancel(true);
 						
@@ -138,8 +138,9 @@ public class BoardCreator {
 				
 				for (int i = 0; i < numPlanets && !Thread.currentThread().isInterrupted(); i++) {
 					//the position where the planet will be placed
-					int x = (int) (Math.random() * width);
-					int y = (int) (Math.random() * height);
+					int[] randomPosition = chooseRandomPosition();
+					int x = randomPosition[0];
+					int y = randomPosition[1];
 					Position pos = new Position(x, y);
 					
 					if (fields.get(pos).getPlanet() == null) {
@@ -217,8 +218,9 @@ public class BoardCreator {
 		boolean moved = false;
 		Position movingTo = null;
 		while (!moved && !Thread.currentThread().isInterrupted()) {
-			int x = (int) (Math.random() * width);
-			int y = (int) (Math.random() * height);
+			int[] randomPosition = chooseRandomPosition();
+			int x = randomPosition[0];
+			int y = randomPosition[1];
 			movingTo = new Position(x, y);
 			
 			if (fields.get(movingTo).getPlanet() == null) {
@@ -304,7 +306,7 @@ public class BoardCreator {
 	@VisibleForTesting
 	protected boolean isSamePlanetRulesViolated() {
 		//center of mass
-		double centerOfMassThreshold = 4;//just guessing what could be a good value...
+		double centerOfMassThreshold = 1.5;//just guessing what could be a good value...
 		for (Planet planet : Planet.values()) {
 			List<Field> planetFields = fields.values().stream().filter(f -> f.getPlanet() == planet).collect(Collectors.toList());
 			
@@ -447,7 +449,7 @@ public class BoardCreator {
 		int planetsPerClusterToIdentifySpreadViolation = 3;
 		for (Vector2D key : clusters.keySet()) {
 			//the lower threshold that indicates a problem in spreading of the planets (depending on the number of planets in the cluster)
-			double averageDistanceThreshold = Math.min(((double) clusters.get(key).size()) / 2, 2.5);
+			double averageDistanceThreshold = Math.min(((double) clusters.get(key).size()) / 2, 1.5);
 			if (clusters.get(key).size() >= planetsPerClusterToIdentifySpreadViolation) {
 				double avgDist = clusters.get(key).stream().map(Field::toVector2D).mapToDouble(v -> v.distance(key)).sum() / clusters.get(key).size();
 				if (avgDist < averageDistanceThreshold) {
@@ -574,5 +576,20 @@ public class BoardCreator {
 	@VisibleForTesting
 	protected Map<Position, Field> getFields() {
 		return fields;
+	}
+	
+	private int[] chooseRandomPosition() {
+		int[] randomPosition = new int[2];
+		randomPosition[0] = (int) (Math.random() * width);
+		
+		//the height is different for even or odd columns
+		if (randomPosition[0] % 2 == 0) {
+			randomPosition[1] = (int) (Math.random() * (height + 1));
+		}
+		else {
+			randomPosition[1] = (int) (Math.random() * height);
+		}
+		
+		return randomPosition;
 	}
 }
